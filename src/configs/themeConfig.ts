@@ -49,8 +49,8 @@ type ThemeConfig = {
 
 const themeConfig: ThemeConfig = {
   // ** Layout Configs
-  templateName: 'Materialize' /* App Name */,
-  layout: 'vertical' /* vertical | horizontal */,
+  templateName: 'Media Verse' /* App Name */,
+  layout: 'horizontal' /* vertical | horizontal */,
   mode: 'light' as Mode /* light | dark | semi-dark /*! Note: semi-dark value will only work for Vertical Layout */,
   direction: 'ltr' /* ltr | rtl */,
   skin: 'default' /* default | bordered */,
@@ -61,7 +61,7 @@ const themeConfig: ThemeConfig = {
   routingLoader: true /* true | false */,
 
   // ** Navigation (Menu) Configs
-  navHidden: false /* true | false */,
+  navHidden: true /* true | false */,
   menuTextTruncate: true /* true | false */,
   navSubItemIcon: 'mdi:circle' /* Icon */,
   verticalNavToggleType: 'accordion' /* accordion | collapse /*! Note: This is for Vertical navigation menu only */,
