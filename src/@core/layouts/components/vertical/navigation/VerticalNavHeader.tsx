@@ -1,5 +1,6 @@
 // ** Next Import
 import Link from 'next/link'
+import Image from 'next/Image'
 
 // ** MUI Imports
 import IconButton from '@mui/material/IconButton'
@@ -128,7 +129,7 @@ const VerticalNavHeader = (props: Props) => {
         userNavMenuBranding(props)
       ) : (
         <StyledLink href='/'>
-          <svg width={40} fill='none' height={22} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
+          {/* <svg width={40} fill='none' height={22} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
             <rect
               rx='25.1443'
               width='50.2886'
@@ -197,7 +198,8 @@ const VerticalNavHeader = (props: Props) => {
                 <stop offset='1' stopOpacity='0' />
               </linearGradient>
             </defs>
-          </svg>
+          </svg> */}
+          <Image width={40} height={40} src='/images/logos/media-app.png' alt='media logo' />
           <HeaderTitle variant='h6' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 2 }) }}>
             {themeConfig.templateName}
           </HeaderTitle>

@@ -1,10 +1,11 @@
 // ** Next Import
 import Link from 'next/link'
+import Image from 'next/Image'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { styled, useTheme } from '@mui/material/styles'
+import { styled /* useTheme */ } from '@mui/material/styles'
 
 // ** Type Import
 import { LayoutProps } from 'src/@core/layouts/types'
@@ -32,7 +33,7 @@ const AppBarContent = (props: Props) => {
   const { appBarContent: userAppBarContent, appBarBranding: userAppBarBranding } = props
 
   // ** Hooks
-  const theme = useTheme()
+  // const theme = useTheme()
 
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -40,7 +41,7 @@ const AppBarContent = (props: Props) => {
         userAppBarBranding(props)
       ) : (
         <StyledLink href='/'>
-          <svg width={40} fill='none' height={22} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
+          {/* <svg width={40} fill='none' height={22} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
             <rect
               rx='25.1443'
               width='50.2886'
@@ -109,7 +110,8 @@ const AppBarContent = (props: Props) => {
                 <stop offset='1' stopOpacity='0' />
               </linearGradient>
             </defs>
-          </svg>
+          </svg> */}
+          <Image width={40} height={40} src='/images/logos/media-app.png' alt='media logo' />
           <Typography variant='h6' sx={{ ml: 2, fontWeight: 700, lineHeight: 1.2 }}>
             {themeConfig.templateName}
           </Typography>
