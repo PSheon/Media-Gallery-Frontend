@@ -13,12 +13,17 @@ import Layout from 'src/@core/layouts/Layout'
 import VerticalNavItems from 'src/navigation/vertical'
 import HorizontalNavItems from 'src/navigation/horizontal'
 
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
+
 // ** Component Import
 // Uncomment the below line (according to the layout type) when using server-side menu
 // import ServerSideVerticalNavItems from './components/vertical/ServerSideNavItems'
 // import ServerSideHorizontalNavItems from './components/horizontal/ServerSideNavItems'
+import AppBrand from './components/AppBrand'
 import VerticalAppBarContent from './components/vertical/AppBarContent'
 import HorizontalAppBarContent from './components/horizontal/AppBarContent'
+import Footer from './components/Footer'
 
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
@@ -58,6 +63,8 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       contentHeightFixed={contentHeightFixed}
       verticalLayoutProps={{
         navMenu: {
+          lockedIcon: <Icon icon='bx:disc' />,
+          unlockedIcon: <Icon icon='material-symbols:circle-outline' />,
           navItems: VerticalNavItems()
 
           // Uncomment the below line when using server-side menu in vertical layout and comment the above line
@@ -83,10 +90,15 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
             // navItems: horizontalMenuItems
           },
           appBar: {
+            componentProps: { sx: { background: 'transparent', boxShadow: 'none' } },
+            branding: () => <AppBrand />,
             content: () => <HorizontalAppBarContent hidden={hidden} settings={settings} saveSettings={saveSettings} />
           }
         }
       })}
+      footerProps={{
+        content: () => <Footer />
+      }}
     >
       {children}
     </Layout>

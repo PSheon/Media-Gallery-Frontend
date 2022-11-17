@@ -19,6 +19,8 @@ import {
   HorizontalMenuToggle
 } from 'src/@core/layouts/types'
 
+const isProduction: boolean = (process.env.NODE_ENV as string) === 'production'
+
 type ThemeConfig = {
   skin: Skin
   mode: Mode
@@ -80,7 +82,7 @@ const themeConfig: ThemeConfig = {
   // ** Other Configs
   responsiveFontSizes: true /* true | false */,
   disableRipple: false /* true | false */,
-  disableCustomizer: false /* true | false */,
+  disableCustomizer: isProduction ? true : false /* true | false */,
   toastPosition: 'top-right' /* top-left | top-center | top-right | bottom-left | bottom-center | bottom-right */
 }
 

@@ -1,7 +1,9 @@
 // ** MUI Imports
+import { Theme } from '@mui/material/styles'
+import useScrollTrigger from '@mui/material/useScrollTrigger'
 import Fab from '@mui/material/Fab'
 import AppBar from '@mui/material/AppBar'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Box, { BoxProps } from '@mui/material/Box'
 import MuiToolbar, { ToolbarProps } from '@mui/material/Toolbar'
 
@@ -75,10 +77,23 @@ const HorizontalLayout = (props: LayoutProps) => {
     horizontalLayoutProps
   } = props
 
+  // ** Hooks
+  const theme = useTheme()
+  const scrollTrigger = useScrollTrigger({ threshold: 0, disableHysteresis: true })
+
   // ** Vars
   const { skin, appBar, navHidden, appBarBlur, contentWidth } = settings
   const appBarProps = horizontalLayoutProps?.appBar?.componentProps
   const userNavMenuContent = horizontalLayoutProps?.navMenu?.content
+
+  const appBarFixedStyles = () => {
+    return {
+      mt: 1.5,
+      width: `calc(100% - 3rem)`,
+      borderRadius: '10px',
+      backgroundColor: hexToRGBA(theme.palette.background.paper, appBarBlur ? 0.9 : 1)
+    }
+  }
 
   let userAppBarStyle = {}
   if (appBarProps && appBarProps.sx) {
@@ -104,12 +119,13 @@ const HorizontalLayout = (props: LayoutProps) => {
             ...(appBar === 'static' && { zIndex: 13 }),
             ...(skin === 'bordered' && { borderBottom: theme => `1px solid ${theme.palette.divider}` }),
             transition: 'border-bottom 0.2s ease-in-out, backdrop-filter .25s ease-in-out, box-shadow .25s ease-in-out',
-            ...(appBar === 'fixed'
-              ? appBarBlur && {
-                  backdropFilter: 'blur(8px)',
-                  backgroundColor: theme => hexToRGBA(theme.palette.background.paper, 0.9)
-                }
-              : {}),
+
+            // ...(appBar === 'fixed'
+            //   ? appBarBlur && {
+            //       backdropFilter: 'blur(8px)',
+            //       backgroundColor: theme => hexToRGBA(theme.palette.background.paper, 0.9)
+            //     }
+            //   : {}),
             ...userAppBarStyle
           }}
           {...userAppBarProps}
@@ -119,6 +135,8 @@ const HorizontalLayout = (props: LayoutProps) => {
             className='layout-navbar'
             sx={{
               width: '100%',
+              background: 'transparent',
+              ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
               ...(navHidden ? {} : { borderBottom: theme => `1px solid ${theme.palette.divider}` })
             }}
           >
@@ -126,8 +144,15 @@ const HorizontalLayout = (props: LayoutProps) => {
               className='navbar-content-container'
               sx={{
                 mx: 'auto',
-                ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
-                minHeight: theme => `${(theme.mixins.toolbar.minHeight as number) - 1}px !important`
+                borderRadius: '10px',
+                ...(appBar === 'fixed'
+                  ? appBarBlur && {
+                      backdropFilter: 'blur(8px)'
+                    }
+                  : {}),
+                transition: 'width 0.2s ease-in-out, margin .25s ease-in-out, background-color .25s ease-in-out',
+                ...(appBar === 'fixed' && scrollTrigger && { ...appBarFixedStyles() }),
+                minHeight: (theme: Theme) => `${(theme.mixins.toolbar.minHeight as number) - 1}px !important`
               }}
             >
               <AppBarContent
