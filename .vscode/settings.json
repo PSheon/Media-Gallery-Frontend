@@ -33,7 +33,10 @@
   "npm.packageManager": "yarn",
   // Extension: cSpell
   "cSpell.words": [
-    "customizer"
+    "customizer",
+    "ecommerce",
+    "moralis",
+    "wagmi"
   ],
   "search-node-modules.path": "node_modules",
   "markdown.extension.toc.updateOnSave": false
