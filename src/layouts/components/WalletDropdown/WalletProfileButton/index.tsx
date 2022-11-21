@@ -14,14 +14,24 @@ import MenuItem from '@mui/material/MenuItem'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 
+// ** Wagmi Imports
+import { useDisconnect } from 'wagmi'
+
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
 
+// ** Component Imports
+import EditProfileItem from './EditProfileItem'
+
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
+import { UserDataType } from 'src/context/types'
+
+// ** Config
+import authConfig from 'src/configs/auth'
 
 interface Props {
   settings: Settings
@@ -41,7 +51,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
   border: `3px solid ${theme.palette.background.default}`
 }))
 
-const WalletDropdown = (props: Props) => {
+const WalletProfileButton = (props: Props) => {
   // ** Props
   const { settings } = props
 
@@ -50,10 +60,13 @@ const WalletDropdown = (props: Props) => {
 
   // ** Hooks
   const router = useRouter()
-  const { logout } = useAuth()
+  const { disconnect } = useDisconnect()
+  const { user, logout } = useAuth()
 
   // ** Vars
   const { direction } = settings
+
+  const userData = user as UserDataType
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget)
@@ -82,8 +95,10 @@ const WalletDropdown = (props: Props) => {
   }
 
   const handleLogout = () => {
-    logout()
+    disconnect()
     handleDropdownClose()
+
+    logout()
   }
 
   return (
@@ -98,7 +113,11 @@ const WalletDropdown = (props: Props) => {
           horizontal: 'right'
         }}
       >
-        <StyledAvatar alt='John Doe' onClick={handleDropdownOpen} src='/images/avatars/1.png' />
+        <StyledAvatar
+          alt='John Doe'
+          onClick={handleDropdownOpen}
+          src={userData.avatar ? `${authConfig.publicFolderUrl}${userData.avatar}` : '/images/avatars/1.png'}
+        />
       </Badge>
       <Menu
         anchorEl={anchorEl}
@@ -121,20 +140,23 @@ const WalletDropdown = (props: Props) => {
               <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
             </Badge> */}
             <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 600 }}>John Doe</Typography>
+              <Typography sx={{ fontWeight: 600 }}>{`@${
+                userData.username.length > 10 ? `${userData.username.slice(0, 12)}...` : userData.username
+              }`}</Typography>
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                Admin
+                {userData.address.slice(0, 12)}
               </Typography>
             </Box>
           </Box>
         </Box>
         <Divider sx={{ mt: '0 !important' }} />
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/pages/user-profile/profile')}>
+        <EditProfileItem handleDropdownClose={handleDropdownClose} />
+        {/* <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/pages/user-profile/profile')}>
           <Box sx={styles}>
             <Icon icon='mdi:account-outline' />
             Profile
           </Box>
-        </MenuItem>
+        </MenuItem> */}
         {/* <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/apps/email')}>
           <Box sx={styles}>
             <Icon icon='mdi:email-outline' />
@@ -179,4 +201,4 @@ const WalletDropdown = (props: Props) => {
   )
 }
 
-export default WalletDropdown
+export default WalletProfileButton
