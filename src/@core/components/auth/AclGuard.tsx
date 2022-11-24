@@ -31,6 +31,7 @@ const AclGuard = (props: AclGuardProps) => {
   const { aclAbilities, children, guestGuard } = props
 
   const [ability, setAbility] = useState<AppAbility | undefined>(undefined)
+  const [currentRole, setCurrentRole] = useState<string>('')
 
   // ** Hooks
   const auth = useAuth()
@@ -42,7 +43,9 @@ const AclGuard = (props: AclGuardProps) => {
   }
 
   // User is logged in, build ability for the user based on his role
-  if (auth.user && auth.user.role && !ability) {
+  // if (auth.user && auth.user.role && !ability) {
+  if (auth.user.role !== currentRole) {
+    setCurrentRole(() => auth.user.role)
     setAbility(buildAbilityFor(auth.user.role, aclAbilities.subject))
   }
 

@@ -11,11 +11,16 @@ import axios from 'axios'
 import authConfig from 'src/configs/auth'
 
 // ** Types
-import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
+import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType, GuestDataType } from './types'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
-  user: null,
+  user: {
+    role: 'guest',
+    email: 'anonymous@media.app',
+    fullName: 'Anonymous',
+    username: 'anonymous'
+  },
   loading: true,
   setUser: () => null,
   setLoading: () => Boolean,
@@ -32,7 +37,7 @@ type Props = {
 
 const AuthProvider = ({ children }: Props) => {
   // ** States
-  const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
+  const [user, setUser] = useState<UserDataType | GuestDataType>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
 
   // ** Hooks
@@ -43,25 +48,37 @@ const AuthProvider = ({ children }: Props) => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
       if (storedToken) {
         setLoading(true)
-        await axios
-          .get(authConfig.meEndpoint, {
-            headers: {
-              Authorization: storedToken
-            }
-          })
+
+        axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`
+
+        // .get(authConfig.meEndpoint, {
+        await axios({
+          method: 'POST',
+          url: `http://localhost:1337/api/auth/me`,
+          headers: {
+            Authorization: `Bearer ${storedToken}`
+          }
+        })
           .then(async response => {
             setLoading(false)
-            setUser({ ...response.data.userData })
+            setUser(() => ({ ...response.data.userData }))
           })
           .catch(() => {
             localStorage.removeItem('userData')
             localStorage.removeItem('refreshToken')
             localStorage.removeItem('accessToken')
-            setUser(null)
+            setUser(() => ({
+              role: 'guest',
+              email: 'anonymous@media.app',
+              fullName: 'Anonymous',
+              username: 'anonymous'
+            }))
             setLoading(false)
-            if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
-              router.replace('/login')
-            }
+
+            // if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
+            //   router.replace('/login')
+            // }
+            router.replace('/')
           })
       } else {
         setLoading(false)
@@ -73,20 +90,33 @@ const AuthProvider = ({ children }: Props) => {
   }, [])
 
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
+    // .post(authConfig.loginEndpoint, params)
     axios
-      .post(authConfig.loginEndpoint, params)
+      .post(`http://localhost:1337/api/auth/connect`, params)
       .then(async response => {
-        params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
-          : null
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`
+
+        window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
         const returnUrl = router.query.returnUrl
 
-        setUser({ ...response.data.userData })
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
+        setUser(() => ({ ...response.data.userData }))
+        window.localStorage.setItem('userData', JSON.stringify(response.data.userData))
 
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
         router.replace(redirectURL as string)
+
+        // params.rememberMe
+        //   ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
+        //   : null
+        // const returnUrl = router.query.returnUrl
+
+        // setUser(() => ({ ...response.data.userData }))
+        // params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
+
+        // const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+
+        // router.replace(redirectURL as string)
       })
 
       .catch(err => {
@@ -95,10 +125,13 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   const handleLogout = () => {
-    setUser(null)
+    setUser(() => ({ role: 'guest', email: 'anonymous@media.app', fullName: 'Anonymous', username: 'anonymous' }))
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
-    router.push('/login')
+    delete axios.defaults.headers.common['Authorization']
+
+    // router.push('/login')
+    router.push('/')
   }
 
   const handleRegister = (params: RegisterParams, errorCallback?: ErrCallbackType) => {

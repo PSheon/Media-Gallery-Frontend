@@ -26,7 +26,7 @@ const data: CustomRadioImgData[] = [
   }
 ]
 
-const NftImageList = () => {
+const AdvancedSceneList = () => {
   const initialSelected: string = data.filter(item => item.isSelected)[data.filter(item => item.isSelected).length - 1]
     .value
 
@@ -57,4 +57,4 @@ const NftImageList = () => {
   )
 }
 
-export default NftImageList
+export default AdvancedSceneList
