@@ -65,7 +65,7 @@ const ActivityTimelineSection = () => {
     queryFn: () =>
       axios({
         method: 'GET',
-        url: 'http://localhost:1337/api/accesses/me'
+        url: '/api/accesses/me'
       }).then(response => response.data.accesses as IAccess[])
   })
 
@@ -73,7 +73,7 @@ const ActivityTimelineSection = () => {
   const getTypeColor = (accessType: IAccess['type']) => {
     switch (accessType) {
       case 'connect':
-        return 'error'
+        return 'warning'
       case 'update_user_data':
         return 'primary'
       case 'create_scene':
