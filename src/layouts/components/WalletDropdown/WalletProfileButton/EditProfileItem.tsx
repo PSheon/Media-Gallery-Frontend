@@ -118,7 +118,7 @@ const EditProfileItem = (props: Props) => {
     setUpdateLoading(true)
 
     axios
-      .patch(`http://localhost:1337/api/auth/me`, data)
+      .patch(`/api/auth/me`, data)
       .then(async response => {
         auth.setUser({ ...response.data.userData })
         setUpdateLoading(false)

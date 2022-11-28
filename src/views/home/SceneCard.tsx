@@ -31,7 +31,7 @@ const SceneCard = (props: Props) => {
         sx={{ height: 200 }}
         image={
           props?.cover?.data?.attributes?.url
-            ? `http://localhost:1337${props.cover.data.attributes.url}`
+            ? `${props.cover.data.attributes.url}`
             : '/images/cards/background-user.png'
         }
       />

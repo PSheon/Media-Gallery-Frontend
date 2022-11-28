@@ -62,7 +62,7 @@ const ConnectWalletButton = () => {
 
       const userData = { address: account, chain: '0x1', network: 'evm' }
 
-      const { data } = await axios.post(`http://localhost:1337/api/auth/request-message`, userData)
+      const { data } = await axios.post(`/api/auth/request-message`, userData)
 
       const message = data.message
 

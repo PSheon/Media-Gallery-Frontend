@@ -18,7 +18,7 @@ export const fetchScenes = createAsyncThunk(
   'scene/fetchScenes',
   async (params: FetchSceneParamsType, { getState }: Redux) => {
     const { scenes } = getState()
-    const response = await axios.get('http://localhost:1337/api/scenes', {
+    const response = await axios.get('/api/scenes', {
       params: Object.assign(
         {
           filter: scenes.filter,

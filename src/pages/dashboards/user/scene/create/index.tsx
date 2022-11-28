@@ -38,10 +38,10 @@ const CreateScenePage = () => {
       axios({
         method: 'GET',
 
-        // url: `http://localhost:1337/api/scene-models?${qs.stringify({
+        // url: `/api/scene-models?${qs.stringify({
         //   populate: ['creator', 'banner']
         // })}`
-        url: `http://localhost:1337/api/scene-models`,
+        url: `/api/scene-models`,
         params: {
           populate: ['creator', 'banner']
         }
@@ -69,7 +69,7 @@ const CreateScenePage = () => {
   const handleSubmit = () => {
     // axios({
     //   method: 'POST',
-    //   url: 'http://localhost:1337/api/scene',
+    //   url: '/api/scene',
     //   data: {
     //     selectedSceneModelId: selected
     //   }

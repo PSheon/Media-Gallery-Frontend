@@ -45,16 +45,18 @@ const AuthProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
+      axios.defaults.baseURL =
+        process.env.NODE_ENV === 'production' ? 'https://mint.media.app' : 'http://localhost:1337'
+
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
       if (storedToken) {
         setLoading(true)
 
         axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`
 
-        // .get(authConfig.meEndpoint, {
         await axios({
           method: 'POST',
-          url: `http://localhost:1337/api/auth/me`,
+          url: `/api/auth/me`,
           headers: {
             Authorization: `Bearer ${storedToken}`
           }
@@ -92,7 +94,7 @@ const AuthProvider = ({ children }: Props) => {
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
     // .post(authConfig.loginEndpoint, params)
     axios
-      .post(`http://localhost:1337/api/auth/connect`, params)
+      .post(`/api/auth/connect`, params)
       .then(async response => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`
 

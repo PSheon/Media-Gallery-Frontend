@@ -16,7 +16,7 @@ const defaultParams = {
 export const fetchScenes = createAsyncThunk(
   'scene/fetchScenes',
   async (params: FetchSceneParamsType = defaultParams) => {
-    const response = await axios.get('http://localhost:1337/api/scenes', {
+    const response = await axios.get('/api/scenes', {
       params
     })
 
