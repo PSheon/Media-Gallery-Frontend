@@ -51,7 +51,7 @@ const MintStandardCard = () => {
     queryFn: () =>
       axios({
         method: 'POST',
-        url: 'http://localhost:1337/api/whitelist/check',
+        url: '/api/whitelist/check',
         data: {
           address: (auth.user as UserDataType).address,
           size: 'standard'
@@ -81,7 +81,7 @@ const MintStandardCard = () => {
 
     const { signature, limit } = await axios({
       method: 'POST',
-      url: 'http://localhost:1337/api/whitelist/hash',
+      url: '/api/whitelist/hash',
       data: {
         size: 'standard',
         quantity: mintQuantity
@@ -125,7 +125,7 @@ const MintStandardCard = () => {
             <CustomChip
               skin='light'
               size='small'
-              color='success'
+              color='info'
               label='Standard'
               sx={{ mr: 2.5, height: 20, fontSize: '0.75rem', fontWeight: 500 }}
             />

@@ -51,7 +51,7 @@ const MintLargeCard = () => {
     queryFn: () =>
       axios({
         method: 'POST',
-        url: 'http://localhost:1337/api/whitelist/check',
+        url: '/api/whitelist/check',
         data: {
           address: (auth.user as UserDataType).address,
           size: 'large'
@@ -81,7 +81,7 @@ const MintLargeCard = () => {
 
     const { signature, limit } = await axios({
       method: 'POST',
-      url: 'http://localhost:1337/api/whitelist/hash',
+      url: '/api/whitelist/hash',
       data: {
         size: 'large',
         quantity: mintQuantity
