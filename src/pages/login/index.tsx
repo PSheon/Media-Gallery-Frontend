@@ -3,7 +3,7 @@ import { useState, ReactNode, MouseEvent } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
-import Image from 'next/Image'
+import Image from 'next/image'
 
 // ** MUI Components
 import Alert from '@mui/material/Alert'

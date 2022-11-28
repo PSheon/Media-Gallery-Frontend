@@ -1,5 +1,5 @@
 // ** Next Import
-import Image from 'next/Image'
+import Image from 'next/image'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
