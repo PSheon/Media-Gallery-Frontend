@@ -22,10 +22,13 @@ import FormHelperText from '@mui/material/FormHelperText'
 // ** Component Imports
 // import NftImageList from './NftImageList'
 
+// ** React Query Imports
+import { useMutation } from '@tanstack/react-query'
+
 // ** Axios
 import axios from 'axios'
 
-// ** Third Party Imports
+// ** React Hook Form Imports
 import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -73,10 +76,22 @@ const EditProfileItem = (props: Props) => {
 
   // ** Hooks
   const auth = useAuth()
+  const { mutate, isLoading } = useMutation({
+    mutationFn: (newData: FormData) => axios.patch(`/api/auth/me`, newData),
+    onSuccess: response => {
+      auth.setUser({ ...response.data.userData })
+    },
+    onError: () => {
+      setError('username', {
+        type: 'manual',
+        message: 'Username is invalid'
+      })
+    },
+    retry: 0
+  })
 
   // ** States
   const [show, setShow] = useState<boolean>(false)
-  const [updateLoading, setUpdateLoading] = useState<boolean>(false)
 
   const {
     control,
@@ -114,25 +129,8 @@ const EditProfileItem = (props: Props) => {
     setShow(false)
     handleDropdownClose()
   }
-  const onSubmit = (data: FormData) => {
-    setUpdateLoading(true)
-
-    axios
-      .patch(`/api/auth/me`, data)
-      .then(async response => {
-        auth.setUser({ ...response.data.userData })
-        setUpdateLoading(false)
-        setShow(false)
-      })
-
-      .catch(err => {
-        console.log('err, ', err)
-        setUpdateLoading(false)
-        setError('username', {
-          type: 'manual',
-          message: 'Username is invalid'
-        })
-      })
+  const onSubmit = (newData: FormData) => {
+    mutate(newData)
   }
 
   return (
@@ -173,7 +171,11 @@ const EditProfileItem = (props: Props) => {
               <Grid item xs={12}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
                   <ProfilePicture
-                    src={`${authConfig.publicFolderUrl}${auth.user.avatar as string}`}
+                    src={
+                      auth.user.avatar
+                        ? `${authConfig.publicFolderUrl}${auth.user.avatar as string}`
+                        : '/images/avatars/1.png'
+                    }
                     alt='profile picture'
                   />
                 </Box>
@@ -191,7 +193,7 @@ const EditProfileItem = (props: Props) => {
                         label='Username'
                         value={value}
                         onBlur={onBlur}
-                        onChange={onChange}
+                        onChange={e => onChange(e.target.value.replace(' ', '-'))}
                         error={Boolean(errors.username)}
                         placeholder='Anonymous'
                         InputProps={{
@@ -208,12 +210,12 @@ const EditProfileItem = (props: Props) => {
             </Grid>
           </DialogContent>
           <DialogActions sx={{ pb: { xs: 8, sm: 12.5 }, justifyContent: 'center' }}>
-            <LoadingButton loading={updateLoading} variant='contained' sx={{ mr: 2 }} type='submit'>
-              Submit
-            </LoadingButton>
-            <Button variant='outlined' color='secondary' onClick={() => setShow(false)}>
+            <Button variant='outlined' color='secondary' onClick={() => setShow(false)} sx={{ mr: 2 }}>
               Discard
             </Button>
+            <LoadingButton loading={isLoading} variant='contained' type='submit'>
+              Submit
+            </LoadingButton>
           </DialogActions>
         </form>
       </Dialog>
