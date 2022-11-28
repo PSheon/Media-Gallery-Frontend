@@ -1,6 +1,9 @@
-export const TARGET_CHAIN_ID = 5
-export const TARGET_CHAIN_NAME = 'Goerli'
-export const CONTRACT_ADDRESS = '0x510b9645640051B0389b3d6FC9B3673F72810c58'
+export const TARGET_CHAIN_ID = process.env.NODE_ENV === 'production' ? 1 : 5
+export const TARGET_CHAIN_NAME = process.env.NODE_ENV === 'production' ? 'Mainnet' : 'Goerli'
+export const CONTRACT_ADDRESS =
+  process.env.NODE_ENV === 'production'
+    ? '0x2CcfA2Cd838A6Dca55b7B2C21c88ceE3905660Fb'
+    : '0x510b9645640051B0389b3d6FC9B3673F72810c58'
 
 export const CONTRACT_ABI = [
   {

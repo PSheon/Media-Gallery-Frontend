@@ -4,5 +4,5 @@ export default {
   registerEndpoint: '/jwt/register',
   storageTokenKeyName: 'accessToken',
   onTokenExpiration: 'refreshToken', // logout | refreshToken
-  publicFolderUrl: 'http://localhost:1337'
+  publicFolderUrl: process.env.NODE_ENV === 'production' ? 'https://mint.media.app' : 'http://localhost:1337'
 }
