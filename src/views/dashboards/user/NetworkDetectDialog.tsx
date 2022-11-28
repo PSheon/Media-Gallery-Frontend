@@ -1,5 +1,5 @@
 // ** React Imports
-import { Ref, useState, forwardRef, ReactElement } from 'react'
+import { Ref, forwardRef, ReactElement } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -10,7 +10,7 @@ import Fade, { FadeProps } from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 
 // ** Wagmi Imports
-import { getNetwork, switchNetwork, Chain } from '@wagmi/core'
+import { useNetwork, useSwitchNetwork, Chain } from 'wagmi'
 
 // ** Configs Imports
 import { TARGET_CHAIN_ID, TARGET_CHAIN_NAME } from 'src/configs/ethereum'
@@ -24,18 +24,12 @@ const Transition = forwardRef(function Transition(
 
 const NetworkDetectDialog = () => {
   // ** Hooks
-  const { chain } = getNetwork()
-
-  // ** States
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { chain } = useNetwork()
+  const { isLoading, switchNetwork } = useSwitchNetwork()
 
   // ** Logics
   const handleSwitchNetwork = async () => {
-    setIsLoading(true)
-    await switchNetwork({
-      chainId: TARGET_CHAIN_ID
-    })
-    setIsLoading(false)
+    switchNetwork?.(TARGET_CHAIN_ID)
   }
 
   return (
@@ -52,7 +46,7 @@ const NetworkDetectDialog = () => {
             Change Network
           </Typography>
           <Typography variant='body2' sx={{ mb: 4 }}>{`Switch network from ${
-            (chain as Chain).name
+            (chain as Chain)?.name
           } to ${TARGET_CHAIN_NAME}`}</Typography>
 
           <LoadingButton loading={isLoading} variant='contained' onClick={handleSwitchNetwork}>
