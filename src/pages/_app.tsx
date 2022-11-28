@@ -49,7 +49,7 @@ import GuestGuard from 'src/@core/components/auth/GuestGuard'
 import WindowWrapper from 'src/@core/components/window-wrapper'
 
 // ** Spinner Import
-import Spinner from 'src/@core/components/spinner'
+import Spinner from 'src/layouts/components/spinner'
 
 // ** Contexts
 import { AuthProvider } from 'src/context/AuthContext'
