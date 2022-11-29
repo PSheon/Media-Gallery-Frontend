@@ -19,36 +19,36 @@ import { ThemeColor } from 'src/@core/layouts/types'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import OptionsMenu from 'src/@core/components/option-menu'
 
-interface SaleDataType {
+interface StatisticDataType {
   stats: string
   title: string
   color: ThemeColor
   icon: ReactElement
 }
 
-const salesData: SaleDataType[] = [
+const statisticList: StatisticDataType[] = [
   {
-    stats: '4,458',
-    color: 'primary',
-    title: 'Users',
-    icon: <Icon icon='mdi:account-outline' />
-  },
-  {
-    stats: '2.28k',
-    color: 'warning',
-    title: 'Total Holding Days',
+    stats: '90',
+    color: 'success',
+    title: 'Total Large land',
     icon: <Icon icon='mdi:poll' />
   },
   {
+    stats: '1,860',
+    color: 'primary',
+    title: 'Total Medium land',
+    icon: <Icon icon='mdi:poll' />
+  },
+  {
+    stats: '4,050',
     color: 'info',
-    stats: '450k',
-    title: 'Transactions Per week',
-    icon: <Icon icon='mdi:trending-up' />
+    title: 'Total Standard land',
+    icon: <Icon icon='mdi:poll' />
   }
 ]
 
 const renderStats = () => {
-  return salesData.map((sale: SaleDataType, index: number) => (
+  return statisticList.map((sale: StatisticDataType, index: number) => (
     <Grid item xs={12} sm={4} key={index}>
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
         <CustomAvatar skin='light' variant='rounded' color={sale.color} sx={{ mr: 4 }}>
