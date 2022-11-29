@@ -105,8 +105,8 @@ const MintStandardCard = () => {
       const progress = (await readContract({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
-        functionName: 'addressClaimedCountForSize',
-        args: ['0', (auth.user as UserDataType).address],
+        functionName: 'totalSupplyBySize',
+        args: ['0'],
         chainId: TARGET_CHAIN_ID
       })) as BigNumber
 
