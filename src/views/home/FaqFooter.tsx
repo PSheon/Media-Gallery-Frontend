@@ -62,6 +62,9 @@ const FaqFooter = (props: Props) => {
   return (
     <>
       <Box sx={{ mb: 11.75, textAlign: 'center' }}>
+        <Typography variant='h5' sx={{ mb: 1 }}>
+          MediaVerse Main Island Free mint
+        </Typography>
         <Typography variant='h5' sx={{ mb: 2.5 }}>
           FAQ’s
         </Typography>
