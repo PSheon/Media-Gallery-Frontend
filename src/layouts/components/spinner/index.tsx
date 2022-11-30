@@ -28,7 +28,7 @@ const FallbackSpinner = ({ sx }: { sx?: BoxProps['sx'] }) => {
         }}
       >
         <Avatar src='/images/logos/media-app.png' alt='media logo' sx={{ width: 64, height: 64 }} />
-        <CircularProgress disableShrink size={80} sx={{ position: 'absolute', strokeLinecap: 'round' }} />
+        <CircularProgress disableShrink size={88} sx={{ position: 'absolute', strokeLinecap: 'round' }} />
       </Box>
 
       <Typography variant='h6' sx={{ mt: 4, fontWeight: 700, lineHeight: 1.2 }}>
