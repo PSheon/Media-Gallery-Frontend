@@ -34,6 +34,9 @@ import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
+// ** React Query Imports
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
 // ** Third Party Import
 import { Toaster } from 'react-hot-toast'
 
@@ -109,6 +112,13 @@ const client = createClient({
   provider,
   webSocketProvider
 })
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }
+})
 
 // ** Pace Loader
 if (themeConfig.routingLoader) {
@@ -163,24 +173,26 @@ const App = (props: ExtendedAppProps) => {
 
           <AuthProvider>
             <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
-              <SettingsConsumer>
-                {({ settings }) => {
-                  return (
-                    <ThemeComponent settings={settings}>
-                      <WindowWrapper>
-                        <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                          <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
-                            {getLayout(<Component {...pageProps} />)}
-                          </AclGuard>
-                        </Guard>
-                      </WindowWrapper>
-                      <ReactHotToast>
-                        <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                      </ReactHotToast>
-                    </ThemeComponent>
-                  )
-                }}
-              </SettingsConsumer>
+              <QueryClientProvider client={queryClient}>
+                <SettingsConsumer>
+                  {({ settings }) => {
+                    return (
+                      <ThemeComponent settings={settings}>
+                        <WindowWrapper>
+                          <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                            <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
+                              {getLayout(<Component {...pageProps} />)}
+                            </AclGuard>
+                          </Guard>
+                        </WindowWrapper>
+                        <ReactHotToast>
+                          <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
+                        </ReactHotToast>
+                      </ThemeComponent>
+                    )
+                  }}
+                </SettingsConsumer>
+              </QueryClientProvider>
             </SettingsProvider>
           </AuthProvider>
         </CacheProvider>
