@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 // ** Spinner Import
-import Spinner from 'src/@core/components/spinner'
+import Spinner from 'src/layouts/components/spinner'
 
 // ** Hook Imports
 import { useAuth } from 'src/hooks/useAuth'
