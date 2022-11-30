@@ -26,7 +26,7 @@ const data: CustomRadioImgData[] = [
   }
 ]
 
-const CustomRadioWithImages = () => {
+const NftImageList = () => {
   const initialSelected: string = data.filter(item => item.isSelected)[data.filter(item => item.isSelected).length - 1]
     .value
 
@@ -57,4 +57,4 @@ const CustomRadioWithImages = () => {
   )
 }
 
-export default CustomRadioWithImages
+export default NftImageList

@@ -77,7 +77,7 @@ const EditProfileItem = (props: Props) => {
   // ** Hooks
   const auth = useAuth()
   const { mutate, isLoading } = useMutation({
-    mutationFn: (newData: FormData) => axios.patch(`http://localhost:1337/api/auth/me`, newData),
+    mutationFn: (newData: FormData) => axios.patch(`/api/auth/me`, newData),
     onSuccess: response => {
       auth.setUser({ ...response.data.userData })
     },
