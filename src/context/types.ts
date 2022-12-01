@@ -23,6 +23,7 @@ export type GuestDataType = {
   fullName: string
   username: string
   avatar?: string | null
+  address?: string
 }
 
 export type UserDataType = {
