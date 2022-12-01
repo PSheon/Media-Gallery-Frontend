@@ -35,7 +35,13 @@
   "cSpell.words": [
     "customizer",
     "ecommerce",
+    "gltf",
+    "hemi",
+    "lerp",
     "moralis",
+    "raycast",
+    "registree",
+    "Trimesh",
     "wagmi"
   ],
   "search-node-modules.path": "node_modules",
