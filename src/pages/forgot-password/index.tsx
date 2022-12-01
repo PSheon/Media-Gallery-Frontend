@@ -3,7 +3,7 @@ import { ReactNode, SyntheticEvent } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
-import Image from 'next/Image'
+import Image from 'next/image'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
