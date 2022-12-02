@@ -1,9 +1,9 @@
-import { CharacterStateBase } from '../_stateLibrary'
-import { Character } from '../../Character'
-import { VehicleSeat } from 'src/ts/vehicles/VehicleSeat'
-import { CloseVehicleDoorInside } from './CloseVehicleDoorInside'
-import { SeatType } from '../../../enums/SeatType'
-import { SwitchingSeats } from './SwitchingSeats'
+import { CharacterStateBase } from 'src/views/verse/book/characters/character_states/_stateLibrary'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
+import { CloseVehicleDoorInside } from 'src/views/verse/book/characters/character_states/vehicles/CloseVehicleDoorInside'
+import { SeatType } from 'src/views/verse/book/enums/SeatType'
+import { SwitchingSeats } from 'src/views/verse/book/characters/character_states/vehicles/SwitchingSeats'
 
 export class Sitting extends CharacterStateBase {
   private seat: VehicleSeat
@@ -14,7 +14,7 @@ export class Sitting extends CharacterStateBase {
     this.seat = seat
     this.canFindVehiclesToEnter = false
 
-    this.character.world.updateControls([
+    this.character.world!.updateControls([
       {
         keys: ['X'],
         desc: 'Switch seats'
@@ -33,7 +33,7 @@ export class Sitting extends CharacterStateBase {
 
     if (!this.seat.door?.achievingTargetRotation && this.seat.door?.rotation > 0 && this.noDirection()) {
       this.character.setState(new CloseVehicleDoorInside(this.character, this.seat))
-    } else if (this.character.vehicleEntryInstance !== null) {
+    } else if (this.character.vehicleEntryInstance !== undefined) {
       if (this.character.vehicleEntryInstance.wantsToDrive) {
         for (const possibleDriverSeat of this.seat.connectedSeats) {
           if (possibleDriverSeat.type === SeatType.Driver) {
@@ -43,7 +43,7 @@ export class Sitting extends CharacterStateBase {
           }
         }
       } else {
-        this.character.vehicleEntryInstance = null
+        this.character.vehicleEntryInstance = undefined
       }
     }
   }

@@ -1,8 +1,9 @@
-import { ISpawnPoint } from '../interfaces/ISpawnPoint'
-import { VehicleSpawnPoint } from './VehicleSpawnPoint'
-import { CharacterSpawnPoint } from './CharacterSpawnPoint'
-import { World } from './World'
-import { LoadingManager } from '../core/LoadingManager'
+import { ISpawnPoint } from 'src/views/verse/book/interfaces/ISpawnPoint'
+import { VehicleSpawnPoint } from 'src/views/verse/book/world/VehicleSpawnPoint'
+import { CharacterSpawnPoint } from 'src/views/verse/book/world/CharacterSpawnPoint'
+import { NpcSpawnPoint } from 'src/views/verse/book/world/NpcSpawnPoint'
+import { World } from 'src/views/verse/book/world/World'
+import { LoadingManager } from 'src/views/verse/book/core/LoadingManager'
 
 export class Scenario {
   public id: string
@@ -71,6 +72,9 @@ export class Scenario {
           } else if (child.userData.type === 'player') {
             const sp = new CharacterSpawnPoint(child)
             this.spawnPoints.push(sp)
+          } else if (child.userData.type === 'npc') {
+            const sp = new NpcSpawnPoint(child)
+            this.spawnPoints.push(sp)
           }
         }
       }
@@ -81,7 +85,8 @@ export class Scenario {
     this.world.params[this.name] = () => {
       this.world.launchScenario(this.id)
     }
-    this.world.scenarioGUIFolder.add(this.world.params, this.name)
+
+    // this.world.scenarioGUIFolder.add(this.world.params, this.name)
   }
 
   public launch(loadingManager: LoadingManager, world: World): void {

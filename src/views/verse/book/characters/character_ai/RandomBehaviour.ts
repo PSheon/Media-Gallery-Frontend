@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import { ICharacterAI } from '../../interfaces/ICharacterAI'
-import { Character } from '../Character'
+import { ICharacterAI } from 'src/views/verse/book/interfaces/ICharacterAI'
+import { Character } from 'src/views/verse/book/characters/Character'
 
 export class RandomBehaviour implements ICharacterAI {
   public character: Character

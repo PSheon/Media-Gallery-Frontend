@@ -1,11 +1,11 @@
 import * as THREE from 'three'
-import * as Utils from '../../../core/FunctionLibrary'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
-import { Character } from '../../Character'
-import { VehicleSeat } from '../../../vehicles/VehicleSeat'
-import { Falling } from '../Falling'
-import { ExitingStateBase } from './ExitingStateBase'
-import { Vehicle } from '../../../vehicles/Vehicle'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
+import { Falling } from 'src/views/verse/book/characters/character_states/Falling'
+import { ExitingStateBase } from 'src/views/verse/book/characters/character_states/vehicles/ExitingStateBase'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
 
 export class ExitingAirplane extends ExitingStateBase {
   constructor(character: Character, seat: VehicleSeat) {

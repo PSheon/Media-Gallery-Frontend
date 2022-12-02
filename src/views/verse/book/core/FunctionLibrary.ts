@@ -1,11 +1,10 @@
 import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as _ from 'lodash'
-import { SimulationFrame } from '../physics/spring_simulation/SimulationFrame'
-import { World } from '../world/World'
-import { Side } from '../enums/Side'
-import { Object3D } from 'three'
-import { Space } from '../enums/Space'
+import { SimulationFrame } from 'src/views/verse/book/physics/spring_simulation/SimulationFrame'
+import { World } from 'src/views/verse/book/world/World'
+import { Side } from 'src/views/verse/book/enums/Side'
+import { Space } from 'src/views/verse/book/enums/Space'
 
 export function createCapsuleGeometry(radius = 1, height = 2, N = 32): THREE.Geometry {
   const geometry = new THREE.Geometry()
@@ -99,7 +98,7 @@ export function createCapsuleGeometry(radius = 1, height = 2, N = 32): THREE.Geo
  * @param {Vector3} a Vector to construct 2D matrix from
  * @param {Vector3} b Vector to apply basis to
  */
-export function appplyVectorMatrixXZ(a: THREE.Vector3, b: THREE.Vector3): THREE.Vector3 {
+export function applyVectorMatrixXZ(a: THREE.Vector3, b: THREE.Vector3): THREE.Vector3 {
   return new THREE.Vector3(a.x * b.z + a.z * b.x, b.y, a.z * b.z + -a.x * b.x)
 }
 
@@ -251,7 +250,7 @@ export function setupMeshProperties(child: any): void {
   }
 }
 
-export function detectRelativeSide(from: Object3D, to: Object3D): Side {
+export function detectRelativeSide(from: THREE.Object3D, to: THREE.Object3D): Side {
   const right = getRight(from, Space.Local)
   const viewVector = to.position.clone().sub(from.position).normalize()
 

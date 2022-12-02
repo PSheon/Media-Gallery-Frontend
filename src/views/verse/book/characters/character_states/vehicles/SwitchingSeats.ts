@@ -1,13 +1,13 @@
 import * as THREE from 'three'
-import { CharacterStateBase } from '../_stateLibrary'
-import { Character } from '../../Character'
-import { VehicleSeat } from '../../../vehicles/VehicleSeat'
-import { Side } from '../../../enums/Side'
-import { SeatType } from '../../../enums/SeatType'
-import { Driving } from './Driving'
-import { Sitting } from './Sitting'
-import * as Utils from '../../../core/FunctionLibrary'
-import { Space } from '../../../enums/Space'
+import { CharacterStateBase } from 'src/views/verse/book/characters/character_states/_stateLibrary'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
+import { Side } from 'src/views/verse/book/enums/Side'
+import { SeatType } from 'src/views/verse/book/enums/SeatType'
+import { Driving } from 'src/views/verse/book/characters/character_states/vehicles/Driving'
+import { Sitting } from 'src/views/verse/book/characters/character_states/vehicles/Sitting'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import { Space } from 'src/views/verse/book/enums/Space'
 
 export class SwitchingSeats extends CharacterStateBase {
   private toSeat: VehicleSeat

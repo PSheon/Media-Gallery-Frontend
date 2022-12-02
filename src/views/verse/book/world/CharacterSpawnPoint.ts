@@ -1,9 +1,9 @@
-import { ISpawnPoint } from '../interfaces/ISpawnPoint'
 import * as THREE from 'three'
-import { World } from './World'
-import { Character } from '../characters/Character'
-import { LoadingManager } from '../core/LoadingManager'
-import * as Utils from '../core/FunctionLibrary'
+import { ISpawnPoint } from 'src/views/verse/book/interfaces/ISpawnPoint'
+import { World } from 'src/views/verse/book/world/World'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { LoadingManager } from 'src/views/verse/book/core/LoadingManager'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
 export class CharacterSpawnPoint implements ISpawnPoint {
   private object: THREE.Object3D
@@ -13,14 +13,18 @@ export class CharacterSpawnPoint implements ISpawnPoint {
   }
 
   public spawn(loadingManager: LoadingManager, world: World): void {
-    loadingManager.loadGLTF('/assets/book/boxman.glb', model => {
-      let player = new Character(model)
+    const avatarModel = 'ship-bear'
+    loadingManager.loadGLTF(`/assets/book/character/${avatarModel}.glb`, model => {
+      const player = new Character(model)
+      player.isPlayer = true
+      player.setMetadata({ displayName: 'Me', objectType: 'localPlayer' })
+      world.localPlayer = player
 
-      let worldPos = new THREE.Vector3()
+      const worldPos = new THREE.Vector3()
       this.object.getWorldPosition(worldPos)
       player.setPosition(worldPos.x, worldPos.y, worldPos.z)
 
-      let forward = Utils.getForward(this.object)
+      const forward = Utils.getForward(this.object)
       player.setOrientation(forward, true)
 
       world.add(player)

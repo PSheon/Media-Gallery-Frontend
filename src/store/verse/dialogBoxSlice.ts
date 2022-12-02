@@ -1,21 +1,10 @@
+// ** Redux Imports
 import { createSlice } from '@reduxjs/toolkit'
 
-/* Session Interface */
-// {
-//   type: string; // dialog, display, playerInfo
-//   speaker: string;
-//   content: string;
-//   confirmButtonText?: string;
-//   confirmCallback?: function;
-//
-//   artworkTitle?: string;
-//   artworkDescription?: string;
-//   artworkMediaUrl?: string;
-//
-//   playerDisplayName?: string;
-// }
+// ** Types
+import { IInitialState } from 'src/types/verse/dialogBoxTypes'
 
-const initialState = {
+const initialState: IInitialState = {
   show: false,
   hover: false,
   speaker: '',

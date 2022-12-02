@@ -1,11 +1,20 @@
 import * as THREE from 'three'
-import * as Utils from './FunctionLibrary'
-import { World } from '../world/World'
-import { IInputReceiver } from '../interfaces/IInputReceiver'
-import { KeyBinding } from './KeyBinding'
-import { Character } from '../characters/Character'
-import _ = require('lodash')
-import { IUpdatable } from '../interfaces/IUpdatable'
+import * as CANNON from 'src/views/verse/lib/cannon/cannon'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import { World } from 'src/views/verse/book/world/World'
+import { IInputReceiver } from 'src/views/verse/book/interfaces/IInputReceiver'
+import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { CollisionGroups } from 'src/views/verse/book/enums/CollisionGroups'
+import { IUpdatable } from 'src/views/verse/book/interfaces/IUpdatable'
+import _ from 'lodash'
+
+import {
+  SET_DIALOG_BOX_ACTION,
+  UN_HOVER_DIALOG_BOX_ACTION,
+  SHOW_DIALOG_BOX_ACTION,
+  HIDE_DIALOG_BOX_ACTION
+} from 'src/views/verse/book/actions'
 
 export class CameraOperator implements IInputReceiver, IUpdatable {
   public updateOrder = 4
@@ -14,14 +23,18 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
   public camera: THREE.Camera
   public target: THREE.Vector3
   public sensitivity: THREE.Vector2
-  public radius = 1
+  public radius = 5
   public theta: number
   public phi: number
   public onMouseDownPosition: THREE.Vector2
   public onMouseDownTheta: any
   public onMouseDownPhi: any
-  public targetRadius = 1
+  public targetRadius = 5
 
+  public rayHasHit = false
+  public rayResult = new CANNON.RaycastResult()
+  public hoverObjectDisplayName: string | undefined
+  public hoverObjectType: string | undefined
   public movementSpeed: number
   public actions: { [action: string]: KeyBinding }
 
@@ -31,7 +44,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 
   public followMode = false
 
-  public characterCaller: Character
+  public characterCaller: Character | undefined
 
   constructor(world: World, camera: THREE.Camera, sensitivityX = 1, sensitivityY: number = sensitivityX * 0.8) {
     this.world = world
@@ -40,7 +53,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
     this.sensitivity = new THREE.Vector2(sensitivityX, sensitivityY)
 
     this.movementSpeed = 0.06
-    this.radius = 3
+    this.radius = 5
     this.theta = 0
     this.phi = 0
 
@@ -104,15 +117,112 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
         this.target.z + this.radius * Math.cos((this.theta * Math.PI) / 180) * Math.cos((this.phi * Math.PI) / 180)
       this.camera.updateMatrix()
       this.camera.lookAt(this.target)
+
+      if (
+        this.world.localPlayer?.characterCapsule &&
+        !this.world.localPlayer?.controlledObject &&
+        this.world.inputManager.inputReceiver === this.world.localPlayer
+      ) {
+        const camPos = this.world.camera.position.clone()
+        const bodyPos = this.world.localPlayer.characterCapsule.body.position.clone()
+
+        const start = new CANNON.Vec3(
+          camPos.x + 0.9 * (bodyPos.x - camPos.x),
+          camPos.y + 0.9 * (bodyPos.y - camPos.y),
+          camPos.z + 0.9 * (bodyPos.z - camPos.z)
+        )
+
+        const end = new CANNON.Vec3(camPos.x, camPos.y, camPos.z)
+
+        // const material = new THREE.LineBasicMaterial({ color: 0x0000ff })
+        // const geometry = new THREE.BufferGeometry().setFromPoints([start, end])
+        // const line = new THREE.Line(geometry, material)
+        // this.world.graphicsWorld.add(line)
+
+        // Raycast options
+        const rayCastOptions = {
+          collisionFilterMask: CollisionGroups.Default,
+
+          /* ignore back faces */
+          skipBackfaces: true
+        }
+
+        // Cast the ray
+        this.rayHasHit = this.world.physicsWorld.raycastClosest(start, end, rayCastOptions, this.rayResult)
+
+        if (this.rayHasHit) {
+          this.world.camera.position.x = this.rayResult.hitPointWorld.x
+          this.world.camera.position.y = this.rayResult.hitPointWorld.y
+          this.world.camera.position.z = this.rayResult.hitPointWorld.z
+        }
+
+        this.world.camera.position.y = Math.max(this.world.localPlayer.position.y - 0.2, this.world.camera.position.y)
+      } else {
+        const camPos = this.world.camera.position.clone()
+        const camDir = this.world.camera.getWorldDirection(new THREE.Vector3()).normalize()
+
+        const start = new CANNON.Vec3(camPos.x, camPos.y, camPos.z)
+        const end = new CANNON.Vec3(camPos.x + 4 * camDir.x, camPos.y + 4 * camDir.y, camPos.z + 4 * camDir.z)
+
+        this.world.cursorBox.position.copy(end)
+
+        // const material = new THREE.LineBasicMaterial({ color: 0x0000ff })
+        // const geometry = new THREE.BufferGeometry().setFromPoints([start, end])
+        // const line = new THREE.Line(geometry, material)
+        // this.world.graphicsWorld.add(line)
+
+        // Raycast options
+        const rayCastOptions = {
+          // collisionFilterMask: CollisionGroups.Default,
+
+          /* ignore back faces */
+          skipBackfaces: true
+        }
+
+        // Cast the ray
+        this.rayHasHit = this.world.physicsWorld.raycastClosest(start, end, rayCastOptions, this.rayResult)
+
+        if (this.rayHasHit) {
+          this.world.cursorBox.position.copy(this.rayResult.hitPointWorld)
+          if (this.rayResult.body?.displayName && this.rayResult.body?.objectType) {
+            this.world.cursorBox.material.color.setHex(0xbbe6e4)
+            this.world.cursorBox.material.opacity = 1
+            this.hoverObjectDisplayName = this.rayResult.body.displayName
+            this.hoverObjectType = this.rayResult.body.objectType
+          } else {
+            delete this.hoverObjectDisplayName
+            delete this.hoverObjectType
+          }
+        } else {
+          delete this.hoverObjectDisplayName
+          delete this.hoverObjectType
+        }
+
+        if (this.hoverObjectDisplayName && this.hoverObjectType) {
+          SET_DIALOG_BOX_ACTION({
+            displayName: this.rayResult.body.displayName,
+            objectType: this.rayResult.body.objectType
+          })
+        } else {
+          UN_HOVER_DIALOG_BOX_ACTION()
+        }
+      }
     }
   }
 
   public handleKeyboardEvent(event: KeyboardEvent, code: string, pressed: boolean): void {
     // Free camera
+    if (this.world.dialogMode) return
     if (code === 'KeyC' && pressed === true && event.shiftKey === true) {
       if (this.characterCaller !== undefined) {
         this.world.inputManager.setInputReceiver(this.characterCaller)
         this.characterCaller = undefined
+      }
+    } else if (code === 'KeyE' && pressed === true) {
+      if (this.hoverObjectDisplayName) {
+        SHOW_DIALOG_BOX_ACTION()
+      } else {
+        HIDE_DIALOG_BOX_ACTION()
       }
     } else {
       for (const action in this.actions) {
@@ -128,7 +238,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
   }
 
   public handleMouseWheel(event: WheelEvent, value: number): void {
-    this.world.scrollTheTimeScale(value)
+    // this.world.scrollTheTimeScale(value)
   }
 
   public handleMouseButton(event: MouseEvent, code: string, pressed: boolean): void {
@@ -144,6 +254,10 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
   }
 
   public handleMouseMove(event: MouseEvent, deltaX: number, deltaY: number): void {
+    this.move(deltaX, deltaY)
+  }
+
+  public handleTouchMove(event: TouchEvent, deltaX: number, deltaY: number): void {
     this.move(deltaX, deltaY)
   }
 

@@ -1,11 +1,11 @@
 import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
-import * as Utils from '../../core/FunctionLibrary'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
-import { FollowTarget } from './FollowTarget'
-import { ICharacterAI } from '../../interfaces/ICharacterAI'
-import { PathNode } from '../../world/PathNode'
-import { Vehicle } from '../../vehicles/Vehicle'
+import { FollowTarget } from 'src/views/verse/book/characters/character_ai/FollowTarget'
+import { ICharacterAI } from 'src/views/verse/book/interfaces/ICharacterAI'
+import { PathNode } from 'src/views/verse/book/world/PathNode'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
 
 export class FollowPath extends FollowTarget implements ICharacterAI {
   public nodeRadius: number
@@ -39,8 +39,8 @@ export class FollowPath extends FollowTarget implements ICharacterAI {
 
     // console.log(slowDownAngle, viewVector.length(), speed);
     if (slowDownAngle < 0.7 && viewVector.length() < 50 && speed > 10) {
-      this.character.controlledObject.triggerAction('reverse', true)
-      this.character.controlledObject.triggerAction('throttle', false)
+      this.character.controlledObject!.triggerAction('reverse', true)
+      this.character.controlledObject!.triggerAction('throttle', false)
     }
 
     if (speed < 1 || (this.character.controlledObject as unknown as Vehicle).rayCastVehicle.numWheelsOnGround === 0)

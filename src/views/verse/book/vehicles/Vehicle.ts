@@ -1,17 +1,17 @@
-import { Character } from '../characters/Character'
+import { Character } from 'src/views/verse/book/characters/Character'
 import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
-import { World } from '../world/World'
-import _ = require('lodash')
-import { KeyBinding } from '../core/KeyBinding'
-import { VehicleSeat } from './VehicleSeat'
-import { Wheel } from './Wheel'
-import { VehicleDoor } from './VehicleDoor'
-import * as Utils from '../core/FunctionLibrary'
-import { CollisionGroups } from '../enums/CollisionGroups'
-import { SwitchingSeats } from '../characters/character_states/vehicles/SwitchingSeats'
-import { EntityType } from '../enums/EntityType'
-import { IWorldEntity } from '../interfaces/IWorldEntity'
+import { World } from 'src/views/verse/book/world/World'
+import _ from 'lodash'
+import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
+import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
+import { Wheel } from 'src/views/verse/book/vehicles/Wheel'
+import { VehicleDoor } from 'src/views/verse/book/vehicles/VehicleDoor'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import { CollisionGroups } from 'src/views/verse/book/enums/CollisionGroups'
+import { SwitchingSeats } from 'src/views/verse/book/characters/character_states/vehicles/SwitchingSeats'
+import { EntityType } from 'src/views/verse/book/enums/EntityType'
+import { IWorldEntity } from 'src/views/verse/book/interfaces/IWorldEntity'
 
 export abstract class Vehicle extends THREE.Object3D implements IWorldEntity {
   public updateOrder = 2
@@ -212,6 +212,10 @@ export abstract class Vehicle extends THREE.Object3D implements IWorldEntity {
   }
 
   public handleMouseMove(event: MouseEvent, deltaX: number, deltaY: number): void {
+    this.world.cameraOperator.move(deltaX, deltaY)
+  }
+
+  public handleTouchMove(event: TouchEvent, deltaX: number, deltaY: number): void {
     this.world.cameraOperator.move(deltaX, deltaY)
   }
 

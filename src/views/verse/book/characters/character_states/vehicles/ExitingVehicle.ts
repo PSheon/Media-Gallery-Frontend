@@ -1,15 +1,15 @@
 import * as THREE from 'three'
-import * as Utils from '../../../core/FunctionLibrary'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
-import { Character } from '../../Character'
-import { Side } from '../../../enums/Side'
-import { VehicleSeat } from '../../../vehicles/VehicleSeat'
-import { Idle } from '../Idle'
-import { CloseVehicleDoorOutside } from './CloseVehicleDoorOutside'
-import { Vehicle } from 'src/ts/vehicles/Vehicle'
-import { Falling } from '../Falling'
-import { DropRolling } from '../DropRolling'
-import { ExitingStateBase } from './ExitingStateBase'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { Side } from 'src/views/verse/book/enums/Side'
+import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
+import { Idle } from 'src/views/verse/book/characters/character_states/Idle'
+import { CloseVehicleDoorOutside } from 'src/views/verse/book/characters/character_states/vehicles/CloseVehicleDoorOutside'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
+import { Falling } from 'src/views/verse/book/characters/character_states/Falling'
+import { DropRolling } from 'src/views/verse/book/characters/character_states/DropRolling'
+import { ExitingStateBase } from 'src/views/verse/book/characters/character_states/vehicles/ExitingStateBase'
 
 export class ExitingVehicle extends ExitingStateBase {
   constructor(character: Character, seat: VehicleSeat) {

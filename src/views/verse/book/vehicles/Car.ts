@@ -1,13 +1,13 @@
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 
-import { Vehicle } from './Vehicle'
-import { IControllable } from '../interfaces/IControllable'
-import { KeyBinding } from '../core/KeyBinding'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
+import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
+import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
 import * as THREE from 'three'
-import * as Utils from '../core/FunctionLibrary'
-import { SpringSimulator } from '../physics/spring_simulation/SpringSimulator'
-import { World } from '../world/World'
-import { EntityType } from '../enums/EntityType'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import { SpringSimulator } from 'src/views/verse/book/physics/spring_simulation/SpringSimulator'
+import { World } from 'src/views/verse/book/world/World'
+import { EntityType } from 'src/views/verse/book/enums/EntityType'
 
 export class Car extends Vehicle implements IControllable {
   public entityType: EntityType = EntityType.Car

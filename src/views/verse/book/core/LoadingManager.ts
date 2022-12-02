@@ -1,28 +1,43 @@
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { LoadingTrackerEntry } from './LoadingTrackerEntry'
-import { UIManager } from './UIManager'
-import { Scenario } from '../world/Scenario'
-import Swal from 'sweetalert2'
-import { World } from '../world/World'
+import * as THREE from 'three'
+import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
+import { LoadingTrackerEntry } from 'src/views/verse/book/core/LoadingTrackerEntry'
+import { UIManager } from 'src/views/verse/book/core/UIManager'
+import { Scenario } from 'src/views/verse/book/world/Scenario'
+import { World } from 'src/views/verse/book/world/World'
+
+import { SET_LOADING_PROGRESS, SHOW_START_PANEL_ACTION, SET_START_PANEL_ACTION } from 'src/views/verse/book/actions'
 
 export class LoadingManager {
-  public firstLoad = true
-  public onFinishedCallback: () => void
+  public isRestartLoading = false
+  public onFinishedCallback: any = undefined
+  public loadingProgress = new THREE.LoadingManager()
 
   private world: World
+  private dracoLoader: DRACOLoader
   private gltfLoader: GLTFLoader
   private loadingTracker: LoadingTrackerEntry[] = []
 
   constructor(world: World) {
     this.world = world
-    this.gltfLoader = new GLTFLoader()
+    this.dracoLoader = new DRACOLoader()
+    this.dracoLoader.setDecoderPath('/lib/draco/')
+    this.gltfLoader = new GLTFLoader(this.loadingProgress)
+    this.gltfLoader.setDRACOLoader(this.dracoLoader)
 
     this.world.setTimeScale(0)
     UIManager.setUserInterfaceVisible(false)
     UIManager.setLoadingScreenVisible(true)
   }
 
-  public loadGLTF(path: string, onLoadingFinished: (gltf: any) => void): void {
+  public loadGLTF(path: string, onLoadingFinished: (gltf: GLTF) => void): void {
+    this.loadingProgress.onProgress = (url, itemsLoaded, itemsTotal) => {
+      SET_LOADING_PROGRESS({
+        percentage: (itemsLoaded / itemsTotal) * 100,
+        content: `Loading Scene ${itemsLoaded}/${itemsTotal} ...`
+      })
+    }
+
     const trackerEntry = this.addLoadingEntry(path)
 
     this.gltfLoader.load(
@@ -57,10 +72,12 @@ export class LoadingManager {
       if (this.onFinishedCallback !== undefined) {
         this.onFinishedCallback()
       } else {
-        UIManager.setUserInterfaceVisible(true)
+        // UIManager.setUserInterfaceVisible(true)
       }
 
-      UIManager.setLoadingScreenVisible(false)
+      if (this.isRestartLoading) {
+        UIManager.setLoadingScreenVisible(false)
+      }
     }
   }
 
@@ -69,12 +86,12 @@ export class LoadingManager {
       this.onFinishedCallback = () => {
         this.world.update(1, 1)
 
-        Swal.fire({
+        SHOW_START_PANEL_ACTION()
+        SET_START_PANEL_ACTION({
           title: scenario.descriptionTitle,
-          html: scenario.descriptionContent,
-          confirmButtonText: 'Play',
-          buttonsStyling: false,
-          onClose: () => {
+          content: scenario.descriptionContent,
+          confirmButtonText: 'Visit world',
+          closeCallback: () => {
             this.world.setTimeScale(1)
             UIManager.setUserInterfaceVisible(true)
           }
@@ -83,19 +100,19 @@ export class LoadingManager {
     }
   }
 
-  private getLoadingPercentage(): number {
-    let done = true
-    let total = 0
-    let finished = 0
+  // private getLoadingPercentage(): number {
+  //   let done = true
+  //   let total = 0
+  //   let finished = 0
 
-    for (const item of this.loadingTracker) {
-      total++
-      finished += item.progress
-      if (!item.finished) done = false
-    }
+  //   for (const item of this.loadingTracker) {
+  //     total++
+  //     finished += item.progress
+  //     if (!item.finished) done = false
+  //   }
 
-    return (finished / total) * 100
-  }
+  //   return (finished / total) * 100
+  // }
 
   private isLoadingDone(): boolean {
     for (const entry of this.loadingTracker) {

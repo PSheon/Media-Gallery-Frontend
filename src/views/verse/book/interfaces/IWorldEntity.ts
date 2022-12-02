@@ -1,6 +1,6 @@
-import { World } from '../world/World'
-import { EntityType } from '../enums/EntityType'
-import { IUpdatable } from './IUpdatable'
+import { World } from 'src/views/verse/book/world/World'
+import { EntityType } from 'src/views/verse/book/enums/EntityType'
+import { IUpdatable } from 'src/views/verse/book/interfaces/IUpdatable'
 
 export interface IWorldEntity extends IUpdatable {
   entityType: EntityType

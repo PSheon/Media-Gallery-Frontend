@@ -37,6 +37,7 @@
   }
 })(function () {
   var define, module, exports
+
   return (function e(t, n, r) {
     function s(o, u) {
       if (!n[o]) {
@@ -51,6 +52,7 @@
           f.exports,
           function (e) {
             var n = t[o][1][e]
+
             return s(n ? n : e)
           },
           f,
@@ -61,10 +63,12 @@
           r
         )
       }
+
       return n[o].exports
     }
     var i = typeof require == 'function' && require
     for (var o = 0; o < r.length; o++) s(r[o])
+
     return s
   })(
     {
@@ -338,6 +342,7 @@
           AABB.prototype.copy = function (aabb) {
             this.lowerBound.copy(aabb.lowerBound)
             this.upperBound.copy(aabb.upperBound)
+
             return this
           }
 
@@ -391,6 +396,7 @@
           AABB.prototype.volume = function () {
             var l = this.lowerBound,
               u = this.upperBound
+
             return (u.x - l.x) * (u.y - l.y) * (u.z - l.z)
           }
 
@@ -586,6 +592,7 @@
               j = i
               i = temp
             }
+
             return this.matrix[((i * (i + 1)) >> 1) + j - 1]
           }
 
@@ -825,6 +832,7 @@
           Broadphase.boundingSphereCheck = function (bodyA, bodyB) {
             var dist = bsc_dist
             bodyA.position.vsub(bodyB.position, dist)
+
             return Math.pow(bodyA.shape.boundingSphereRadius + bodyB.shape.boundingSphereRadius, 2) > dist.norm2()
           }
 
@@ -838,6 +846,7 @@
            */
           Broadphase.prototype.aabbQuery = function (world, aabb, result) {
             console.warn('.aabbQuery is not implemented in this Broadphase subclass.')
+
             return []
           }
         },
@@ -1073,6 +1082,7 @@
             // Check each bin
             for (var i = 0; i !== Nbins; i++) {
               var binLength = binLengths[i]
+
               //Skip bins with no potential collisions
               if (binLength > 1) {
                 var bin = bins[i]
@@ -1220,6 +1230,7 @@
               j = i
               i = temp
             }
+
             return i + '-' + j in this.matrix
           }
 
@@ -1280,6 +1291,7 @@
               j = i
               i = temp
             }
+
             return (i << 16) | j
           }
 
@@ -1989,6 +2001,7 @@
 
                 this.reportIntersection(normal, intersectPoint, reportedShape, body, fi)
               }
+
               // }
             }
           }
@@ -2428,6 +2441,7 @@
               }
               a[j + 1] = v
             }
+
             return a
           }
 
@@ -2448,6 +2462,7 @@
               }
               a[j + 1] = v
             }
+
             return a
           }
 
@@ -2468,6 +2483,7 @@
               }
               a[j + 1] = v
             }
+
             return a
           }
 
@@ -3587,6 +3603,7 @@
             var GW = this.computeGW(),
               Gq = this.computeGq(),
               GiMf = this.computeGiMf()
+
             return -Gq * a - GW * b - GiMf * h
           }
 
@@ -3602,6 +3619,7 @@
               bj = this.bj,
               xi = bi.position,
               xj = bj.position
+
             return GA.spatial.dot(xi) + GB.spatial.dot(xj)
           }
 
@@ -3621,6 +3639,7 @@
               vj = bj.velocity,
               wi = bi.angularVelocity,
               wj = bj.angularVelocity
+
             return GA.multiplyVectors(vi, wi) + GB.multiplyVectors(vj, wj)
           }
 
@@ -3638,6 +3657,7 @@
               vj = bj.vlambda,
               wi = bi.wlambda,
               wj = bj.wlambda
+
             return GA.multiplyVectors(vi, wi) + GB.multiplyVectors(vj, wj)
           }
 
@@ -4267,6 +4287,7 @@
                 r.elements[i + j * 3] = sum
               }
             }
+
             return r
           }
 
@@ -4285,6 +4306,7 @@
               t[3 * i + 1] = v.y * e[3 * i + 1]
               t[3 * i + 2] = v.z * e[3 * i + 2]
             }
+
             return target
           }
 
@@ -4405,6 +4427,7 @@
             for (var i = 0; i < source.elements.length; i++) {
               this.elements[i] = source.elements[i]
             }
+
             return this
           }
 
@@ -4419,6 +4442,7 @@
             for (var i = 0; i < 9; i++) {
               r += this.elements[i] + sep
             }
+
             return r
           }
 
@@ -4643,6 +4667,7 @@
             this.y = y
             this.z = z
             this.w = w
+
             return this
           }
 
@@ -4676,6 +4701,7 @@
             this.y = axis.y * s
             this.z = axis.z * s
             this.w = Math.cos(angle * 0.5)
+
             return this
           }
 
@@ -4701,6 +4727,7 @@
               targetAxis.y = this.y / s
               targetAxis.z = this.z / s
             }
+
             return [targetAxis, angle]
           }
 
@@ -4728,6 +4755,7 @@
               this.w = Math.sqrt(Math.pow(u.norm(), 2) * Math.pow(v.norm(), 2)) + u.dot(v)
               this.normalize()
             }
+
             return this
           }
 
@@ -4819,6 +4847,7 @@
               this.z *= l
               this.w *= l
             }
+
             return this
           }
 
@@ -4841,6 +4870,7 @@
               this.z *= f
               this.w *= f
             }
+
             return this
           }
 
@@ -4887,6 +4917,7 @@
             this.y = source.y
             this.z = source.z
             this.w = source.w
+
             return this
           }
 
@@ -5134,6 +5165,7 @@
             worldPoint.vsub(position, result)
             quaternion.conjugate(tmpQuat)
             tmpQuat.vmult(result, result)
+
             return result
           }
 
@@ -5160,6 +5192,7 @@
             var result = result || new Vec3()
             quaternion.vmult(localPoint, result)
             result.vadd(position, result)
+
             return result
           }
 
@@ -5177,11 +5210,13 @@
           Transform.prototype.vectorToWorldFrame = function (localVector, result) {
             var result = result || new Vec3()
             this.quaternion.vmult(localVector, result)
+
             return result
           }
 
           Transform.vectorToWorldFrame = function (quaternion, localVector, result) {
             quaternion.vmult(localVector, result)
+
             return result
           }
 
@@ -5190,6 +5225,7 @@
             quaternion.w *= -1
             quaternion.vmult(worldVector, result)
             quaternion.w *= -1
+
             return result
           }
         },
@@ -5292,6 +5328,7 @@
             this.x = x
             this.y = y
             this.z = z
+
             return this
           }
 
@@ -5368,6 +5405,7 @@
               this.y = 0
               this.z = 0
             }
+
             return n
           }
 
@@ -5393,6 +5431,7 @@
               target.y = 0
               target.z = 0
             }
+
             return target
           }
 
@@ -5406,6 +5445,7 @@
             var x = this.x,
               y = this.y,
               z = this.z
+
             return Math.sqrt(x * x + y * y + z * z)
           }
 
@@ -5446,6 +5486,7 @@
             var px = p.x,
               py = p.y,
               pz = p.z
+
             return Math.sqrt((px - x) * (px - x) + (py - y) * (py - y) + (pz - z) * (pz - z))
           }
 
@@ -5462,6 +5503,7 @@
             var px = p.x,
               py = p.y,
               pz = p.z
+
             return (px - x) * (px - x) + (py - y) * (py - y) + (pz - z) * (pz - z)
           }
 
@@ -5482,6 +5524,7 @@
             target.x = scalar * x
             target.y = scalar * y
             target.z = scalar * z
+
             return target
           }
 
@@ -5497,6 +5540,7 @@
             target.x = vector.x * this.x
             target.y = vector.y * this.y
             target.z = vector.z * this.z
+
             return target
           }
 
@@ -5522,6 +5566,7 @@
             target.x = this.x + scalar * vector.x
             target.y = this.y + scalar * vector.y
             target.z = this.z + scalar * vector.z
+
             return target
           }
 
@@ -5554,6 +5599,7 @@
             target.x = -this.x
             target.y = -this.y
             target.z = -this.z
+
             return target
           }
 
@@ -5615,6 +5661,7 @@
             this.x = source.x
             this.y = source.y
             this.z = source.z
+
             return this
           }
 
@@ -5652,6 +5699,7 @@
             ) {
               return false
             }
+
             return true
           }
 
@@ -5667,6 +5715,7 @@
             if (Math.abs(this.x) > precision || Math.abs(this.y) > precision || Math.abs(this.z) > precision) {
               return false
             }
+
             return true
           }
 
@@ -5681,6 +5730,7 @@
            */
           Vec3.prototype.isAntiparallelTo = function (v, precision) {
             this.negate(antip_neg)
+
             return antip_neg.almostEquals(v, precision)
           }
 
@@ -6236,6 +6286,7 @@
             var result = result || new Vec3()
             worldPoint.vsub(this.position, result)
             this.quaternion.conjugate().vmult(result, result)
+
             return result
           }
 
@@ -6249,6 +6300,7 @@
           Body.prototype.vectorToLocalFrame = function (worldVector, result) {
             var result = result || new Vec3()
             this.quaternion.conjugate().vmult(worldVector, result)
+
             return result
           }
 
@@ -6263,6 +6315,7 @@
             var result = result || new Vec3()
             this.interpolatedQuaternion.vmult(localPoint, result)
             result.vadd(this.interpolatedPosition, result)
+
             return result
           }
 
@@ -6276,6 +6329,7 @@
           Body.prototype.vectorToWorldFrame = function (localVector, result) {
             var result = result || new Vec3()
             this.interpolatedQuaternion.vmult(localVector, result)
+
             return result
           }
 
@@ -6558,6 +6612,7 @@
             worldPoint.vsub(this.position, r)
             this.angularVelocity.cross(r, result)
             this.velocity.vadd(result, result)
+
             return result
           }
 
@@ -6843,6 +6898,7 @@
             var vel = new Vec3()
             for (i = 0; i < numWheels; i++) {
               var wheel = wheelInfos[i]
+
               //var relpos = new Vec3();
               //wheel.chassisConnectionPointWorld.vsub(chassisBody.position, relpos);
               chassisBody.getVelocityAtWorldPoint(wheel.chassisConnectionPointWorld, vel)
@@ -6958,6 +7014,7 @@
             var param = 0
 
             raycastResult.reset()
+
             // Turn off ray collision with the chassis temporarily
             var oldState = chassisBody.collisionResponse
             chassisBody.collisionResponse = false
@@ -7074,6 +7131,7 @@
           RaycastVehicle.prototype.lerp = function (value1, value2, amount) {
             amount = amount < 0 ? 0 : amount
             amount = amount > 1 ? 1 : amount
+
             return value1 + (value2 - value1) * amount
           }
 
@@ -7238,6 +7296,7 @@
 
               var rel_pos = new Vec3()
               wheel.raycastResult.hitPointWorld.vsub(chassisBody.position, rel_pos)
+
               // cannons applyimpulse is using world coord for the position
               //rel_pos.copy(wheel.raycastResult.hitPointWorld);
 
@@ -7252,6 +7311,7 @@
 
                 var rel_pos2 = new Vec3()
                 wheel.raycastResult.hitPointWorld.vsub(groundObject.position, rel_pos2)
+
                 //rel_pos2.copy(wheel.raycastResult.hitPointWorld);
                 var sideImp = new Vec3()
                 axle[i].scale(wheel.sideImpulse, sideImp)
@@ -7283,6 +7343,7 @@
             var vel1 = calcRollingFriction_vel1
             var vel2 = calcRollingFriction_vel2
             var vel = calcRollingFriction_vel
+
             // contactPosWorld.vsub(body0.position, rel_pos1);
             // contactPosWorld.vsub(body1.position, rel_pos2);
 
@@ -7338,6 +7399,7 @@
             if (normalLenSqr > 1.1) {
               return 0 // no impulse
             }
+
             // var rel_pos1 = new Vec3();
             // var rel_pos2 = new Vec3();
             // pos1.vsub(body1.position, rel_pos1);
@@ -7586,6 +7648,7 @@
             var wheelBody = this.wheelBodies[wheelIndex]
             var w = wheelBody.angularVelocity
             this.chassisBody.vectorToWorldFrame(axis, worldAxis)
+
             return w.dot(worldAxis)
           }
         },
@@ -7757,6 +7820,7 @@
               //printf("Neighbors: ");
               for (var j = 0; j !== numNeighbors; j++) {
                 var neighbor = neighbors[j]
+
                 //printf("%d ",nj);
 
                 // Get r once for all..
@@ -7769,6 +7833,7 @@
                   (this.pressures[i] / (this.densities[i] * this.densities[i] + eps) +
                     this.pressures[j] / (this.densities[j] * this.densities[j] + eps))
                 this.gradw(r_vec, gradW)
+
                 // Add to pressure acceleration
                 gradW.mult(Pij, gradW)
                 a_pressure.vadd(gradW, a_pressure)
@@ -7778,6 +7843,7 @@
                 u.mult((1.0 / (0.0001 + this.densities[i] * this.densities[j])) * this.viscosity * neighbor.mass, u)
                 nabla = this.nablaw(r)
                 u.mult(nabla, u)
+
                 // Add to viscosity acceleration
                 a_visc.vadd(u, a_visc)
               }
@@ -7796,6 +7862,7 @@
           SPHSystem.prototype.w = function (r) {
             // 315
             var h = this.smoothingRadius
+
             return (315.0 / (64.0 * Math.PI * Math.pow(h, 9))) * Math.pow(h * h - r * r, 3)
           }
 
@@ -7810,6 +7877,7 @@
           SPHSystem.prototype.nablaw = function (r) {
             var h = this.smoothingRadius
             var nabla = (945.0 / (32.0 * Math.PI * Math.pow(h, 9))) * (h * h - r * r) * (7 * r * r - 3 * h * h)
+
             return nabla
           }
         },
@@ -7997,6 +8065,7 @@
 
             // Compute relative velocity of the anchor points, u
             bodyB.velocity.vsub(bodyA.velocity, u)
+
             // Add rotational velocity
 
             bodyB.angularVelocity.cross(rj, tmp)
@@ -8403,6 +8472,7 @@
           Box.prototype.calculateLocalInertia = function (mass, target) {
             target = target || new Vec3()
             Box.calculateInertia(this.halfExtents, mass, target)
+
             return target
           }
 
@@ -8632,6 +8702,7 @@
           ConvexPolyhedron.prototype.constructor = ConvexPolyhedron
 
           var computeEdges_tmpEdge = new Vec3()
+
           /**
            * Computes uniqueEdges
            * @method computeEdges
@@ -8737,6 +8808,7 @@
             var va = this.vertices[f[0]]
             var vb = this.vertices[f[1]]
             var vc = this.vertices[f[2]]
+
             return ConvexPolyhedron.computeNormal(va, vb, vc, target)
           }
 
@@ -8773,6 +8845,7 @@
             for (var face = 0; face < hullB.faces.length; face++) {
               WorldNormal.copy(hullB.faceNormals[face])
               quatB.vmult(WorldNormal, WorldNormal)
+
               //posB.vadd(WorldNormal,WorldNormal);
               var d = WorldNormal.dot(separatingNormal)
               if (d > dmax) {
@@ -8971,6 +9044,7 @@
             var d0 = maxA - minB
             var d1 = maxB - minA
             var depth = d0 < d1 ? d0 : d1
+
             return depth
           }
 
@@ -9004,6 +9078,7 @@
             var n = this.faceNormals[face_i]
             var v = this.vertices[f[0]]
             var c = -n.dot(v)
+
             return c
           }
 
@@ -9048,12 +9123,14 @@
             var worldVertsB2 = []
             var pVtxIn = worldVertsB1
             var pVtxOut = worldVertsB2
+
             // Find the face with normal closest to the separating axis
             var closestFaceA = -1
             var dmin = Number.MAX_VALUE
             for (var face = 0; face < hullA.faces.length; face++) {
               faceANormalWS.copy(hullA.faceNormals[face])
               quatA.vmult(faceANormalWS, faceANormalWS)
+
               //posA.vadd(faceANormalWS,faceANormalWS);
               var d = faceANormalWS.dot(separatingNormal)
               if (d < dmin) {
@@ -9065,6 +9142,7 @@
               // console.log("--- did not find any closest face... ---");
               return
             }
+
             //console.log("closest A: ",closestFaceA);
             // Get the face and construct connected faces
             var polyA = hullA.faces[closestFaceA]
@@ -9080,6 +9158,7 @@
                 }
               }
             }
+
             // Clip the polygon to the back of the planes of all faces of hull A, that are adjacent to the witness face
             var numContacts = pVtxIn.length
             var numVerticesA = polyA.length
@@ -9108,6 +9187,7 @@
 
                 planeNormalWS.copy(localPlaneNormal)
                 quatA.vmult(planeNormalWS, planeNormalWS)
+
                 //posA.vadd(planeNormalWS,planeNormalWS);
                 var planeEqWS = localPlaneEq - planeNormalWS.dot(posA)
               } else {
@@ -9217,6 +9297,7 @@
               firstVertex = lastVertex
               n_dot_first = n_dot_last
             }
+
             return outVertices
           }
 
@@ -9371,6 +9452,7 @@
               target.vadd(verts[i], target)
             }
             target.mult(1 / n, target)
+
             return target
           }
 
@@ -9391,11 +9473,13 @@
                 var v = verts[i]
                 quat.vmult(v, v)
               }
+
               // Rotate face normals
               for (var i = 0; i < this.faceNormals.length; i++) {
                 var v = this.faceNormals[i]
                 quat.vmult(v, v)
               }
+
               /*
         // Rotate edges
         for(var i=0; i<this.uniqueEdges.length; i++){
@@ -9507,6 +9591,7 @@
               min = max
               max = temp
             }
+
             // Output
             result[0] = max
             result[1] = min
@@ -9558,6 +9643,7 @@
                 // Bottom
                 verts.push(new Vec3(radiusBottom * cos(theta), radiusBottom * sin(theta), -height * 0.5))
                 bottomface.push(2 * i + 2)
+
                 // Top
                 verts.push(new Vec3(radiusTop * cos(theta), radiusTop * sin(theta), height * 0.5))
                 topface.push(2 * i + 3)
@@ -9850,6 +9936,7 @@
             var upperDist2 = Math.pow(x / elementSize - (xi + 1), 2) + Math.pow(y / elementSize - (yi + 1), 2)
             var upper = lowerDist2 > upperDist2
             this.getTriangle(xi, yi, upper, a, b, c)
+
             return upper
           }
 
@@ -9988,6 +10075,7 @@
               if (data) {
                 this.pillarConvex = data.convex
                 this.pillarOffset = data.offset
+
                 return
               }
 
@@ -10126,6 +10214,7 @@
           Heightfield.prototype.calculateLocalInertia = function (mass, target) {
             target = target || new Vec3()
             target.set(0, 0, 0)
+
             return target
           }
 
@@ -10224,6 +10313,7 @@
           Particle.prototype.calculateLocalInertia = function (mass, target) {
             target = target || new Vec3()
             target.set(0, 0, 0)
+
             return target
           }
 
@@ -10280,6 +10370,7 @@
 
           Plane.prototype.calculateLocalInertia = function (mass, target) {
             target = target || new Vec3()
+
             return target
           }
 
@@ -10484,6 +10575,7 @@
             target.x = I
             target.y = I
             target.z = I
+
             return target
           }
 
@@ -10801,6 +10893,7 @@
             out.x *= scale.x
             out.y *= scale.y
             out.z *= scale.z
+
             return out
           }
 
@@ -10815,6 +10908,7 @@
           Trimesh.prototype._getUnscaledVertex = function (i, out) {
             var i3 = i * 3
             var vertices = this.vertices
+
             return out.set(vertices[i3], vertices[i3 + 1], vertices[i3 + 2])
           }
 
@@ -10830,6 +10924,7 @@
           Trimesh.prototype.getWorldVertex = function (i, pos, quat, out) {
             this.getVertex(i, out)
             Transform.pointToWorldFrame(pos, quat, out, out)
+
             return out
           }
 
@@ -10857,6 +10952,7 @@
            */
           Trimesh.prototype.getNormal = function (i, target) {
             var i3 = i * 3
+
             return target.set(this.normals[i3], this.normals[i3 + 1], this.normals[i3 + 2])
           }
 
@@ -10875,6 +10971,7 @@
             var x = cli_aabb.upperBound.x - cli_aabb.lowerBound.x,
               y = cli_aabb.upperBound.y - cli_aabb.lowerBound.y,
               z = cli_aabb.upperBound.z - cli_aabb.lowerBound.z
+
             return target.set(
               (1.0 / 12.0) * mass * (2 * y * 2 * y + 2 * z * 2 * z),
               (1.0 / 12.0) * mass * (2 * x * 2 * x + 2 * z * 2 * z),
@@ -11329,6 +11426,7 @@
                 return node
               }
             }
+
             return false
           }
 
@@ -11339,6 +11437,7 @@
             visitFunc(root, bds, eqs)
             while (queue.length) {
               var node = queue.pop()
+
               // Loop over unvisited child nodes
               var child
               while ((child = getUnvisitedNode(node.children))) {
@@ -11472,6 +11571,7 @@
             if (listeners[type].indexOf(listener) === -1) {
               listeners[type].push(listener)
             }
+
             return this
           }),
             /**
@@ -11489,6 +11589,7 @@
               if (listeners[type] !== undefined && listeners[type].indexOf(listener) !== -1) {
                 return true
               }
+
               return false
             }),
             /**
@@ -11502,6 +11603,7 @@
                 return false
               }
               var listeners = this._listeners
+
               return listeners[type] !== undefined
             }),
             /**
@@ -11523,6 +11625,7 @@
               if (index !== -1) {
                 listeners[type].splice(index, 1)
               }
+
               return this
             }),
             /**
@@ -11544,6 +11647,7 @@
                   listenerArray[i].call(this, event)
                 }
               }
+
               return this
             })
         },
@@ -11813,6 +11917,7 @@
             for (var i = 0; i !== Nargs; i++) {
               this.objects.push(arguments[i])
             }
+
             return this
           }
 
@@ -11889,6 +11994,7 @@
               j = i
               i = temp
             }
+
             return this.data[i + '-' + j]
           }
 
@@ -12177,6 +12283,7 @@
             f2.rj.copy(f1.rj)
             averageNormal.normalize()
             averageNormal.tangents(f1.t, f2.t)
+
             // return eq;
           }
 
@@ -12318,6 +12425,7 @@
             sj.convexPolyhedronRepresentation.material = sj.material
             si.convexPolyhedronRepresentation.collisionResponse = si.collisionResponse
             sj.convexPolyhedronRepresentation.collisionResponse = sj.collisionResponse
+
             return this.convexConvex(
               si.convexPolyhedronRepresentation,
               sj.convexPolyhedronRepresentation,
@@ -12337,6 +12445,7 @@
             function (si, sj, xi, xj, qi, qj, bi, bj, rsi, rsj, justTest) {
               si.convexPolyhedronRepresentation.material = si.material
               si.convexPolyhedronRepresentation.collisionResponse = si.collisionResponse
+
               return this.convexConvex(si.convexPolyhedronRepresentation, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
             }
 
@@ -12355,6 +12464,7 @@
           ) {
             si.convexPolyhedronRepresentation.material = si.material
             si.convexPolyhedronRepresentation.collisionResponse = si.collisionResponse
+
             return this.convexParticle(si.convexPolyhedronRepresentation, sj, xi, xj, qi, qj, bi, bj, si, sj, justTest)
           }
 
@@ -12556,6 +12666,7 @@
               )
 
               trimeshShape.getTrianglesInAABB(localSphereAABB, triangles)
+
               //for (var i = 0; i < trimeshShape.indices.length / 3; i++) triangles.push(i); // All
 
               // Vertices
@@ -12771,6 +12882,7 @@
 
               // Get cross product between polygon normal and the edge
               var edge_x_normal = pointInPolygon_edge_x_normal
+
               //var edge_x_normal = new Vec3();
               edge.cross(normal, edge_x_normal)
 
@@ -13109,6 +13221,7 @@
 
                   this.result.push(r)
                   this.createFrictionEquationsFromContact(r, this.frictionResult)
+
                   return
                 }
               }
@@ -13313,6 +13426,7 @@
             sj.convexPolyhedronRepresentation.material = sj.material
             sj.convexPolyhedronRepresentation.collisionResponse = sj.collisionResponse
             sj.convexPolyhedronRepresentation.id = sj.id
+
             return this.planeConvex(si, sj.convexPolyhedronRepresentation, xi, xj, qi, qj, bi, bj, si, sj, justTest)
           }
 
@@ -13592,6 +13706,7 @@
                 var projected = particlePlane_projected
                 normal.mult(normal.dot(xi), projected)
                 xi.vsub(projected, projected)
+
                 //projected.vadd(bj.position,projected);
 
                 // rj is now the projected world position minus plane position
@@ -13712,6 +13827,7 @@
                   worldPenetrationVec.vadd(xi, worldPenetrationVec)
                   worldPenetrationVec.vsub(xj, worldPenetrationVec)
                   r.rj.copy(worldPenetrationVec)
+
                   //var projectedToFace = xi.vsub(xj).vadd(worldPenetrationVec);
                   //projectedToFace.copy(r.rj);
 
@@ -13740,6 +13856,7 @@
             function (si, sj, xi, xj, qi, qj, bi, bj, rsi, rsj, justTest) {
               si.convexPolyhedronRepresentation.material = si.material
               si.convexPolyhedronRepresentation.collisionResponse = si.collisionResponse
+
               return this.convexHeightfield(
                 si.convexPolyhedronRepresentation,
                 sj,
@@ -14036,6 +14153,7 @@
                   if (numContacts > 2) {
                     return
                   }
+
                   /*
             // Skip all but 1
             for (var k = 0; k < numContacts - 1; k++) {
@@ -14168,6 +14286,7 @@
             this.default_dt = 1 / 60
 
             this.nextId = 0
+
             /**
              * @property gravity
              * @type {Vec3}
@@ -14451,6 +14570,7 @@
             options.from = from
             options.to = to
             options.callback = callback
+
             return tmpRay.intersectWorld(this, options)
           }
 
@@ -14472,6 +14592,7 @@
             options.from = from
             options.to = to
             options.result = result
+
             return tmpRay.intersectWorld(this, options)
           }
 
@@ -14493,6 +14614,7 @@
             options.from = from
             options.to = to
             options.result = result
+
             return tmpRay.intersectWorld(this, options)
           }
 
@@ -14621,6 +14743,7 @@
                 this.accumulator -= dt
                 substeps++
               }
+
               // Get rid of excess simulation time
               this.accumulator %= dt
 
@@ -14805,6 +14928,7 @@
               // c.enabled = bi.collisionResponse && bj.collisionResponse && si.collisionResponse && sj.collisionResponse;
 
               var mu = cm.friction
+
               // c.restitution = cm.restitution;
 
               // If friction or restitution were specified in the material, use them
@@ -15048,6 +15172,7 @@
               shapeA: null,
               shapeB: null
             }
+
             return function () {
               var hasBeginContact = this.hasAnyEventListener('beginContact')
               var hasEndContact = this.hasAnyEventListener('endContact')

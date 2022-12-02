@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 
-import { World } from './World'
-import { WaterShader } from '../../lib/shaders/WaterShader'
-import { IUpdatable } from '../interfaces/IUpdatable'
+import { World } from 'src/views/verse/book/world/World'
+import { WaterShader } from 'src/views/verse/lib/shaders/WaterShader'
+import { IUpdatable } from 'src/views/verse/book/interfaces/IUpdatable'
 
 export class Ocean implements IUpdatable {
   public updateOrder = 10

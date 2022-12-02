@@ -1,83 +1,128 @@
 import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
-import Swal from 'sweetalert2'
-import * as $ from 'jquery'
 
-import { CameraOperator } from '../core/CameraOperator'
+import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
+import { CameraOperator } from 'src/views/verse/book/core/CameraOperator'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass'
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader'
 
-import { Detector } from '../../lib/utils/Detector'
-import { Stats } from '../../lib/utils/Stats'
-import * as GUI from '../../lib/utils/dat.gui'
-import { CannonDebugRenderer } from '../../lib/cannon/CannonDebugRenderer'
+import { Detector } from 'src/views/verse/lib/utils/Detector'
+import { Stats } from 'src/views/verse/lib/utils/Stats'
+
+import { CannonDebugRenderer } from 'src/views/verse/lib/cannon/CannonDebugRenderer'
 import * as _ from 'lodash'
 
-import { InputManager } from '../core/InputManager'
-import * as Utils from '../core/FunctionLibrary'
-import { LoadingManager } from '../core/LoadingManager'
-import { InfoStack } from '../core/InfoStack'
-import { UIManager } from '../core/UIManager'
-import { IWorldEntity } from '../interfaces/IWorldEntity'
-import { IUpdatable } from '../interfaces/IUpdatable'
-import { Character } from '../characters/Character'
-import { Path } from './Path'
-import { CollisionGroups } from '../enums/CollisionGroups'
-import { BoxCollider } from '../physics/colliders/BoxCollider'
-import { TrimeshCollider } from '../physics/colliders/TrimeshCollider'
-import { Vehicle } from '../vehicles/Vehicle'
-import { Scenario } from './Scenario'
-import { Sky } from './Sky'
-import { Ocean } from './Ocean'
+import { InputManager } from 'src/views/verse/book/core/InputManager'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import { LoadingManager } from 'src/views/verse/book/core/LoadingManager'
+import { InfoStack } from 'src/views/verse/book/core/InfoStack'
+import { UIManager } from 'src/views/verse/book/core/UIManager'
+import { IWorldMetadata } from 'src/views/verse/book/interfaces/IWorldMetadata'
+import { INftMetadata } from 'src/views/verse/book/interfaces/INftMetadata'
+import { IWorldEntity } from 'src/views/verse/book/interfaces/IWorldEntity'
+import { IUpdatable } from 'src/views/verse/book/interfaces/IUpdatable'
+import { IParams } from 'src/views/verse/book/interfaces/IParams'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { CollisionGroups } from 'src/views/verse/book/enums/CollisionGroups'
+import { BoxCollider } from 'src/views/verse/book/physics/colliders/BoxCollider'
+import { TrimeshCollider } from 'src/views/verse/book/physics/colliders/TrimeshCollider'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
+import { Scenario } from 'src/views/verse/book/world/Scenario'
+import { Path } from 'src/views/verse/book/world/Path'
+import { Nft } from 'src/views/verse/book/world/Nft'
+import { Sky } from 'src/views/verse/book/world/Sky'
+import { Ocean } from 'src/views/verse/book/world/Ocean'
+
+import {
+  SHOW_START_PANEL_ACTION,
+  SET_START_PANEL_ACTION,
+  SET_CONTROL_HINT_PANEL_ACTION
+} from 'src/views/verse/book/actions'
 
 export class World {
   public renderer: THREE.WebGLRenderer
+  public labelRenderer: CSS2DRenderer
   public camera: THREE.PerspectiveCamera
   public composer: any
   public stats: Stats
   public graphicsWorld: THREE.Scene
   public sky: Sky
   public physicsWorld: CANNON.World
-  public parallelPairs: any[]
+  public parallelPairs: any[] // NOTE
   public physicsFrameRate: number
   public physicsFrameTime: number
   public physicsMaxPrediction: number
+  public scope: World
   public clock: THREE.Clock
   public renderDelta: number
   public logicDelta: number
   public requestDelta: number
   public sinceLastFrame: number
   public justRendered: boolean
-  public params: any
   public inputManager: InputManager
   public cameraOperator: CameraOperator
   public timeScaleTarget = 1
   public console: InfoStack
-  public cannonDebugRenderer: CannonDebugRenderer
+  public cursorBox: THREE.Mesh
+  public cannonDebugRenderer: CannonDebugRenderer | undefined
   public scenarios: Scenario[] = []
+  public gltfScenes: THREE.Scene[] = [] // NOTE
+  public physicsBodyList: CANNON.body[] = [] // NOTE
   public characters: Character[] = []
   public vehicles: Vehicle[] = []
+  public nfts: Nft[] = []
   public paths: Path[] = []
-  public scenarioGUIFolder: any
-  public updatables: IUpdatable[] = []
+  public scenarioGUIFolder: any // NOTE
+  public updatableList: IUpdatable[] = []
+  public mixer: Record<string, THREE.AnimationMixer> = {}
+  public localPlayer: Character | undefined = undefined
+  public dialogMode = false
+  public metadata: IWorldMetadata = {
+    owner: '',
+    displayName: '',
+    description: '',
+    worldScenePaths: [],
+    nftList: [] // NOTE
 
-  private lastScenarioID: string
+    // allowedVisitors: [] // NOTE
+  }
+  public params: IParams = {
+    Label_Visible:
+      localStorage.getItem('media_verse_settings-label-visible') !== null
+        ? JSON.parse(localStorage.getItem('media_verse_settings-label-visible')!)
+        : true,
+    Pointer_Lock:
+      localStorage.getItem('media_verse_settings-pointer-lock') !== null
+        ? JSON.parse(localStorage.getItem('media_verse_settings-pointer-lock')!)
+        : true,
+    Mouse_Sensitivity: 0.3,
+    Time_Scale: 0,
+    Shadows:
+      localStorage.getItem('media_verse_settings-shadows') !== null
+        ? JSON.parse(localStorage.getItem('media_verse_settings-shadows')!)
+        : true,
+    FXAA:
+      localStorage.getItem('media_verse_settings-anti-alias') !== null
+        ? JSON.parse(localStorage.getItem('media_verse_settings-shadows')!)
+        : true,
+    Debug_Physics: false,
+    Debug_FPS: false,
+    Sun_Elevation: 50,
+    Sun_Rotation: 145
+  }
 
-  constructor(worldScenePath?: any) {
+  private lastScenarioID: string | undefined
+
+  constructor() {
     const scope = this
+    this.scope = scope
 
     // WebGL not supported
     if (!Detector.webgl) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'WebGL compatibility',
-        text: "This browser doesn't seem to have the required WebGL capabilities. The application may not work correctly.",
-        footer: '<a href="https://get.webgl.org/" target="_blank">Click here for more information</a>',
-        showConfirmButton: false,
-        buttonsStyling: false
-      })
+      window.location.assign('/verse/un-supported')
     }
 
     // Renderer
@@ -89,6 +134,13 @@ export class World {
     this.renderer.shadowMap.enabled = true
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
+    // Label Renderer
+    this.labelRenderer = new CSS2DRenderer()
+    this.labelRenderer.setSize(window.innerWidth, window.innerHeight)
+    this.labelRenderer.domElement.style.position = 'absolute'
+    this.labelRenderer.domElement.style.top = '0px'
+    this.labelRenderer.domElement.style.pointerEvents = 'none'
+
     this.generateHTML()
 
     // Auto window resize
@@ -96,6 +148,7 @@ export class World {
       scope.camera.aspect = window.innerWidth / window.innerHeight
       scope.camera.updateProjectionMatrix()
       scope.renderer.setSize(window.innerWidth, window.innerHeight)
+      scope.labelRenderer.setSize(window.innerWidth, window.innerHeight)
       fxaaPass.uniforms['resolution'].value.set(
         1 / (window.innerWidth * pixelRatio),
         1 / (window.innerHeight * pixelRatio)
@@ -107,6 +160,7 @@ export class World {
     // Three.js scene
     this.graphicsWorld = new THREE.Scene()
     this.camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1010)
+    this.camera.position.setY(1.5)
 
     // Passes
     const renderPass = new RenderPass(this.graphicsWorld, this.camera)
@@ -129,7 +183,7 @@ export class World {
     this.physicsWorld.solver.iterations = 10
     this.physicsWorld.allowSleep = true
 
-    this.parallelPairs = []
+    this.parallelPairs = [] // NOTE
     this.physicsFrameRate = 60
     this.physicsFrameTime = 1 / this.physicsFrameRate
     this.physicsMaxPrediction = this.physicsFrameRate
@@ -145,47 +199,85 @@ export class World {
     this.stats = Stats()
 
     // Create right panel GUI
-    this.createParamsGUI(scope)
+    // this.createParamsGUI(scope)
 
     // Initialization
     this.inputManager = new InputManager(this, this.renderer.domElement)
     this.cameraOperator = new CameraOperator(this, this.camera, this.params.Mouse_Sensitivity)
     this.sky = new Sky(this)
 
-    // Load scene if path is supplied
-    if (worldScenePath !== undefined) {
-      const loadingManager = new LoadingManager(this)
-      loadingManager.onFinishedCallback = () => {
-        this.update(1, 1)
-        this.setTimeScale(1)
+    this.initScene()
 
-        Swal.fire({
-          title: 'Welcome to Sketchbook!',
-          text: 'Feel free to explore the world and interact with available vehicles. There are also various scenarios ready to launch from the right panel.',
-          footer:
-            '<a href="https://github.com/swift502/Sketchbook" target="_blank">GitHub page</a><a href="https://discord.gg/fGuEqCe" target="_blank">Discord server</a>',
-          confirmButtonText: 'Okay',
-          buttonsStyling: false,
-          onClose: () => {
-            UIManager.setUserInterfaceVisible(true)
-          }
-        })
+    // Cursor
+    this.cursorBox = new THREE.Mesh(
+      new THREE.SphereGeometry(0.05, 20, 20),
+      new THREE.MeshLambertMaterial({
+        color: 0xced3dc,
+        opacity: 0.3,
+        transparent: true
+      })
+    )
+    this.graphicsWorld.add(this.cursorBox)
+
+    this.adjustShadows(this.params.Shadows)
+    this.adjustPointerLock(this.params.Pointer_Lock)
+
+    this.render(this)
+  }
+
+  public async initScene() {
+    await this.setSceneMetadata()
+    const worldScenePaths = this.metadata.worldScenePaths
+
+    worldScenePaths.forEach((worldScenePath, loadingOrder) => {
+      // Load scene if path is supplied
+      const loadingManager = new LoadingManager(this)
+      if (loadingOrder === 0) {
+        loadingManager.onFinishedCallback = () => {
+          this.update(1, 1)
+          this.setTimeScale(1)
+
+          UIManager.setLoadingScreenVisible(false)
+
+          SHOW_START_PANEL_ACTION()
+          SET_START_PANEL_ACTION({
+            title: 'Welcome to Media Verse!',
+            content: 'Feel free to explore the world and interact with available vehicles.',
+            confirmButtonText: "Let's GO!",
+            closeCallback: () => {
+              UIManager.setUserInterfaceVisible(true)
+            }
+          })
+        }
       }
       loadingManager.loadGLTF(worldScenePath, gltf => {
         this.loadScene(loadingManager, gltf)
       })
-    } else {
-      UIManager.setUserInterfaceVisible(true)
-      UIManager.setLoadingScreenVisible(false)
-      Swal.fire({
-        icon: 'success',
-        title: 'Hello world!',
-        text: 'Empty Sketchbook world was succesfully initialized. Enjoy the blueness of the sky.',
-        buttonsStyling: false
-      })
-    }
+    })
+  }
 
-    this.render(this)
+  /* TODO integrate backend function */
+  async setSceneMetadata() {
+    this.metadata = {
+      owner: 'owner',
+      displayName: 'Display Name',
+      description: 'Description',
+      worldScenePaths: [
+        '/assets/glb/scene/advanced-gallery/draco-p1.glb',
+        '/assets/glb/scene/advanced-gallery/draco-p2.glb',
+        '/assets/glb/scene/advanced-gallery/draco-p3.glb',
+        '/assets/glb/scene/advanced-gallery/draco-p4.glb',
+        '/assets/glb/scene/advanced-gallery/draco-p5.glb',
+        '/assets/glb/scene/advanced-gallery/draco-p6.glb',
+        '/assets/glb/scene/advanced-gallery/draco-p7.glb',
+        '/assets/glb/scene/advanced-gallery/draco-p8.glb'
+      ],
+      nftList: []
+    }
+  }
+
+  public setDialogMode(newDialogMode: boolean): void {
+    this.dialogMode = newDialogMode
   }
 
   // Update
@@ -194,15 +286,19 @@ export class World {
     this.updatePhysics(timeStep)
 
     // Update registred objects
-    this.updatables.forEach(entity => {
+    this.updatableList.forEach(entity => {
       entity.update(timeStep, unscaledTimeStep)
+    })
+
+    Object.values(this.mixer).forEach(item => {
+      item.update(timeStep)
     })
 
     // Lerp time scale
     this.params.Time_Scale = THREE.MathUtils.lerp(this.params.Time_Scale, this.timeScaleTarget, 0.2)
 
     // Physics debug
-    if (this.params.Debug_Physics) this.cannonDebugRenderer.update()
+    if (this.params.Debug_Physics) this.cannonDebugRenderer?.update()
   }
 
   public updatePhysics(timeStep: number): void {
@@ -232,7 +328,7 @@ export class World {
       position.z > -169.098 &&
       position.z < 153.232 &&
       position.y > 0.107
-    const belowSeaLevel = position.y < 14.989
+    const belowSeaLevel = position.y < -50.989
 
     return !inside && belowSeaLevel
   }
@@ -283,8 +379,14 @@ export class World {
     this.stats.begin()
 
     // Actual rendering with a FXAA ON/OFF switch
-    if (this.params.FXAA) this.composer.render()
-    else this.renderer.render(this.graphicsWorld, this.camera)
+    if (window.innerWidth > 768) {
+      if (this.params.FXAA) this.composer.render()
+      else this.renderer.render(this.graphicsWorld, this.camera)
+    } else {
+      this.renderer.render(this.graphicsWorld, this.camera)
+    }
+
+    this.labelRenderer.render(this.graphicsWorld, this.camera)
 
     // Measuring render time
     this.renderDelta = this.clock.getDelta()
@@ -301,8 +403,8 @@ export class World {
   }
 
   public registerUpdatable(registree: IUpdatable): void {
-    this.updatables.push(registree)
-    this.updatables.sort((a, b) => (a.updateOrder > b.updateOrder ? 1 : -1))
+    this.updatableList.push(registree)
+    this.updatableList.sort((a, b) => (a.updateOrder > b.updateOrder ? 1 : -1))
   }
 
   public remove(worldEntity: IWorldEntity): void {
@@ -311,10 +413,11 @@ export class World {
   }
 
   public unregisterUpdatable(registree: IUpdatable): void {
-    _.pull(this.updatables, registree)
+    _.pull(this.updatableList, registree)
   }
 
-  public loadScene(loadingManager: LoadingManager, gltf: any): void {
+  public loadScene(loadingManager: LoadingManager, gltf: GLTF): void {
+    let launch = false
     gltf.scene.traverse(child => {
       if (child.hasOwnProperty('userData')) {
         if (child.type === 'Mesh') {
@@ -343,13 +446,19 @@ export class World {
                 })
 
                 this.physicsWorld.addBody(phys.body)
+                this.physicsBodyList.push(phys.body)
               } else if (child.userData.type === 'trimesh') {
                 const phys = new TrimeshCollider(child, {})
                 this.physicsWorld.addBody(phys.body)
+                this.physicsBodyList.push(phys.body)
               }
 
               child.visible = false
             }
+          }
+
+          if (child.userData.data === 'artwork') {
+            this.nfts.push(new Nft(child, this))
           }
 
           if (child.userData.data === 'path') {
@@ -357,32 +466,50 @@ export class World {
           }
 
           if (child.userData.data === 'scenario') {
+            launch = true
             this.scenarios.push(new Scenario(child, this))
           }
+        }
+
+        if (child.userData.hasOwnProperty('animation')) {
+          this.mixer[child.name] = new THREE.AnimationMixer(child)
+          const clips = gltf.animations
+
+          const clip = THREE.AnimationClip.findByName(clips, child.userData.animation)
+          this.mixer[child.name].clipAction(clip).play()
         }
       }
     })
 
+    this.gltfScenes.push(gltf.scene)
     this.graphicsWorld.add(gltf.scene)
 
     // Launch default scenario
-    let defaultScenarioID: string
+    let defaultScenarioID = ''
     for (const scenario of this.scenarios) {
       if (scenario.default) {
         defaultScenarioID = scenario.id
         break
       }
     }
-    if (defaultScenarioID !== undefined) this.launchScenario(defaultScenarioID, loadingManager)
+    if (launch && defaultScenarioID !== '') {
+      this.launchScenario(defaultScenarioID, loadingManager)
+    }
   }
 
   public launchScenario(scenarioID: string, loadingManager?: LoadingManager): void {
     this.lastScenarioID = scenarioID
 
+    if (this.localPlayer) {
+      this.localPlayer.removeFromWorld(this)
+      delete this.localPlayer
+    }
+
     this.clearEntities()
 
     // Launch default scenario
     if (!loadingManager) loadingManager = new LoadingManager(this)
+    loadingManager.isRestartLoading = true
     for (const scenario of this.scenarios) {
       if (scenario.id === scenarioID || scenario.spawnAlways) {
         scenario.launch(loadingManager, this)
@@ -427,146 +554,122 @@ export class World {
   }
 
   public updateControls(controls: any): void {
-    let html = ''
-    html += '<h2 class="controls-title">Controls:</h2>'
-
-    controls.forEach(row => {
-      html += '<div class="ctrl-row">'
-      row.keys.forEach(key => {
-        if (key === '+' || key === 'and' || key === 'or' || key === '&') html += '&nbsp;' + key + '&nbsp;'
-        else html += '<span class="ctrl-key">' + key + '</span>'
-      })
-
-      html += '<span class="ctrl-desc">' + row.desc + '</span></div>'
+    SET_CONTROL_HINT_PANEL_ACTION({
+      title: 'Controls',
+      content: controls
     })
-
-    document.getElementById('controls').innerHTML = html
   }
 
   private generateHTML(): void {
-    // Fonts
-    $('head').append(
-      '<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet">'
-    )
-    $('head').append(
-      '<link href="https://fonts.googleapis.com/css2?family=Solway:wght@400;500;700&display=swap" rel="stylesheet">'
-    )
-    $('head').append('<link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">')
-
-    // Loader
-    $(`	<div id="loading-screen">
-				<div id="loading-screen-background"></div>
-				<h1 id="main-title" class="sb-font">Sketchbook 0.4</h1>
-				<div class="cubeWrap">
-					<div class="cube">
-						<div class="faces1"></div>
-						<div class="faces2"></div>
-					</div>
-				</div>
-				<div id="loading-text">Loading...</div>
-			</div>
-		`).appendTo('body')
-
-    // UI
-    $(`	<div id="ui-container" style="display: none;">
-				<div class="github-corner">
-					<a href="https://github.com/swift502/Sketchbook" target="_blank" title="Fork me on GitHub">
-						<svg viewbox="0 0 100 100" fill="currentColor">
-							<title>Fork me on GitHub</title>
-							<path d="M0 0v100h100V0H0zm60 70.2h.2c1 2.7.3 4.7 0 5.2 1.4 1.4 2 3 2 5.2 0 7.4-4.4 9-8.7 9.5.7.7 1.3 2
-							1.3 3.7V99c0 .5 1.4 1 1.4 1H44s1.2-.5 1.2-1v-3.8c-3.5 1.4-5.2-.8-5.2-.8-1.5-2-3-2-3-2-2-.5-.2-1-.2-1
-							2-.7 3.5.8 3.5.8 2 1.7 4 1 5 .3.2-1.2.7-2 1.2-2.4-4.3-.4-8.8-2-8.8-9.4 0-2 .7-4 2-5.2-.2-.5-1-2.5.2-5
-							0 0 1.5-.6 5.2 1.8 1.5-.4 3.2-.6 4.8-.6 1.6 0 3.3.2 4.8.7 2.8-2 4.4-2 5-2z"></path>
-						</svg>
-					</a>
-				</div>
-				<div class="left-panel">
-					<div id="controls" class="panel-segment flex-bottom"></div>
-				</div>
-			</div>
-		`).appendTo('body')
-
     // Canvas
-    document.body.appendChild(this.renderer.domElement)
+    const worldDom = document.getElementById('world') as HTMLElement
+
+    worldDom.appendChild(this.renderer.domElement)
+    worldDom.appendChild(this.labelRenderer.domElement)
     this.renderer.domElement.id = 'canvas'
+    this.labelRenderer.domElement.id = 'label-canvas'
   }
 
-  private createParamsGUI(scope: World): void {
-    this.params = {
-      Pointer_Lock: true,
-      Mouse_Sensitivity: 0.3,
-      Time_Scale: 1,
-      Shadows: true,
-      FXAA: true,
-      Debug_Physics: false,
-      Debug_FPS: false,
-      Sun_Elevation: 50,
-      Sun_Rotation: 145
+  public updateNftFrame(frameId: string, newNftMetadata: INftMetadata) {
+    const selectedNft = this.nfts.find(nft => nft.frameId === frameId)
+    if (selectedNft) {
+      selectedNft.update(newNftMetadata)
     }
+  }
 
-    const gui = new GUI.GUI()
-
-    // Scenario
-    this.scenarioGUIFolder = gui.addFolder('Scenarios')
-    this.scenarioGUIFolder.open()
-
-    // World
-    const worldFolder = gui.addFolder('World')
-    worldFolder
-      .add(this.params, 'Time_Scale', 0, 1)
-      .listen()
-      .onChange(value => {
-        scope.timeScaleTarget = value
+  adjustLabelVisible(newLabelVisible: boolean): void {
+    if (newLabelVisible) {
+      this.characters.forEach(char => {
+        char.setLabelVisible(true)
       })
-    worldFolder
-      .add(this.params, 'Sun_Elevation', 0, 180)
-      .listen()
-      .onChange(value => {
-        scope.sky.phi = value
+      this.params.Label_Visible = true
+    } else {
+      this.characters.forEach(char => {
+        char.setLabelVisible(false)
       })
-    worldFolder
-      .add(this.params, 'Sun_Rotation', 0, 360)
-      .listen()
-      .onChange(value => {
-        scope.sky.theta = value
+      this.params.Label_Visible = false
+    }
+  }
+
+  adjustShadows(newShadowsStatus: boolean): void {
+    if (newShadowsStatus) {
+      this.sky.csm.lights.forEach(light => {
+        light.castShadow = true
+      })
+    } else {
+      this.sky.csm.lights.forEach(light => {
+        light.castShadow = false
+      })
+    }
+  }
+
+  adjustAntiAliasing(newAntiAliasingStatus: boolean): void {
+    this.params.FXAA = newAntiAliasingStatus
+  }
+
+  adjustPointerLock(newPointerLockStatus: boolean): void {
+    this.scope.inputManager.setPointerLock(newPointerLockStatus)
+  }
+
+  adjustPhysicDebug(newPhysicDebugStatus: boolean): void {
+    if (newPhysicDebugStatus !== undefined) {
+      this.cannonDebugRenderer = new CannonDebugRenderer(this.graphicsWorld, this.physicsWorld)
+      this.params.Debug_Physics = true
+    } else {
+      this.cannonDebugRenderer!.clearMeshes()
+      this.cannonDebugRenderer = undefined
+      this.params.Debug_Physics = false
+    }
+    this.scope.characters.forEach(char => {
+      char.raycastBox.visible = newPhysicDebugStatus
+      char.raycastHoverBox.visible = newPhysicDebugStatus
+    })
+  }
+
+  adjustFpsDebug(newFpsDebugStatus: boolean): void {
+    UIManager.setFPSVisible(newFpsDebugStatus)
+  }
+
+  public dispose() {
+    this.clearEntities()
+    if (this.localPlayer) {
+      this.localPlayer.removeFromWorld(this)
+    }
+    this.physicsBodyList.forEach(body => {
+      this.physicsWorld.remove(body)
+    })
+
+    this.renderer.renderLists.dispose()
+
+    this.gltfScenes.forEach(scene => {
+      scene.traverse(child => {
+        if (child.removable) {
+          child.geometry.dispose()
+          child.material.dispose()
+        }
       })
 
-    // Input
-    const settingsFolder = gui.addFolder('Settings')
-    settingsFolder.add(this.params, 'FXAA')
-    settingsFolder.add(this.params, 'Shadows').onChange(enabled => {
-      if (enabled) {
-        this.sky.csm.lights.forEach(light => {
-          light.castShadow = true
-        })
-      } else {
-        this.sky.csm.lights.forEach(light => {
-          light.castShadow = false
-        })
-      }
-    })
-    settingsFolder.add(this.params, 'Pointer_Lock').onChange(enabled => {
-      scope.inputManager.setPointerLock(enabled)
-    })
-    settingsFolder.add(this.params, 'Mouse_Sensitivity', 0, 1).onChange(value => {
-      scope.cameraOperator.setSensitivity(value, value * 0.8)
-    })
-    settingsFolder.add(this.params, 'Debug_Physics').onChange(enabled => {
-      if (enabled) {
-        this.cannonDebugRenderer = new CannonDebugRenderer(this.graphicsWorld, this.physicsWorld)
-      } else {
-        this.cannonDebugRenderer.clearMeshes()
-        this.cannonDebugRenderer = undefined
-      }
-
-      scope.characters.forEach(char => {
-        char.raycastBox.visible = enabled
-      })
-    })
-    settingsFolder.add(this.params, 'Debug_FPS').onChange(enabled => {
-      UIManager.setFPSVisible(enabled)
+      this.graphicsWorld.remove(scene)
     })
 
-    gui.open()
+    this.localPlayer = undefined
+    this.scenarios = []
+
+    this.gltfScenes = []
+    this.physicsBodyList = []
+    this.vehicles = []
+    this.nfts = []
+  }
+
+  /* TODO: optimize clean steps */
+  public restartScene() {
+    this.dispose()
+
+    this.initScene()
+  }
+
+  public destroy() {
+    /* NOTE: trick to prevent memory leak */
+    this.render = () => undefined
   }
 }

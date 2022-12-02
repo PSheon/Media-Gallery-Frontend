@@ -1,10 +1,10 @@
 import * as THREE from 'three'
-import { SeatType } from '../enums/SeatType'
-import { Side } from '../enums/Side'
-import { IControllable } from '../interfaces/IControllable'
-import { VehicleDoor } from './VehicleDoor'
-import { Vehicle } from './Vehicle'
-import { Character } from '../characters/Character'
+import { SeatType } from 'src/views/verse/book/enums/SeatType'
+import { Side } from 'src/views/verse/book/enums/Side'
+import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
+import { VehicleDoor } from 'src/views/verse/book/vehicles/VehicleDoor'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
+import { Character } from 'src/views/verse/book/characters/Character'
 
 export class VehicleSeat {
   public vehicle: IControllable

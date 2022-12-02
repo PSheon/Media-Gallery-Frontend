@@ -94,6 +94,7 @@ CannonDebugRenderer.prototype = {
       return false
     }
     var geo = mesh.geometry
+
     return (
       (geo instanceof THREE.SphereGeometry && shape instanceof CANNON.Sphere) ||
       (geo instanceof THREE.BoxGeometry && shape instanceof CANNON.Box) ||

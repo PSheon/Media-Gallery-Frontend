@@ -1,5 +1,11 @@
-import { CharacterStateBase, EndWalk, Idle, JumpRunning, Sprint } from './_stateLibrary'
-import { Character } from '../Character'
+import {
+  CharacterStateBase,
+  EndWalk,
+  Idle,
+  JumpRunning,
+  Sprint
+} from 'src/views/verse/book/characters/character_states/_stateLibrary'
+import { Character } from 'src/views/verse/book/characters/Character'
 
 export class Walk extends CharacterStateBase {
   constructor(character: Character) {

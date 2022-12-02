@@ -1,11 +1,11 @@
-import { CharacterStateBase } from '../_stateLibrary'
-import { Character } from '../../Character'
-import { VehicleSeat } from '../../../vehicles/VehicleSeat'
-import { Side } from '../../../enums/Side'
-import { Driving } from './Driving'
-import { SeatType } from '../../../enums/SeatType'
-import { Sitting } from './Sitting'
-import * as Utils from '../../../core/FunctionLibrary'
+import { CharacterStateBase } from 'src/views/verse/book/characters/character_states/_stateLibrary'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
+import { Side } from 'src/views/verse/book/enums/Side'
+import { Driving } from 'src/views/verse/book/characters/character_states/vehicles/Driving'
+import { SeatType } from 'src/views/verse/book/enums/SeatType'
+import { Sitting } from 'src/views/verse/book/characters/character_states/vehicles/Sitting'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
 export class CloseVehicleDoorInside extends CharacterStateBase {
   private seat: VehicleSeat

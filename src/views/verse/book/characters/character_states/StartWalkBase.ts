@@ -1,6 +1,14 @@
-import * as Utils from '../../core/FunctionLibrary'
-import { CharacterStateBase, Idle, IdleRotateLeft, IdleRotateRight, JumpRunning, Sprint, Walk } from './_stateLibrary'
-import { Character } from '../Character'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import {
+  CharacterStateBase,
+  Idle,
+  IdleRotateLeft,
+  IdleRotateRight,
+  JumpRunning,
+  Sprint,
+  Walk
+} from 'src/views/verse/book/characters/character_states/_stateLibrary'
+import { Character } from 'src/views/verse/book/characters/Character'
 
 export class StartWalkBase extends CharacterStateBase {
   constructor(character: Character) {

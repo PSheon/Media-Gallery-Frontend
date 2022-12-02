@@ -1,4 +1,4 @@
-import { InfoStack } from './InfoStack'
+import { InfoStack } from 'src/views/verse/book/core/InfoStack'
 
 export class InfoStackMessage {
   public domElement: HTMLElement

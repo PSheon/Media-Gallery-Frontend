@@ -1,13 +1,13 @@
-import { Character } from '../characters/Character'
-import { IInputReceiver } from './IInputReceiver'
-import { VehicleSeat } from '../vehicles/VehicleSeat'
-import { EntityType } from '../enums/EntityType'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { IInputReceiver } from 'src/views/verse/book/interfaces/IInputReceiver'
+import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
+import { EntityType } from 'src/views/verse/book/enums/EntityType'
 
 export interface IControllable extends IInputReceiver {
   entityType: EntityType
   seats: VehicleSeat[]
   position: THREE.Vector3
-  controllingCharacter: Character
+  controllingCharacter: Character | undefined
 
   triggerAction(actionName: string, value: boolean): void
   resetControls(): void

@@ -1,7 +1,7 @@
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as THREE from 'three'
-import * as Utils from '../../core/FunctionLibrary'
-import { ICollider } from '../../interfaces/ICollider'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import { ICollider } from 'src/views/verse/book/interfaces/ICollider'
 
 export class CapsuleCollider implements ICollider {
   public options: any

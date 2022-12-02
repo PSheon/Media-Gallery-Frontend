@@ -1,4 +1,4 @@
-import { KeyBinding } from '../core/KeyBinding'
+import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
 
 export interface IInputReceiver {
   actions: { [action: string]: KeyBinding }
@@ -6,6 +6,7 @@ export interface IInputReceiver {
   handleKeyboardEvent(event: KeyboardEvent, code: string, pressed: boolean): void
   handleMouseButton(event: MouseEvent, code: string, pressed: boolean): void
   handleMouseMove(event: MouseEvent, deltaX: number, deltaY: number): void
+  handleTouchMove(event: TouchEvent, deltaX: number, deltaY: number): void
   handleMouseWheel(event: WheelEvent, value: number): void
 
   inputReceiverInit(): void

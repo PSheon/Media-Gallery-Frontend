@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import { SimulatorBase } from './SimulatorBase'
-import { SimulationFrame } from './SimulationFrame'
-import { spring } from '../../core/FunctionLibrary'
+import { SimulatorBase } from 'src/views/verse/book/physics/spring_simulation/SimulatorBase'
+import { SimulationFrame } from 'src/views/verse/book/physics/spring_simulation//SimulationFrame'
+import { spring } from 'src/views/verse/book/core/FunctionLibrary'
 
 export class RelativeSpringSimulator extends SimulatorBase {
   public position: number

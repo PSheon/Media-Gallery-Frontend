@@ -1,6 +1,6 @@
-import { CharacterStateBase, Falling } from './_stateLibrary'
-import { ICharacterState } from '../../interfaces/ICharacterState'
-import { Character } from '../Character'
+import { CharacterStateBase, Falling } from 'src/views/verse/book/characters/character_states/_stateLibrary'
+import { ICharacterState } from 'src/views/verse/book/interfaces/ICharacterState'
+import { Character } from 'src/views/verse/book/characters/Character'
 
 export class JumpIdle extends CharacterStateBase implements ICharacterState {
   private alreadyJumped: boolean

@@ -1,13 +1,13 @@
 import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
-import * as Utils from '../core/FunctionLibrary'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
-import { Vehicle } from './Vehicle'
-import { IControllable } from '../interfaces/IControllable'
-import { IWorldEntity } from '../interfaces/IWorldEntity'
-import { KeyBinding } from '../core/KeyBinding'
-import { World } from '../world/World'
-import { EntityType } from '../enums/EntityType'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
+import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
+import { IWorldEntity } from 'src/views/verse/book/interfaces/IWorldEntity'
+import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
+import { World } from 'src/views/verse/book/world/World'
+import { EntityType } from 'src/views/verse/book/enums/EntityType'
 
 export class Helicopter extends Vehicle implements IControllable, IWorldEntity {
   public entityType: EntityType = EntityType.Helicopter

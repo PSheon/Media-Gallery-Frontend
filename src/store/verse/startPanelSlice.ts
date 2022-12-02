@@ -1,6 +1,10 @@
+// ** Redux Imports
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
+// ** Types
+import { IInitialState } from 'src/types/verse/startPanelTypes'
+
+const initialState: IInitialState = {
   show: false,
   title: '',
   content: '',

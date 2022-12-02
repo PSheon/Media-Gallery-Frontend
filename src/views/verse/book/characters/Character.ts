@@ -1,43 +1,58 @@
 import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as _ from 'lodash'
-import * as Utils from '../core/FunctionLibrary'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
-import { KeyBinding } from '../core/KeyBinding'
-import { VectorSpringSimulator } from '../physics/spring_simulation/VectorSpringSimulator'
-import { RelativeSpringSimulator } from '../physics/spring_simulation/RelativeSpringSimulator'
-import { Idle } from './character_states/Idle'
-import { EnteringVehicle } from './character_states/vehicles/EnteringVehicle'
-import { ExitingVehicle } from './character_states/vehicles/ExitingVehicle'
-import { OpenVehicleDoor as OpenVehicleDoor } from './character_states/vehicles/OpenVehicleDoor'
-import { Driving } from './character_states/vehicles/Driving'
-import { ExitingAirplane } from './character_states/vehicles/ExitingAirplane'
-import { ICharacterAI } from '../interfaces/ICharacterAI'
-import { World } from '../world/World'
-import { IControllable } from '../interfaces/IControllable'
-import { ICharacterState } from '../interfaces/ICharacterState'
-import { IWorldEntity } from '../interfaces/IWorldEntity'
-import { VehicleSeat } from '../vehicles/VehicleSeat'
-import { Vehicle } from '../vehicles/Vehicle'
-import { CollisionGroups } from '../enums/CollisionGroups'
-import { CapsuleCollider } from '../physics/colliders/CapsuleCollider'
-import { VehicleEntryInstance } from './VehicleEntryInstance'
-import { SeatType } from '../enums/SeatType'
-import { GroundImpactData } from './GroundImpactData'
-import { ClosestObjectFinder } from '../core/ClosestObjectFinder'
-import { Object3D } from 'three'
-import { EntityType } from '../enums/EntityType'
+import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer'
+import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
+import { VectorSpringSimulator } from 'src/views/verse/book/physics/spring_simulation/VectorSpringSimulator'
+import { RelativeSpringSimulator } from 'src/views/verse/book/physics/spring_simulation/RelativeSpringSimulator'
+import { Idle } from 'src/views/verse/book/characters/character_states/Idle'
+import { EnteringVehicle } from 'src/views/verse/book/characters/character_states/vehicles/EnteringVehicle'
+import { ExitingVehicle } from 'src/views/verse/book/characters/character_states/vehicles/ExitingVehicle'
+import { OpenVehicleDoor as OpenVehicleDoor } from 'src/views/verse/book/characters/character_states/vehicles/OpenVehicleDoor'
+import { Driving } from 'src/views/verse/book/characters/character_states/vehicles/Driving'
+import { ExitingAirplane } from 'src/views/verse/book/characters/character_states/vehicles/ExitingAirplane'
+import { ICharacterAI } from 'src/views/verse/book/interfaces/ICharacterAI'
+import { World } from 'src/views/verse/book/world/World'
+import { ICharacterMetadata } from 'src/views/verse/book/interfaces/ICharacterMetadata'
+import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
+import { ICharacterState } from 'src/views/verse/book/interfaces/ICharacterState'
+import { IWorldEntity } from 'src/views/verse/book/interfaces/IWorldEntity'
+import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
+import { CollisionGroups } from 'src/views/verse/book/enums/CollisionGroups'
+import { CapsuleCollider } from 'src/views/verse/book/physics/colliders/CapsuleCollider'
+import { VehicleEntryInstance } from 'src/views/verse/book/characters/VehicleEntryInstance'
+import { SeatType } from 'src/views/verse/book/enums/SeatType'
+import { GroundImpactData } from 'src/views/verse/book/characters/GroundImpactData'
+import { ClosestObjectFinder } from 'src/views/verse/book/core/ClosestObjectFinder'
+import { EntityType } from 'src/views/verse/book/enums/EntityType'
+import { getAnimationDetails } from 'src/utils/get-character-animation-details'
+
+import {
+  SHOW_DIALOG_BOX_ACTION,
+  SET_DIALOG_BOX_ACTION,
+  UN_HOVER_DIALOG_BOX_ACTION,
+  HIDE_DIALOG_BOX_ACTION
+} from 'src/views/verse/book/actions/index'
 
 export class Character extends THREE.Object3D implements IWorldEntity {
   public updateOrder = 1
   public entityType: EntityType = EntityType.Character
-
+  public metadata: ICharacterMetadata = {
+    displayName: 'MediaVerve',
+    objectType: 'player'
+  }
+  public isPlayer = false
+  public zoomLevel = 5
   public height = 0
   public tiltContainer: THREE.Group
   public modelContainer: THREE.Group
   public materials: THREE.Material[] = []
   public mixer: THREE.AnimationMixer
   public animations: any[]
+  public currentClip: string
 
   // Movement
   public acceleration: THREE.Vector3 = new THREE.Vector3()
@@ -59,25 +74,31 @@ export class Character extends THREE.Object3D implements IWorldEntity {
   public viewVector: THREE.Vector3
   public actions: { [action: string]: KeyBinding }
   public characterCapsule: CapsuleCollider
+  public characterLabel: CSS2DObject | undefined
 
   // Ray casting
   public rayResult: CANNON.RaycastResult = new CANNON.RaycastResult()
+  public rayHoverResult: CANNON.RaycastResult = new CANNON.RaycastResult()
   public rayHasHit = false
+  public rayHoverHasHit = false
   public rayCastLength = 0.57
   public raySafeOffset = 0.03
   public wantsToJump = false
   public initJumpSpeed = -1
   public groundImpactData: GroundImpactData = new GroundImpactData()
   public raycastBox: THREE.Mesh
+  public raycastHoverBox: THREE.Mesh
+  public hoverObjectDisplayName: string | undefined
+  public hoverObjectType: string | undefined
 
-  public world: World
+  public world: World | undefined
   public charState: ICharacterState
   public behaviour: ICharacterAI
 
   // Vehicles
-  public controlledObject: IControllable
-  public occupyingSeat: VehicleSeat = null
-  public vehicleEntryInstance: VehicleEntryInstance = null
+  public controlledObject: IControllable | undefined
+  public occupyingSeat: VehicleSeat | null = null
+  public vehicleEntryInstance: VehicleEntryInstance | undefined
 
   private physicsEnabled = true
 
@@ -154,12 +175,20 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     this.characterCapsule.body.updateMassProperties()
 
     // Ray cast debug
-    const boxGeo = new THREE.BoxGeometry(0.1, 0.1, 0.1)
-    const boxMat = new THREE.MeshLambertMaterial({
-      color: 0xff0000
-    })
-    this.raycastBox = new THREE.Mesh(boxGeo, boxMat)
+    this.raycastBox = new THREE.Mesh(
+      new THREE.BoxGeometry(0.1, 0.1, 0.1),
+      new THREE.MeshLambertMaterial({
+        color: 0xff0000
+      })
+    )
     this.raycastBox.visible = false
+    this.raycastHoverBox = new THREE.Mesh(
+      new THREE.BoxGeometry(0.1, 0.1, 0.1),
+      new THREE.MeshLambertMaterial({
+        color: 0x00ff00
+      })
+    )
+    this.raycastHoverBox.visible = false
 
     // Physics pre/post step callback bindings
     this.characterCapsule.body.preStep = (body: CANNON.Body) => {
@@ -171,6 +200,28 @@ export class Character extends THREE.Object3D implements IWorldEntity {
 
     // States
     this.setState(new Idle(this))
+  }
+
+  public setMetadata(metadata: ICharacterMetadata): void {
+    this.metadata.displayName = metadata.displayName
+    this.characterCapsule.body.displayName = metadata.displayName
+    this.metadata.objectType = metadata.objectType
+    this.characterCapsule.body.objectType = metadata.objectType
+
+    if (!this.isPlayer && !this.characterLabel) {
+      const labelDomElement = document.createElement('div')
+      labelDomElement.className = 'verse-character-label-container'
+      labelDomElement.textContent = metadata.displayName
+      this.characterLabel = new CSS2DObject(labelDomElement)
+      this.characterLabel.position.copy(new THREE.Vector3(0, 1.25, 0))
+      this.modelContainer.add(this.characterLabel)
+    }
+  }
+
+  public setLabelVisible(labelVisibility: boolean): void {
+    if (this.characterLabel) {
+      this.characterLabel.visible = labelVisibility
+    }
   }
 
   public setAnimations(animations: []): void {
@@ -239,7 +290,8 @@ export class Character extends THREE.Object3D implements IWorldEntity {
   }
 
   public setBehaviour(behaviour: ICharacterAI): void {
-    behaviour.character = this
+    const scope = this
+    behaviour.character = scope
     this.behaviour = behaviour
   }
 
@@ -265,15 +317,56 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     })
   }
 
+  // NOTE
+  public playAnimationClip(animationClip: string, isTriggerRoomEvent = false): void {
+    if (this.world?.room && animationClip !== 'idle') {
+      const animation = getAnimationDetails(animationClip)
+
+      this.setAnimation(animation.clip, animation.fade)
+
+      // if (isTriggerRoomEvent) {
+      //   this.world.room.send('animation', {
+      //     clip: animation.clip
+      //   })
+      // }
+
+      setTimeout(() => {
+        if (this.currentClip === animationClip) {
+          this.setAnimation('idle', 0.1)
+        }
+
+        // if (isTriggerRoomEvent) {
+        //   this.world.room.send('animation', {
+        //     clip: 'idle'
+        //   })
+        // }
+      }, animation.duration * 1000)
+    }
+  }
+
+  // NOTE: performance optimization needed
+  public changeAvatar(newAvatarModel: string, isTriggerRoomEvent = false): void {
+    console.log('newAvatarModel, ', newAvatarModel)
+    console.log('isTriggerRoomEvent, ', isTriggerRoomEvent)
+  }
+
   public handleKeyboardEvent(event: KeyboardEvent, code: string, pressed: boolean): void {
+    if (this.world.dialogMode) return
     if (this.controlledObject !== undefined) {
       this.controlledObject.handleKeyboardEvent(event, code, pressed)
     } else {
       // Free camera
       if (code === 'KeyC' && pressed === true && event.shiftKey === true) {
+        const scope = this
         this.resetControls()
-        this.world.cameraOperator.characterCaller = this
+        this.world.cameraOperator.characterCaller = scope
         this.world.inputManager.setInputReceiver(this.world.cameraOperator)
+      } else if (code === 'KeyE' && pressed === true) {
+        if (this.hoverObjectDisplayName) {
+          SHOW_DIALOG_BOX_ACTION()
+        } else {
+          HIDE_DIALOG_BOX_ACTION()
+        }
       } else if (code === 'KeyR' && pressed === true && event.shiftKey === true) {
         this.world.restartScenario()
       } else {
@@ -283,8 +376,29 @@ export class Character extends THREE.Object3D implements IWorldEntity {
 
             if (_.includes(binding.eventCodes, code)) {
               this.triggerAction(action, pressed)
+
+              if (this.world?.room) {
+                this.world.room.send('actions', {
+                  action,
+                  pressed
+                })
+              }
             }
           }
+        }
+
+        if (this.world?.room) {
+          this.world.room.send('keyboard-event', {
+            posX: this.characterCapsule.body.position.x,
+            posY: this.characterCapsule.body.position.y,
+            posZ: this.characterCapsule.body.position.z,
+            oriX: this.orientation.x,
+            oriY: this.orientation.y,
+            oriZ: this.orientation.z,
+            vecX: this.viewVector.x,
+            vecY: this.viewVector.y,
+            vecZ: this.viewVector.z
+          })
         }
       }
     }
@@ -314,11 +428,23 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     }
   }
 
+  public handleTouchMove(event: TouchEvent, deltaX: number, deltaY: number): void {
+    if (this.controlledObject !== undefined) {
+      this.controlledObject.handleTouchMove(event, deltaX, deltaY)
+    } else {
+      this.world.cameraOperator.move(deltaX, deltaY)
+    }
+  }
+
   public handleMouseWheel(event: WheelEvent, value: number): void {
+    if (this.world.dialogMode) return
     if (this.controlledObject !== undefined) {
       this.controlledObject.handleMouseWheel(event, value)
     } else {
-      this.world.scrollTheTimeScale(value)
+      // this.world.scrollTheTimeScale(value)
+      this.zoomLevel += event.deltaY * 0.01
+      this.zoomLevel = Math.min(Math.max(1.2, this.zoomLevel), 5)
+      this.world.cameraOperator.setRadius(this.zoomLevel, true)
     }
   }
 
@@ -401,7 +527,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
       return
     }
 
-    this.world.cameraOperator.setRadius(1.6, true)
+    this.world.cameraOperator.setRadius(5, true)
     this.world.cameraOperator.followMode = false
 
     // this.world.dirLight.target = this;
@@ -448,7 +574,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     }
   }
 
-  public setAnimation(clipName: string, fadeIn: number): number {
+  public setAnimation(clipName: string, fadeIn: number): number | void {
     if (this.mixer !== undefined) {
       // gltf
       const clip = THREE.AnimationClip.findByName(this.animations, clipName)
@@ -506,11 +632,11 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     const localDirection = this.getLocalMovementDirection()
     const flatViewVector = new THREE.Vector3(this.viewVector.x, 0, this.viewVector.z).normalize()
 
-    return Utils.appplyVectorMatrixXZ(flatViewVector, localDirection)
+    return Utils.applyVectorMatrixXZ(flatViewVector, localDirection)
   }
 
   public setCameraRelativeOrientationTarget(): void {
-    if (this.vehicleEntryInstance === null) {
+    if (this.vehicleEntryInstance === undefined) {
       const moveVector = this.getCameraRelativeMovementVector()
 
       if (moveVector.x === 0 && moveVector.y === 0 && moveVector.z === 0) {
@@ -584,7 +710,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
         const targetSeat = seatFinder.closestObject
         vehicleEntryInstance.targetSeat = targetSeat
 
-        const entryPointFinder = new ClosestObjectFinder<Object3D>(this.position)
+        const entryPointFinder = new ClosestObjectFinder<THREE.Object3D>(this.position)
 
         for (const point of targetSeat.entryPoints) {
           point.getWorldPosition(worldPos)
@@ -631,6 +757,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
 
   public startControllingVehicle(vehicle: IControllable, seat: VehicleSeat): void {
     if (this.controlledObject !== vehicle) {
+      const scope = this
       this.transferControls(vehicle)
       this.resetControls()
 
@@ -638,7 +765,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
       this.controlledObject.allowSleep(false)
       vehicle.inputReceiverInit()
 
-      vehicle.controllingCharacter = this
+      vehicle.controllingCharacter = scope
     }
   }
 
@@ -690,8 +817,9 @@ export class Character extends THREE.Object3D implements IWorldEntity {
   }
 
   public occupySeat(seat: VehicleSeat): void {
+    const scope = this
     this.occupyingSeat = seat
-    seat.occupiedBy = this
+    seat.occupiedBy = scope
   }
 
   public leaveSeat(): void {
@@ -743,7 +871,38 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     this.rayHasHit = this.world.physicsWorld.raycastClosest(start, end, rayCastOptions, this.rayResult)
   }
 
+  public feetHoverRaycast(): void {
+    // Player ray casting
+    // Create ray
+    const bodyPos = this.characterCapsule.body.position.clone()
+
+    const unit = this.viewVector.normalize()
+
+    const start = new CANNON.Vec3(bodyPos.x + 0.3 * unit.x, bodyPos.y + 0.3 * unit.y + 0.6, bodyPos.z + 0.3 * unit.z)
+    const end = new CANNON.Vec3(bodyPos.x + 4 * unit.x, bodyPos.y + 4 * unit.y + 1.75, bodyPos.z + 4 * unit.z)
+
+    // const material = new THREE.LineBasicMaterial({ color: 0x0000ff })
+    // const geometry = new THREE.BufferGeometry().setFromPoints([start, end])
+    // const line = new THREE.Line(geometry, material)
+    // this.world.graphicsWorld.add(line)
+
+    this.world.cursorBox.position.copy(end)
+
+    // Raycast options
+    const rayCastOptions = {
+      // collisionFilterMask: CollisionGroups.Default,
+      skipBackfaces: true /* ignore back faces */
+    }
+
+    // Cast the ray
+    this.rayHoverHasHit = this.world.physicsWorld.raycastClosest(start, end, rayCastOptions, this.rayHoverResult)
+  }
+
   public physicsPostStep(body: CANNON.Body, character: Character): void {
+    if (this.isPlayer) {
+      this.feetHoverRaycast()
+    }
+
     // Get velocities
     const simulatedVelocity = new THREE.Vector3(body.velocity.x, body.velocity.y, body.velocity.z)
 
@@ -751,7 +910,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     let arcadeVelocity = new THREE.Vector3().copy(character.velocity).multiplyScalar(character.moveSpeed)
 
     // Turn local into global
-    arcadeVelocity = Utils.appplyVectorMatrixXZ(character.orientation, arcadeVelocity)
+    arcadeVelocity = Utils.applyVectorMatrixXZ(character.orientation, arcadeVelocity)
 
     let newVelocity = new THREE.Vector3()
 
@@ -759,7 +918,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     if (character.arcadeVelocityIsAdditive) {
       newVelocity.copy(simulatedVelocity)
 
-      const globalVelocityTarget = Utils.appplyVectorMatrixXZ(character.orientation, character.velocityTarget)
+      const globalVelocityTarget = Utils.applyVectorMatrixXZ(character.orientation, character.velocityTarget)
       const add = new THREE.Vector3().copy(arcadeVelocity).multiply(character.arcadeVelocityInfluence)
 
       if (
@@ -837,6 +996,40 @@ export class Character extends THREE.Object3D implements IWorldEntity {
       character.groundImpactData.velocity.z = body.velocity.z
     }
 
+    // If we're hover the item
+    if (character.rayHoverHasHit) {
+      // Do hover stuff
+      this.world.cursorBox.position.copy(character.rayHoverResult.hitPointWorld)
+      if (character.rayHoverResult.body?.displayName && character.rayHoverResult.body?.objectType) {
+        this.world.cursorBox.material.color.setHex(0xbbe6e4)
+        this.world.cursorBox.material.opacity = 1
+        character.hoverObjectDisplayName = character.rayHoverResult.body.displayName
+        character.hoverObjectType = character.rayHoverResult.body.objectType
+      } else {
+        character.hoverObjectDisplayName = undefined
+        character.hoverObjectType = undefined
+      }
+      character.raycastHoverBox.position.y = character.rayHoverResult.hitPointWorld.y
+      character.raycastHoverBox.position.z = character.rayHoverResult.hitPointWorld.z
+      character.raycastHoverBox.position.x = character.rayHoverResult.hitPointWorld.x
+    } else {
+      this.world.cursorBox.material.color.setHex(0xced3dc)
+      this.world.cursorBox.material.opacity = 0.3
+      character.hoverObjectDisplayName = undefined
+      character.hoverObjectType = undefined
+    }
+
+    if (character.isPlayer) {
+      if (character.hoverObjectDisplayName && character.hoverObjectType) {
+        SET_DIALOG_BOX_ACTION({
+          displayName: character.rayHoverResult.body.displayName,
+          objectType: character.rayHoverResult.body.objectType
+        })
+      } else {
+        UN_HOVER_DIALOG_BOX_ACTION()
+      }
+    }
+
     // Jumping
     if (character.wantsToJump) {
       // If initJumpSpeed is set
@@ -871,7 +1064,9 @@ export class Character extends THREE.Object3D implements IWorldEntity {
       this.world = world
 
       // Register character
-      world.characters.push(this)
+      if (this.metadata.objectType !== 'player') {
+        world.characters.push(this)
+      }
 
       // Register physics
       world.physicsWorld.addBody(this.characterCapsule.body)
@@ -879,6 +1074,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
       // Add to graphicsWorld
       world.graphicsWorld.add(this)
       world.graphicsWorld.add(this.raycastBox)
+      world.graphicsWorld.add(this.raycastHoverBox)
 
       // Shadow cascades
       this.materials.forEach(mat => {
@@ -906,6 +1102,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
       // Remove visuals
       world.graphicsWorld.remove(this)
       world.graphicsWorld.remove(this.raycastBox)
+      world.graphicsWorld.remove(this.raycastHoverBox)
     }
   }
 }

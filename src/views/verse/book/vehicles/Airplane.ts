@@ -1,13 +1,14 @@
 import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 
-import { Vehicle } from './Vehicle'
-import { IControllable } from '../interfaces/IControllable'
-import { IWorldEntity } from '../interfaces/IWorldEntity'
-import { KeyBinding } from '../core/KeyBinding'
-import { SpringSimulator } from '../physics/spring_simulation/SpringSimulator'
-import * as Utils from '../core/FunctionLibrary'
-import { EntityType } from '../enums/EntityType'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
+import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
+import { IWorldEntity } from 'src/views/verse/book/interfaces/IWorldEntity'
+import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
+import { SpringSimulator } from 'src/views/verse/book/physics/spring_simulation/SpringSimulator'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import { EntityType } from 'src/views/verse/book/enums/EntityType'
 
 export class Airplane extends Vehicle implements IControllable, IWorldEntity {
   public entityType: EntityType = EntityType.Airplane
@@ -25,7 +26,7 @@ export class Airplane extends Vehicle implements IControllable, IWorldEntity {
   private enginePower = 0
   private lastDrag = 0
 
-  constructor(gltf: any) {
+  constructor(gltf: GLTF) {
     super(gltf, {
       radius: 0.12,
       suspensionStiffness: 150,
@@ -302,7 +303,7 @@ export class Airplane extends Vehicle implements IControllable, IWorldEntity {
     }
   }
 
-  public readAirplaneData(gltf: any): void {
+  public readAirplaneData(gltf: GLTF): void {
     gltf.scene.traverse(child => {
       if (child.hasOwnProperty('userData')) {
         if (child.userData.hasOwnProperty('data')) {

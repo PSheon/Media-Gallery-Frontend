@@ -1,5 +1,4 @@
-import * as THREE from 'three'
-import * as Utils from '../../core/FunctionLibrary'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import {
   DropIdle,
   DropRolling,
@@ -12,9 +11,9 @@ import {
   StartWalkLeft,
   StartWalkRight,
   Walk
-} from './_stateLibrary'
-import { Character } from '../Character'
-import { ICharacterState } from '../../interfaces/ICharacterState'
+} from 'src/views/verse/book/characters/character_states/_stateLibrary'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { ICharacterState } from 'src/views/verse/book/interfaces/ICharacterState'
 
 export abstract class CharacterStateBase implements ICharacterState {
   public character: Character
@@ -53,14 +52,14 @@ export abstract class CharacterStateBase implements ICharacterState {
       this.character.findVehicleToEnter(true)
     } else if (this.canFindVehiclesToEnter && this.character.actions.enter_passenger.justPressed) {
       this.character.findVehicleToEnter(false)
-    } else if (this.canEnterVehicles && this.character.vehicleEntryInstance !== null) {
+    } else if (this.canEnterVehicles && this.character.vehicleEntryInstance !== undefined) {
       if (
         this.character.actions.up.justPressed ||
         this.character.actions.down.justPressed ||
         this.character.actions.left.justPressed ||
         this.character.actions.right.justPressed
       ) {
-        this.character.vehicleEntryInstance = null
+        this.character.vehicleEntryInstance = undefined
         this.character.actions.up.isPressed = false
       }
     }

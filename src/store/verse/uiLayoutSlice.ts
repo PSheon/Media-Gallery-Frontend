@@ -1,6 +1,10 @@
+// ** Redux Imports
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
+// ** Types
+import { IInitialState } from 'src/types/verse/uiLayoutTypes'
+
+const initialState: IInitialState = {
   loadingScreenShow: true,
   appBarShow: false,
   moveControlShow: false,

@@ -1,6 +1,10 @@
+// ** Redux Imports
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
+// ** Types
+import { IInitialState } from 'src/types/verse/loadingScreenTypes'
+
+const initialState: IInitialState = {
   percentage: 0,
   content: 'Loading Scene...'
 }

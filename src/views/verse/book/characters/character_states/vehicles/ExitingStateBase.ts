@@ -1,11 +1,11 @@
 import * as THREE from 'three'
-import * as Utils from '../../../core/FunctionLibrary'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
-import { CharacterStateBase } from '../_stateLibrary'
-import { Character } from '../../Character'
-import { VehicleSeat } from '../../../vehicles/VehicleSeat'
-import { IControllable } from '../../../interfaces/IControllable'
-import { Vehicle } from 'src/ts/vehicles/Vehicle'
+import { CharacterStateBase } from 'src/views/verse/book/characters/character_states/_stateLibrary'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
+import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
 
 export abstract class ExitingStateBase extends CharacterStateBase {
   protected vehicle: IControllable

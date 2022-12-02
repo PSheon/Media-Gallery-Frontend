@@ -1,12 +1,11 @@
-import { SkyShader } from '../../lib/shaders/SkyShader'
 import * as THREE from 'three'
-import { World } from './World'
-import { EntityType } from '../enums/EntityType'
-import { IUpdatable } from '../interfaces/IUpdatable'
 import { default as CSM } from 'three-csm'
+import { SkyShader } from 'src/views/verse/lib/shaders/SkyShader'
+import { World } from 'src/views/verse/book/world/World'
+import { IUpdatable } from 'src/views/verse/book/interfaces/IUpdatable'
 
 export class Sky extends THREE.Object3D implements IUpdatable {
-  public updateOrder: number = 5
+  public updateOrder = 5
 
   public sunPosition: THREE.Vector3 = new THREE.Vector3()
   public csm: CSM
@@ -22,12 +21,12 @@ export class Sky extends THREE.Object3D implements IUpdatable {
     this.refreshHemiIntensity()
   }
 
-  private _phi: number = 50
-  private _theta: number = 145
+  private _phi = 50
+  private _theta = 145
 
   private hemiLight: THREE.HemisphereLight
-  private maxHemiIntensity: number = 0.9
-  private minHemiIntensity: number = 0.3
+  private maxHemiIntensity = 2.1
+  private minHemiIntensity = 1.9
 
   private skyMesh: THREE.Mesh
   private skyMaterial: THREE.ShaderMaterial
@@ -52,7 +51,7 @@ export class Sky extends THREE.Object3D implements IUpdatable {
     this.attach(this.skyMesh)
 
     // Ambient light
-    this.hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1.0)
+    this.hemiLight = new THREE.HemisphereLight(0xb1e1ff, 0xb97a20, 1.0)
     this.refreshHemiIntensity()
     this.hemiLight.color.setHSL(0.59, 0.4, 0.6)
     this.hemiLight.groundColor.setHSL(0.095, 0.2, 0.75)
@@ -70,8 +69,8 @@ export class Sky extends THREE.Object3D implements IUpdatable {
     // };
 
     // Legacy
-    let splitsCallback = (amount, near, far) => {
-      let arr = []
+    const splitsCallback = (amount: number): number[] => {
+      const arr: number[] = []
 
       for (let i = amount - 1; i >= 0; i--) {
         arr.push(Math.pow(1 / 4, i))
@@ -109,6 +108,39 @@ export class Sky extends THREE.Object3D implements IUpdatable {
       -this.sunPosition.y,
       -this.sunPosition.z
     ).normalize()
+
+    const linearTransformation = (secondPercentage: number, t1 = 2 / 9, t2 = 7 / 9) => {
+      if (0 <= secondPercentage && secondPercentage < t1) {
+        return (secondPercentage / t1) * (1 / 3)
+      } else if (t1 <= secondPercentage && secondPercentage < t2) {
+        return 1 / 3 + ((secondPercentage - t1) / (t2 - t1)) * (1 / 3)
+      } else if (t2 <= secondPercentage && secondPercentage < 1) {
+        return 2 / 3 + ((secondPercentage - t2) / (1 - t2)) * (1 / 3)
+      } else {
+        return 1
+      }
+    }
+
+    const angleToPhi = (anglePercentage: number) => {
+      if (0 <= anglePercentage && anglePercentage < 0.5) {
+        return Math.sin(anglePercentage * Math.PI) * 90
+      } else if (0.5 <= anglePercentage && anglePercentage <= 1) {
+        return (1 + (1 - Math.sin(anglePercentage * Math.PI))) * 90
+      }
+    }
+
+    const milliseconds =
+      (new Date().getMinutes() % 5) * 60 * 1000 + (new Date().getSeconds() % 60) * 1000 + new Date().getMilliseconds()
+    const secondPercentage = milliseconds / (5 * 60 * 1000)
+
+    const thetaSeconds =
+      new Date().getMinutes() * 60 * 1000 + (new Date().getSeconds() % 60) * 1000 + new Date().getMilliseconds()
+    const thetaSecondPercentage = thetaSeconds / (60 * 60 * 1000)
+
+    const newPhi = angleToPhi(linearTransformation(secondPercentage)) as number
+
+    this._phi = newPhi
+    this._theta = thetaSecondPercentage * 360
   }
 
   public refreshSunPosition(): void {

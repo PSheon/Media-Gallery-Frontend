@@ -1,5 +1,5 @@
-import { Path } from './Path'
 import { Object3D } from 'three'
+import { Path } from 'src/views/verse/book/world/Path'
 
 export class PathNode {
   public object: Object3D

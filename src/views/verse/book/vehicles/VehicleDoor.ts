@@ -1,9 +1,9 @@
 import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
-import { Vehicle } from './Vehicle'
-import * as Utils from '../core/FunctionLibrary'
-import { VehicleSeat } from './VehicleSeat'
-import { Side } from '../enums/Side'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
+import { Side } from 'src/views/verse/book/enums/Side'
 
 export class VehicleDoor {
   public vehicle: Vehicle
@@ -36,10 +36,10 @@ export class VehicleDoor {
     else this.sideMultiplier = 0
   }
 
-  public update(timestep: number): void {
+  public update(timeStep: number): void {
     if (this.achievingTargetRotation) {
       if (this.rotation < this.targetRotation) {
-        this.rotation += timestep * this.rotationSpeed
+        this.rotation += timeStep * this.rotationSpeed
 
         if (this.rotation > this.targetRotation) {
           this.rotation = this.targetRotation
@@ -49,7 +49,7 @@ export class VehicleDoor {
           this.physicsEnabled = true
         }
       } else if (this.rotation > this.targetRotation) {
-        this.rotation -= timestep * this.rotationSpeed
+        this.rotation -= timeStep * this.rotationSpeed
 
         if (this.rotation < this.targetRotation) {
           this.rotation = this.targetRotation

@@ -1,4 +1,4 @@
-import { PathNode } from './PathNode'
+import { PathNode } from 'src/views/verse/book/world/PathNode'
 
 export class Path {
   public nodes: { [nodeName: string]: PathNode } = {}

@@ -1,9 +1,8 @@
-import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as THREE from 'three'
-import * as Utils from '../../core/FunctionLibrary'
-import { ICollider } from '../../interfaces/ICollider'
-import { Object3D } from 'three'
-import { threeToCannon } from '../../../lib/utils/three-to-cannon'
+import * as CANNON from 'src/views/verse/lib/cannon/cannon'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import { ICollider } from 'src/views/verse/book/interfaces/ICollider'
+import { threeToCannon } from 'src/views/verse/lib/utils/three-to-cannon'
 
 export class TrimeshCollider implements ICollider {
   public mesh: any
@@ -11,7 +10,7 @@ export class TrimeshCollider implements ICollider {
   public body: CANNON.Body
   public debugModel: any
 
-  constructor(mesh: Object3D, options: any) {
+  constructor(mesh: THREE.Object3D, options: any) {
     this.mesh = mesh.clone()
 
     const defaults = {

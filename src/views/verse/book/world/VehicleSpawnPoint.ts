@@ -1,15 +1,14 @@
 import * as THREE from 'three'
-import { ISpawnPoint } from '../interfaces/ISpawnPoint'
-import { World } from './World'
-import { Helicopter } from '../vehicles/Helicopter'
-import { Airplane } from '../vehicles/Airplane'
-import { Car } from '../vehicles/Car'
-import * as Utils from '../core/FunctionLibrary'
-import { Vehicle } from '../vehicles/Vehicle'
-import { Character } from '../characters/Character'
-import { FollowPath } from '../characters/character_ai/FollowPath'
-import { LoadingManager } from '../core/LoadingManager'
-import { IWorldEntity } from '../interfaces/IWorldEntity'
+import { ISpawnPoint } from 'src/views/verse/book/interfaces/ISpawnPoint'
+import { World } from 'src/views/verse/book/world/World'
+import { Helicopter } from 'src/views/verse/book/vehicles/Helicopter'
+import { Airplane } from 'src/views/verse/book/vehicles/Airplane'
+import { Car } from 'src/views/verse/book/vehicles/Car'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { FollowPath } from 'src/views/verse/book/characters/character_ai/FollowPath'
+import { LoadingManager } from 'src/views/verse/book/core/LoadingManager'
 
 export class VehicleSpawnPoint implements ISpawnPoint {
   public type: string
@@ -23,7 +22,7 @@ export class VehicleSpawnPoint implements ISpawnPoint {
   }
 
   public spawn(loadingManager: LoadingManager, world: World): void {
-    loadingManager.loadGLTF('/assets/book/' + this.type + '.glb', (model: any) => {
+    loadingManager.loadGLTF('/assets/book/vehicle/' + this.type + '.glb', (model: any) => {
       const vehicle: Vehicle = this.getNewVehicleByType(model, this.type)
       vehicle.spawnPoint = this.object
 
@@ -37,7 +36,7 @@ export class VehicleSpawnPoint implements ISpawnPoint {
       world.add(vehicle)
 
       if (this.driver !== undefined) {
-        loadingManager.loadGLTF('/assets/book/boxman.glb', charModel => {
+        loadingManager.loadGLTF('/assets/book/character/ship-bear.glb', charModel => {
           const character = new Character(charModel)
           world.add(character)
           character.teleportToVehicle(vehicle, vehicle.seats[0])
@@ -76,12 +75,13 @@ export class VehicleSpawnPoint implements ISpawnPoint {
 
   private getNewVehicleByType(model: any, type: string): Vehicle {
     switch (type) {
-      case 'car':
-        return new Car(model)
       case 'heli':
         return new Helicopter(model)
       case 'airplane':
         return new Airplane(model)
+      case 'car':
+      default:
+        return new Car(model)
     }
   }
 }

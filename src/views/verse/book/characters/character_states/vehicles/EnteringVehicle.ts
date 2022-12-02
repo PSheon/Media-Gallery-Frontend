@@ -1,16 +1,15 @@
 import * as THREE from 'three'
-import { CharacterStateBase } from '../_stateLibrary'
-import { Character } from '../../Character'
-import { IControllable } from '../../../interfaces/IControllable'
-import { Driving } from './Driving'
-import { VehicleSeat } from '../../../vehicles/VehicleSeat'
-import { Side } from '../../../enums/Side'
-import { Sitting } from './Sitting'
-import { SeatType } from '../../../enums/SeatType'
-import { EntityType } from '../../../enums/EntityType'
-import { Object3D } from 'three'
-import * as Utils from '../../../core/FunctionLibrary'
-import { SpringSimulator } from '../../../physics/spring_simulation/SpringSimulator'
+import { CharacterStateBase } from 'src/views/verse/book/characters/character_states/_stateLibrary'
+import { Character } from 'src/views/verse/book/characters/Character'
+import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
+import { Driving } from 'src/views/verse/book/characters/character_states/vehicles/Driving'
+import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
+import { Side } from 'src/views/verse/book/enums/Side'
+import { Sitting } from 'src/views/verse/book/characters/character_states/vehicles/Sitting'
+import { SeatType } from 'src/views/verse/book/enums/SeatType'
+import { EntityType } from 'src/views/verse/book/enums/EntityType'
+import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
+import { SpringSimulator } from 'src/views/verse/book/physics/spring_simulation/SpringSimulator'
 
 export class EnteringVehicle extends CharacterStateBase {
   private vehicle: IControllable
@@ -25,7 +24,7 @@ export class EnteringVehicle extends CharacterStateBase {
 
   private factorSimulator: SpringSimulator
 
-  constructor(character: Character, seat: VehicleSeat, entryPoint: Object3D) {
+  constructor(character: Character, seat: VehicleSeat, entryPoint: THREE.Object3D) {
     super(character)
 
     this.canFindVehiclesToEnter = false

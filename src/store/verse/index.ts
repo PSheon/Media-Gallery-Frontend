@@ -1,5 +1,7 @@
+// ** Redux Imports
 import { combineReducers } from '@reduxjs/toolkit'
 
+// ** Slice imports
 import uiLayout from './uiLayoutSlice'
 import loadingScreen from './loadingScreenSlice'
 import startPanel from './startPanelSlice'
