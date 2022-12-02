@@ -16,7 +16,7 @@ import { styled, useTheme } from '@mui/material/styles'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import MuiListItem, { ListItemProps } from '@mui/material/ListItem'
 
-// ** Third Party Imports
+// ** Utils Imports
 import clsx from 'clsx'
 import { usePopper } from 'react-popper'
 

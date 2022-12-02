@@ -14,16 +14,14 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import { styled, useTheme } from '@mui/material/styles'
 import ListItemButton from '@mui/material/ListItemButton'
 
-// ** Third Party Imports
-import clsx from 'clsx'
-
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
 // ** Configs Import
 import themeConfig from 'src/configs/themeConfig'
 
-// ** Utils
+// ** Utils Imports
+import clsx from 'clsx'
 import { hasActiveChild, removeChildren } from 'src/@core/layouts/utils'
 
 // ** Type Import

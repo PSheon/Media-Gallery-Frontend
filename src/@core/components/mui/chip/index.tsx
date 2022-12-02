@@ -1,7 +1,7 @@
 // ** MUI Imports
 import MuiChip from '@mui/material/Chip'
 
-// ** Third Party Imports
+// ** Utils Imports
 import clsx from 'clsx'
 
 // ** Types

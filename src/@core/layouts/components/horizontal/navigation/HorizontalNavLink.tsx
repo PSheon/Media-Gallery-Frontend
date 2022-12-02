@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import MuiListItem, { ListItemProps } from '@mui/material/ListItem'
 
-// ** Third Party Imports
+// ** Utils Imports
 import clsx from 'clsx'
 
 // ** Theme Config Import
