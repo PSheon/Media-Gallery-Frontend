@@ -6,10 +6,20 @@ import Link from 'next/link'
 
 // ** MUI Imports
 import Avatar from '@mui/material/Avatar'
+import Badge from '@mui/material/Badge'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import { styled } from '@mui/material/styles'
+
+// ** Hooks
+import { useAuth } from 'src/hooks/useAuth'
+
+// ** Utils
+import { etherAddressFormatter } from 'src/utils/ether-address-formatter'
+
+// ** Config
+import apiConfig from 'src/configs/api'
 
 // ** Types
 import { RootState } from 'src/store'
@@ -37,7 +47,7 @@ const StyledLink = styled(Link)({
 const PanelCard = styled(Card)(({ theme }) => ({
   width: 'fit-content',
   height: 'fit-content',
-  padding: theme.spacing(0),
+  padding: 4,
   alignItems: 'center',
   borderRadius: '1.8rem',
   backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
@@ -48,8 +58,18 @@ const PanelCard = styled(Card)(({ theme }) => ({
   }
 }))
 
+// ** Styled Components
+const BadgeContentSpan = styled('span')(({ theme }) => ({
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  backgroundColor: theme.palette.success.main,
+  boxShadow: `0 0 0 2px ${theme.palette.background.paper}`
+}))
+
 const AppBarPanel = () => {
   // ** Hooks
+  const auth = useAuth()
   const UI_LAYOUT = useSelector(({ verse }: RootState) => verse.uiLayout)
 
   return (
@@ -59,7 +79,37 @@ const AppBarPanel = () => {
       </StyledLink>
 
       <PanelCard>
-        <Typography>Profile</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', ml: 2, mr: 4, alignItems: 'flex-end', flexDirection: 'column' }}>
+            <Typography sx={{ fontWeight: 600 }} color='common.white'>
+              {auth.user.username}
+            </Typography>
+            <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
+              {auth.user?.address ? `${etherAddressFormatter(auth.user.address)}` : 'guest'}
+            </Typography>
+          </Box>
+          <Badge
+            overlap='circular'
+            badgeContent={<BadgeContentSpan />}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+          >
+            <Avatar
+              alt={auth.user.username}
+              src={
+                auth.user.avatar ? `${apiConfig.publicFolderUrl}${auth.user.avatar as string}` : '/images/avatars/1.png'
+              }
+              sx={{
+                width: '2.5rem',
+                height: '2.5rem',
+                border: theme => `2px solid ${theme.palette.primary.main}`,
+                boxShadow: theme => theme.shadows[9]
+              }}
+            />
+          </Badge>
+        </Box>
       </PanelCard>
     </RootBox>
   )
