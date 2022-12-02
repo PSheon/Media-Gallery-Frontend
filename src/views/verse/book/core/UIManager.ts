@@ -3,6 +3,8 @@ import {
   HIDE_APP_BAR,
   SHOW_LOADING_SCREEN,
   HIDE_LOADING_SCREEN,
+  SHOW_MOVE_CONTROL,
+  HIDE_MOVE_CONTROL,
   SHOW_SETTING_PANEL,
   HIDE_SETTING_PANEL
 } from 'src/views/verse/book/actions'
@@ -11,15 +13,15 @@ export class UIManager {
   public static setUserInterfaceVisible(show: boolean): void {
     if (show) {
       SHOW_APP_BAR()
+      SHOW_MOVE_CONTROL()
       SHOW_SETTING_PANEL()
 
-      // SHOW_MOVE_CONTROL()
       // SHOW_SOCIAL_PANEL()
     } else {
       HIDE_APP_BAR()
+      HIDE_MOVE_CONTROL()
       HIDE_SETTING_PANEL()
 
-      // HIDE_MOVE_CONTROL()
       // HIDE_SOCIAL_PANEL()
     }
   }

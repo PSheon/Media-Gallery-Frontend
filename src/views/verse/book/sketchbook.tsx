@@ -16,9 +16,9 @@ import StartPanel from 'src/views/verse/components/StartPanel'
 import SettingPanel from 'src/views/verse/components/SettingPanel'
 import DialogBox from 'src/views/verse/components/DialogBox'
 import HintBox from 'src/views/verse/components/HintBox'
+import MoveControlBox from 'src/views/verse/components/MoveControlBox'
 
 // import SocialPanel from './components/SocialPanel'
-// import MoveControlBox from 'src/views/verse/components/MoveControlBox'
 
 // ** Actions Imports
 import { setWorldInstance } from 'src/store/verse/sceneSlice'
@@ -55,9 +55,9 @@ const Book = () => {
       <SettingPanel />
       <DialogBox />
       <HintBox />
+      <MoveControlBox />
 
       {/* <SocialPanel /> */}
-      {/* <MoveControlBox /> */}
     </StyledRootBox>
   )
 }
