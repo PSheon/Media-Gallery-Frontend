@@ -612,7 +612,7 @@ export class World {
   }
 
   adjustPhysicDebug(newPhysicDebugStatus: boolean): void {
-    if (newPhysicDebugStatus !== undefined) {
+    if (newPhysicDebugStatus) {
       this.cannonDebugRenderer = new CannonDebugRenderer(this.graphicsWorld, this.physicsWorld)
       this.params.Debug_Physics = true
     } else {
