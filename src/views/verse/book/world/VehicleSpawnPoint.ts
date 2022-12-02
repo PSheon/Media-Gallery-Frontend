@@ -36,7 +36,7 @@ export class VehicleSpawnPoint implements ISpawnPoint {
       world.add(vehicle)
 
       if (this.driver !== undefined) {
-        loadingManager.loadGLTF('/assets/book/character/ship-bear.glb', charModel => {
+        loadingManager.loadGLTF('/assets/book/character/ship_bear.glb', charModel => {
           const character = new Character(charModel)
           world.add(character)
           character.teleportToVehicle(vehicle, vehicle.seats[0])

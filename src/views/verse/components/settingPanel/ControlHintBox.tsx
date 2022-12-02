@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 
 // ** MUI Imports
@@ -11,9 +11,8 @@ import Typography from '@mui/material/Typography'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 
-// ** Icons Imports
-import ControllerClassicOutline from 'mdi-material-ui/ControllerClassicOutline'
-import Close from 'mdi-material-ui/Close'
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
 
 // ** Utils Imports
 import clsx from 'clsx'
@@ -51,10 +50,10 @@ const ControlHintBox = () => {
   const handleControlHintPanelClose = () => setControlHintPanelOpen(false)
 
   return (
-    <>
+    <Fragment>
       <Tooltip title='Control Hint' placement='top' arrow>
         <IconButton color='secondary' onClick={handleControlHintPanelOpen}>
-          <ControllerClassicOutline />
+          <Icon icon='mdi:gamepad-variant' fontSize={20} />
         </IconButton>
       </Tooltip>
 
@@ -65,7 +64,7 @@ const ControlHintBox = () => {
             onClick={handleControlHintPanelClose}
             sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
           >
-            <Close />
+            <Icon icon='mdi:close-circle' fontSize={20} />
           </IconButton>
           <Box sx={{ mb: 8, textAlign: 'center' }}>
             <Typography variant='h5' sx={{ mb: 3 }}>
@@ -114,7 +113,7 @@ const ControlHintBox = () => {
           </StyledContentBox>
         </DialogContent>
       </Dialog>
-    </>
+    </Fragment>
   )
 }
 

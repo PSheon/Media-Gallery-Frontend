@@ -71,7 +71,7 @@ const HintBox = () => {
 
   return (
     <RootBox style={{ display: !LOADING_SCREEN_SHOW && !DIALOG_BOX.show && DIALOG_BOX.hover ? 'block' : 'none' }}>
-      <PanelCard className='animate__animated animate__faster animate__fadeIn' onClick={handleClick}>
+      <PanelCard onClick={handleClick}>
         <Typography variant='subtitle1'>{frameDisplayName}</Typography>
         {frameDescription && <Typography variant='subtitle2'>{frameDescription}</Typography>}
         <Typography component='sup' variant='caption'>

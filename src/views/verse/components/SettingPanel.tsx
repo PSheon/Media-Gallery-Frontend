@@ -11,9 +11,6 @@ import Grid from '@mui/material/Grid'
 import ControlHintBox from 'src/views/verse/components/settingPanel/ControlHintBox'
 import SettingBox from 'src/views/verse/components/settingPanel/SettingBox'
 
-// import NftListBox from 'src/views/verse/book/components/settingPanel/NftListBox'
-// import ReferralBox from 'src/views/verse/book/components/settingPanel/ReferralBox'
-
 // ** Types
 import { RootState } from 'src/store'
 
@@ -46,21 +43,9 @@ const SettingPanel = () => {
     <RootBox style={{ display: UI_LAYOUT.settingPanelShow ? 'block' : 'none' }}>
       <PanelCard>
         <Grid container>
-          {/* <Grid item>
-            <TestBox />
-          </Grid> */}
-
-          {/* <Grid item>
-            <NftListBox />
-          </Grid> */}
-
           <Grid item>
             <ControlHintBox />
           </Grid>
-
-          {/* <Grid item>
-            <ReferralBox />
-          </Grid> */}
 
           <Grid item>
             <SettingBox />

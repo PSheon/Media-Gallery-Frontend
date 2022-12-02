@@ -2,7 +2,6 @@ import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as _ from 'lodash'
 import { SimulationFrame } from 'src/views/verse/book/physics/spring_simulation/SimulationFrame'
-import { World } from 'src/views/verse/book/world/World'
 import { Side } from 'src/views/verse/book/enums/Side'
 import { Space } from 'src/views/verse/book/enums/Space'
 
@@ -107,11 +106,7 @@ export function round(value: number, decimals = 0): number {
 }
 
 export function roundVector(vector: THREE.Vector3, decimals = 0): THREE.Vector3 {
-  return new THREE.Vector3(
-    this.round(vector.x, decimals),
-    this.round(vector.y, decimals),
-    this.round(vector.z, decimals)
-  )
+  return new THREE.Vector3(round(vector.x, decimals), round(vector.y, decimals), round(vector.z, decimals))
 }
 
 /**
@@ -148,7 +143,7 @@ export function getSignedAngleBetweenVectors(
   normal: THREE.Vector3 = new THREE.Vector3(0, 1, 0),
   dotTreshold = 0.0005
 ): number {
-  let angle = this.getAngleBetweenVectors(v1, v2, dotTreshold)
+  let angle = getAngleBetweenVectors(v1, v2, dotTreshold)
 
   // Get vector pointing up or down
   const cross = new THREE.Vector3().crossVectors(v1, v2)
@@ -240,7 +235,7 @@ export function setupMeshProperties(child: any): void {
     mat.shininess = 0
     mat.name = child.material.name
     mat.map = child.material.map
-    mat.map.anisotropy = 4
+    mat.map!.anisotropy = 4
     mat.aoMap = child.material.aoMap
     mat.transparent = child.material.transparent
     mat.skinning = child.material.skinning

@@ -21,7 +21,7 @@ export class VehicleSeat {
   public entryPoints: THREE.Object3D[] = []
   public door: VehicleDoor
 
-  public occupiedBy: Character = null
+  public occupiedBy: Character | undefined
 
   constructor(vehicle: IControllable, object: THREE.Object3D, gltf: any) {
     this.vehicle = vehicle

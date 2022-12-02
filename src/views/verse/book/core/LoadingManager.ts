@@ -12,10 +12,10 @@ export class LoadingManager {
   public isRestartLoading = false
   public onFinishedCallback: any = undefined
   public loadingProgress = new THREE.LoadingManager()
+  public gltfLoader: GLTFLoader
 
   private world: World
   private dracoLoader: DRACOLoader
-  private gltfLoader: GLTFLoader
   private loadingTracker: LoadingTrackerEntry[] = []
 
   constructor(world: World) {

@@ -13,7 +13,8 @@ export class CharacterSpawnPoint implements ISpawnPoint {
   }
 
   public spawn(loadingManager: LoadingManager, world: World): void {
-    const avatarModel = 'ship-bear'
+    // NOTE
+    const avatarModel = 'ship_bear'
     loadingManager.loadGLTF(`/assets/book/character/${avatarModel}.glb`, model => {
       const player = new Character(model)
       player.isPlayer = true

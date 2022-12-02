@@ -17,15 +17,14 @@ import Typography from '@mui/material/Typography'
 // ** Actions Imports
 import { setDialogBoxStep, hideDialogBox } from 'src/store/verse/dialogBoxSlice'
 
-// ** Custom Components Imports
-// import EditNftBox from 'src/views/verse/components/dialogBox/EditNftBox'
-// import ViewNftBox from 'src/views/verse/components/dialogBox/ViewNftBox'
+// ** Components Imports
+import ViewNftBox from 'src/views/verse/components/dialogBox/ViewNftBox'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
 
-// ** Icons Imports
-import Close from 'mdi-material-ui/Close'
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
 
 // ** Types
 import { RootState } from 'src/store'
@@ -122,7 +121,7 @@ const DialogBox = () => {
             onClick={handleDialogClose}
             sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
           >
-            <Close />
+            <Icon icon='mdi:close-circle' fontSize={20} />
           </IconButton>
 
           <Box sx={{ px: 4 }}>
@@ -153,7 +152,7 @@ const DialogBox = () => {
       return (
         <DialogContent sx={{ position: 'relative' }}>
           <IconButton size='small' onClick={handleDialogClose} sx={{ position: 'absolute', right: 0, top: 0 }}>
-            <Close />
+            <Icon icon='mdi:close-circle' fontSize={20} />
           </IconButton>
 
           <Box sx={{ px: 4 }}>
@@ -203,6 +202,8 @@ const DialogBox = () => {
       // } else {
       //   return <ViewNftBox artworkMetadata={artworkMetadata} />
       // }
+
+      return <ViewNftBox artworkMetadata={artworkMetadata} />
     }
 
     if (currentSession?.type === 'playerInfo') {

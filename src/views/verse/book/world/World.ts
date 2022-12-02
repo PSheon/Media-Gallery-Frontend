@@ -11,8 +11,11 @@ import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader'
 
 import { Detector } from 'src/views/verse/lib/utils/Detector'
 import { Stats } from 'src/views/verse/lib/utils/Stats'
+import { ColyseusClient } from 'src/views/verse/lib/utils/Network'
 
 import { CannonDebugRenderer } from 'src/views/verse/lib/cannon/CannonDebugRenderer'
+import toast from 'react-hot-toast'
+import { Room } from 'colyseus.js'
 import * as _ from 'lodash'
 
 import { InputManager } from 'src/views/verse/book/core/InputManager'
@@ -50,8 +53,8 @@ export class World {
   public stats: Stats
   public graphicsWorld: THREE.Scene
   public sky: Sky
+  public room: Room | undefined
   public physicsWorld: CANNON.World
-  public parallelPairs: any[] // NOTE
   public physicsFrameRate: number
   public physicsFrameTime: number
   public physicsMaxPrediction: number
@@ -69,13 +72,13 @@ export class World {
   public cursorBox: THREE.Mesh
   public cannonDebugRenderer: CannonDebugRenderer | undefined
   public scenarios: Scenario[] = []
-  public gltfScenes: THREE.Scene[] = [] // NOTE
-  public physicsBodyList: CANNON.body[] = [] // NOTE
+  public gltfScenes: THREE.Scene[] = []
+  public physicsBodyList: CANNON.body[] = []
+  public visitors: Record<string, Character> = {}
   public characters: Character[] = []
   public vehicles: Vehicle[] = []
   public nfts: Nft[] = []
   public paths: Path[] = []
-  public scenarioGUIFolder: any // NOTE
   public updatableList: IUpdatable[] = []
   public mixer: Record<string, THREE.AnimationMixer> = {}
   public localPlayer: Character | undefined = undefined
@@ -85,7 +88,7 @@ export class World {
     displayName: '',
     description: '',
     worldScenePaths: [],
-    nftList: [] // NOTE
+    nftList: []
 
     // allowedVisitors: [] // NOTE
   }
@@ -183,7 +186,6 @@ export class World {
     this.physicsWorld.solver.iterations = 10
     this.physicsWorld.allowSleep = true
 
-    this.parallelPairs = [] // NOTE
     this.physicsFrameRate = 60
     this.physicsFrameTime = 1 / this.physicsFrameRate
     this.physicsMaxPrediction = this.physicsFrameRate
@@ -197,9 +199,6 @@ export class World {
 
     // Stats (FPS, Frame time, Memory)
     this.stats = Stats()
-
-    // Create right panel GUI
-    // this.createParamsGUI(scope)
 
     // Initialization
     this.inputManager = new InputManager(this, this.renderer.domElement)
@@ -494,6 +493,8 @@ export class World {
     }
     if (launch && defaultScenarioID !== '') {
       this.launchScenario(defaultScenarioID, loadingManager)
+
+      this.joinMultiPlayerRoom(loadingManager)
     }
   }
 
@@ -502,7 +503,7 @@ export class World {
 
     if (this.localPlayer) {
       this.localPlayer.removeFromWorld(this)
-      delete this.localPlayer
+      this.localPlayer = undefined
     }
 
     this.clearEntities()
@@ -515,6 +516,99 @@ export class World {
         scenario.launch(loadingManager, this)
       }
     }
+  }
+
+  public joinMultiPlayerRoom(loadingManager: LoadingManager): void {
+    // NOTE
+    ColyseusClient.joinOrCreate('game', {
+      // sceneId: getState().verse.scene.sceneId,
+      // moralisId: getState().verse.identity.moralisId,
+      // displayName: getState().verse.identity.displayName,
+      // photoURL: getState().verse.identity.photoURL,
+      // avatarModel: getState().verse.identity.avatarModel
+      sceneId: 'test',
+      moralisId: 'test',
+      displayName: 'test',
+      photoURL: 'test',
+      avatarModel: 'ship_bear'
+    })
+      .then(room => {
+        this.room = room
+        const gltfLoader = loadingManager.gltfLoader
+
+        room.state.players.onAdd = (player, sessionId) => {
+          if (room.sessionId !== sessionId) {
+            gltfLoader.load(`/assets/glb/character/${player.metadata.avatarModel}.glb`, model => {
+              toast.success(`${player.metadata.displayName} joined!`)
+              const visitor = new Character(model)
+
+              visitor.setMetadata({
+                displayName: `Player #${player.metadata.displayName}`,
+                objectType: 'player'
+              })
+              visitor.setLabelVisible(this.params.Label_Visible)
+
+              this.add(visitor)
+              this.visitors[sessionId] = visitor
+
+              visitor.setPosition(player.position.x, player.position.y, player.position.z)
+
+              // Update player metadata based on changes from the server.
+              player.metadata.onChange = changes => {
+                changes.forEach(change => {
+                  if (change.field === 'displayName') {
+                    this.visitors[sessionId].setMetadata({
+                      displayName: `Player #${player.metadata.displayName}`,
+                      objectType: 'player'
+                    })
+                  }
+                  if (change.field === 'avatarModel') {
+                    this.visitors[sessionId].changeAvatar(player.metadata.avatarModel)
+                  }
+                })
+              }
+
+              // Update player position based on changes from the server.
+              player.position.onChange = () => {
+                this.visitors[sessionId].setPosition(player.position.x, player.position.y, player.position.z)
+              }
+
+              // Update player viewVector based on changes from the server.
+              player.viewVector.onChange = () => {
+                this.visitors[sessionId].viewVector.x = player.viewVector.x
+                this.visitors[sessionId].viewVector.y = player.viewVector.y
+                this.visitors[sessionId].viewVector.z = player.viewVector.z
+              }
+
+              // Update player orientation based on changes from the server.
+              player.orientation.onChange = () => {
+                this.visitors[sessionId].orientation.x = player.orientation.x
+                this.visitors[sessionId].orientation.y = player.orientation.y
+                this.visitors[sessionId].orientation.z = player.orientation.z
+              }
+
+              // Update player action based on changes from the server.
+              player.action.onChange = () => {
+                this.visitors[sessionId].triggerAction(player.action.key, player.action.pressed)
+              }
+
+              // Update player animation based on changes from the server.
+              player.animation.onChange = () => {
+                this.visitors[sessionId].playAnimationClip(player.animation.clip)
+              }
+            })
+          }
+        }
+
+        room.state.players.onRemove = (player, sessionId: string): void => {
+          this.visitors[sessionId].removeFromWorld(this)
+          delete this.visitors[sessionId]
+        }
+      })
+      .catch(roomError => {
+        console.log('roomError, ', roomError)
+        toast.error('Join room failed')
+      })
   }
 
   public restartScenario(): void {
@@ -582,10 +676,16 @@ export class World {
       this.characters.forEach(char => {
         char.setLabelVisible(true)
       })
+      Object.values(this.visitors).forEach(visitor => {
+        visitor.setLabelVisible(true)
+      })
       this.params.Label_Visible = true
     } else {
       this.characters.forEach(char => {
         char.setLabelVisible(false)
+      })
+      Object.values(this.visitors).forEach(visitor => {
+        visitor.setLabelVisible(false)
       })
       this.params.Label_Visible = false
     }
@@ -631,12 +731,18 @@ export class World {
   }
 
   public dispose() {
+    if (this.room !== undefined) {
+      this.room?.leave()
+    }
     this.clearEntities()
     if (this.localPlayer) {
       this.localPlayer.removeFromWorld(this)
     }
     this.physicsBodyList.forEach(body => {
       this.physicsWorld.remove(body)
+    })
+    Object.values(this.visitors).forEach(visitor => {
+      visitor.removeFromWorld(this)
     })
 
     this.renderer.renderLists.dispose()
@@ -652,12 +758,14 @@ export class World {
       this.graphicsWorld.remove(scene)
     })
 
+    this.room = undefined
     this.localPlayer = undefined
     this.scenarios = []
 
     this.gltfScenes = []
     this.physicsBodyList = []
     this.vehicles = []
+    this.visitors = {}
     this.nfts = []
   }
 

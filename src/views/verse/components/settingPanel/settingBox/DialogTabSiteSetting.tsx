@@ -8,27 +8,12 @@ import { Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Switch from '@mui/material/Switch'
-import InputLabel from '@mui/material/InputLabel'
+import Grid from '@mui/material/Grid'
 
 // import Slider from '@mui/material/Slider'
 
-// ** Icons Imports
-// import VolumeHigh from 'mdi-material-ui/VolumeHigh'
-// import VolumeOff from 'mdi-material-ui/VolumeOff'
-import AutoFix from 'mdi-material-ui/AutoFix'
-import LabelOutline from 'mdi-material-ui/LabelOutline'
-import AlarmLightOffOutline from 'mdi-material-ui/AlarmLightOffOutline'
-import AlarmLightOutline from 'mdi-material-ui/AlarmLightOutline'
-import Mouse from 'mdi-material-ui/Mouse'
-import MouseOff from 'mdi-material-ui/MouseOff'
-import CubeOutline from 'mdi-material-ui/CubeOutline'
-import CubeOffOutline from 'mdi-material-ui/CubeOffOutline'
-import ChartBarStacked from 'mdi-material-ui/ChartBarStacked'
-
-// import Ethereum from 'mdi-material-ui/Ethereum'
-
-// ** Custom Network Switcher Component
-// import NetworkSwitcher from 'src/views/verse/book/components/siteSettings/NetworkSwitcher.js'
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
 
 // ** Custom Avatar Component
 import CustomAvatar from 'src/@core/components/mui/avatar'
@@ -120,12 +105,12 @@ const DialogTabSiteSetting = () => {
   }
 
   return (
-    <Box>
-      {/* <Box sx={{ mb: 8 }}>
-        <Box sx={{ mb: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <Grid container spacing={4} sx={{ flexGrow: 1 }}>
+      {/* <Grid item xs={12} sx={{ mb: 4 }}>
+        <Box sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <CustomAvatar skin='light' color='primary' variant='rounded' sx={{ mr: 3, width: 48, height: 48 }}>
-              {streamingPlayerVolume > 0 ? <VolumeHigh /> : <VolumeOff />}
+              <Icon icon='material-symbols:volume-down' fontSize={20} />
             </CustomAvatar>
             <Box>
               <Typography>Streaming Volume</Typography>
@@ -138,15 +123,14 @@ const DialogTabSiteSetting = () => {
             </Box>
           </Box>
         </Box>
-      </Box> */}
+      </Grid> */}
+
       {isDesktop && (
-        <Box sx={{ mb: 8 }}>
-          <Box
-            sx={{ mb: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-          >
+        <Grid item xs={12} sx={{ mb: 4 }}>
+          <Box sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <CustomAvatar skin='light' color='success' variant='rounded' sx={{ mr: 3, width: 48, height: 48 }}>
-                {<AutoFix />}
+                <Icon icon='material-symbols:auto-fix' fontSize={20} />
               </CustomAvatar>
               <Box>
                 <Typography>Anti Aliasing</Typography>
@@ -155,34 +139,23 @@ const DialogTabSiteSetting = () => {
             </Box>
             <Box sx={{ mb: 4 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <InputLabel
-                  htmlFor='change-anti-aliasing'
-                  sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-                >
-                  disable
-                </InputLabel>
                 <Switch
                   id='change-anti-aliasing'
                   name='change-anti-aliasing'
                   checked={antiAliasing}
                   onChange={handleAdjustAntiAliasing}
                 />
-                <InputLabel
-                  htmlFor='change-anti-aliasing'
-                  sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-                >
-                  enable
-                </InputLabel>
               </Box>
             </Box>
           </Box>
-        </Box>
+        </Grid>
       )}
-      <Box sx={{ mb: 8 }}>
-        <Box sx={{ mb: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+
+      <Grid item xs={12} sx={{ mb: 4 }}>
+        <Box sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <CustomAvatar skin='light' color='success' variant='rounded' sx={{ mr: 3, width: 48, height: 48 }}>
-              {<LabelOutline />}
+              <Icon icon='material-symbols:label' fontSize={20} />
             </CustomAvatar>
             <Box>
               <Typography>Label Visible</Typography>
@@ -191,33 +164,22 @@ const DialogTabSiteSetting = () => {
           </Box>
           <Box sx={{ mb: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <InputLabel
-                htmlFor='change-label-visible'
-                sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-              >
-                disable
-              </InputLabel>
               <Switch
                 id='change-label-visible'
                 name='change-label-visible'
                 checked={labelVisible}
                 onChange={handleAdjustLabelVisible}
               />
-              <InputLabel
-                htmlFor='change-label-visible'
-                sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-              >
-                enable
-              </InputLabel>
             </Box>
           </Box>
         </Box>
-      </Box>
-      <Box sx={{ mb: 8 }}>
-        <Box sx={{ mb: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      </Grid>
+
+      <Grid item xs={12} sx={{ mb: 4 }}>
+        <Box sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <CustomAvatar skin='light' color='success' variant='rounded' sx={{ mr: 3, width: 48, height: 48 }}>
-              {shadows ? <AlarmLightOutline /> : <AlarmLightOffOutline />}
+              <Icon icon='material-symbols:ev-shadow' fontSize={20} />
             </CustomAvatar>
             <Box>
               <Typography>Shadows</Typography>
@@ -226,28 +188,17 @@ const DialogTabSiteSetting = () => {
           </Box>
           <Box sx={{ mb: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <InputLabel
-                htmlFor='change-shadows'
-                sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-              >
-                disable
-              </InputLabel>
               <Switch id='change-shadows' name='change-shadows' checked={shadows} onChange={handleAdjustShadows} />
-              <InputLabel
-                htmlFor='change-shadows'
-                sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-              >
-                enable
-              </InputLabel>
             </Box>
           </Box>
         </Box>
-      </Box>
-      <Box sx={{ mb: 8 }}>
-        <Box sx={{ mb: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      </Grid>
+
+      <Grid item xs={12} sx={{ mb: 4 }}>
+        <Box sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <CustomAvatar skin='light' color='success' variant='rounded' sx={{ mr: 3, width: 48, height: 48 }}>
-              {pointerLock ? <Mouse /> : <MouseOff />}
+              <Icon icon='material-symbols:mouse' fontSize={20} />
             </CustomAvatar>
             <Box>
               <Typography>Pointer Lock</Typography>
@@ -256,36 +207,23 @@ const DialogTabSiteSetting = () => {
           </Box>
           <Box sx={{ mb: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <InputLabel
-                htmlFor='change-pointer-lock'
-                sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-              >
-                disable
-              </InputLabel>
               <Switch
                 id='change-pointer-lock'
                 name='change-pointer-lock'
                 checked={pointerLock}
                 onChange={handleAdjustPointerLock}
               />
-              <InputLabel
-                htmlFor='change-pointer-lock'
-                sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-              >
-                enable
-              </InputLabel>
             </Box>
           </Box>
         </Box>
-      </Box>
+      </Grid>
+
       {isDevelopment && (
-        <Box sx={{ mb: 8 }}>
-          <Box
-            sx={{ mb: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-          >
+        <Grid item xs={12} sx={{ mb: 4 }}>
+          <Box sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <CustomAvatar skin='light' color='success' variant='rounded' sx={{ mr: 3, width: 48, height: 48 }}>
-                {physicDebug ? <CubeOutline /> : <CubeOffOutline />}
+                <Icon icon='tabler:3d-cube-sphere' fontSize={20} />
               </CustomAvatar>
               <Box>
                 <Typography>Physic Debug</Typography>
@@ -294,37 +232,23 @@ const DialogTabSiteSetting = () => {
             </Box>
             <Box sx={{ mb: 4 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <InputLabel
-                  htmlFor='change-physic-debug'
-                  sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-                >
-                  disable
-                </InputLabel>
                 <Switch
                   id='change-physic-debug'
                   name='change-physic-debug'
                   checked={physicDebug}
                   onChange={handleAdjustPhysicDebug}
                 />
-                <InputLabel
-                  htmlFor='change-physic-debug'
-                  sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-                >
-                  enable
-                </InputLabel>
               </Box>
             </Box>
           </Box>
-        </Box>
+        </Grid>
       )}
       {isDevelopment && (
-        <Box sx={{ mb: 8 }}>
-          <Box
-            sx={{ mb: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-          >
+        <Grid item xs={12} sx={{ mb: 4 }}>
+          <Box sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <CustomAvatar skin='light' color='success' variant='rounded' sx={{ mr: 3, width: 48, height: 48 }}>
-                <ChartBarStacked />
+                <Icon icon='mingcute:performance-line' fontSize={20} />
               </CustomAvatar>
               <Box>
                 <Typography>FPS Debug</Typography>
@@ -333,44 +257,18 @@ const DialogTabSiteSetting = () => {
             </Box>
             <Box sx={{ mb: 4 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <InputLabel
-                  htmlFor='change-fps-debug'
-                  sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-                >
-                  disable
-                </InputLabel>
                 <Switch
                   id='change-fps-debug'
                   name='change-fps-debug'
                   checked={fpsDebug}
                   onChange={handleAdjustFpsDebug}
                 />
-                <InputLabel
-                  htmlFor='change-fps-debug'
-                  sx={{ cursor: 'pointer', fontSize: '0.875rem', color: 'text.secondary' }}
-                >
-                  enable
-                </InputLabel>
               </Box>
             </Box>
           </Box>
-        </Box>
+        </Grid>
       )}
-      {/* <Box>
-        <Box sx={{ mb: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <CustomAvatar skin='light' color='info' variant='rounded' sx={{ mr: 3, width: 48, height: 48 }}>
-              <Ethereum />
-            </CustomAvatar>
-            <Box>
-              <Typography>Change Network</Typography>
-              <Typography variant='caption'>change network to authorize transaction</Typography>
-            </Box>
-          </Box>
-          <NetworkSwitcher />
-        </Box>
-      </Box> */}
-    </Box>
+    </Grid>
   )
 }
 
