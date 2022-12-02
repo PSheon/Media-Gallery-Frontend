@@ -8,17 +8,17 @@ import dynamic from 'next/dynamic'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Book Import
-const Book = dynamic(() => import('src/views/verse/book/sketchbook'), { ssr: false })
+const Book = dynamic(() => import('src/views/verse/book/Sketchbook'), { ssr: false })
 
-function MapPage() {
+function VerseBookPage() {
   return <Book />
 }
 
-MapPage.acl = {
+VerseBookPage.acl = {
   action: 'read',
-  subject: 'user-page'
+  subject: 'guest-page'
 }
 
-MapPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+VerseBookPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-export default MapPage
+export default VerseBookPage
