@@ -107,8 +107,8 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }))
 
 const LoadingScreen = () => {
-  const UI_LAYOUT = useSelector(({ verse }: RootState) => verse.uiLayout)
-  const LOADING_SCREEN = useSelector(({ verse }: RootState) => verse.loadingScreen)
+  const UI_LAYOUT = useSelector(({ verse }: RootState) => verse.view.uiLayout)
+  const LOADING_SCREEN = useSelector(({ verse }: RootState) => verse.view.loadingScreen)
 
   return (
     <RootBox sx={{ display: UI_LAYOUT.loadingScreenShow ? 'flex' : 'none' }}>

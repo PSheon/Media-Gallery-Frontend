@@ -14,7 +14,7 @@ import {
   UN_HOVER_DIALOG_BOX_ACTION,
   SHOW_DIALOG_BOX_ACTION,
   HIDE_DIALOG_BOX_ACTION
-} from 'src/views/verse/book/actions'
+} from 'src/views/verse/book/actions/view'
 
 export class CameraOperator implements IInputReceiver, IUpdatable {
   public updateOrder = 4

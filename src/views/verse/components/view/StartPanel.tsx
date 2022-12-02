@@ -21,7 +21,7 @@ import Fade, { FadeProps } from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 
 // ** Actions Imports
-import { hideStartPanel } from 'src/store/verse/startPanelSlice'
+import { hideStartPanel } from 'src/store/verse/view/startPanelSlice'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
@@ -70,10 +70,7 @@ const StartPanel = () => {
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
   const auth = useAuth()
-  const START_PANEL = useSelector(({ verse }: RootState) => verse.startPanel)
-
-  // const SCENE_METADATA = useSelector(({ verse }: RootState) => verse.scene)
-  // const IDENTITY = useSelector(({ verse }: RootState) => verse.identity)
+  const START_PANEL = useSelector(({ verse }: RootState) => verse.view.startPanel)
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
   // ** Logics

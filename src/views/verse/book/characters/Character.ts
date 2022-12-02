@@ -37,7 +37,7 @@ import {
   SET_DIALOG_BOX_ACTION,
   UN_HOVER_DIALOG_BOX_ACTION,
   HIDE_DIALOG_BOX_ACTION
-} from 'src/views/verse/book/actions/index'
+} from 'src/views/verse/book/actions/view'
 
 export class Character extends THREE.Object3D implements IWorldEntity {
   public updateOrder = 1

@@ -17,7 +17,7 @@ import Typography from '@mui/material/Typography'
 import Icon from 'src/@core/components/icon'
 
 // ** Tab Content
-import DialogTabSiteSetting from 'src/views/verse/components/settingPanel/settingBox/DialogTabSiteSetting'
+import DialogTabSiteSetting from 'src/views/verse/components/view/settingPanel/settingBox/DialogTabSiteSetting'
 
 // ** Types
 import { RootState } from 'src/store'
@@ -31,7 +31,7 @@ const Transition = forwardRef(function Transition(
 
 const SettingBox = () => {
   // ** Hooks
-  const worldInstance = useSelector(({ verse }: RootState) => verse.scene.worldInstance)
+  const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
 
   // ** States
   const [open, setOpen] = useState<boolean>(false)

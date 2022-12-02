@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
 // ** Actions Imports
-import { hideDialogBox } from 'src/store/verse/dialogBoxSlice'
+import { hideDialogBox } from 'src/store/verse/view/dialogBoxSlice'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'

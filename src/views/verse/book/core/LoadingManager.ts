@@ -6,7 +6,11 @@ import { UIManager } from 'src/views/verse/book/core/UIManager'
 import { Scenario } from 'src/views/verse/book/world/Scenario'
 import { World } from 'src/views/verse/book/world/World'
 
-import { SET_LOADING_PROGRESS, SHOW_START_PANEL_ACTION, SET_START_PANEL_ACTION } from 'src/views/verse/book/actions'
+import {
+  SET_LOADING_PROGRESS,
+  SHOW_START_PANEL_ACTION,
+  SET_START_PANEL_ACTION
+} from 'src/views/verse/book/actions/view'
 
 export class LoadingManager {
   public isRestartLoading = false

@@ -15,10 +15,10 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
 // ** Actions Imports
-import { setDialogBoxStep, hideDialogBox } from 'src/store/verse/dialogBoxSlice'
+import { setDialogBoxStep, hideDialogBox } from 'src/store/verse/view/dialogBoxSlice'
 
 // ** Components Imports
-import ViewNftBox from 'src/views/verse/components/dialogBox/ViewNftBox'
+import ViewNftBox from 'src/views/verse/components/view/dialogBox/ViewNftBox'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
@@ -73,9 +73,9 @@ const DialogBox = () => {
   // ** Hooks
   const dispatch = useDispatch()
   const auth = useAuth()
-  const DIALOG_BOX = useSelector(({ verse }: RootState) => verse.dialogBox)
-  const SCENE_METADATA = useSelector(({ verse }: RootState) => verse.scene)
-  const worldInstance = useSelector(({ verse }: RootState) => verse.scene.worldInstance)
+  const DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.dialogBox)
+  const SCENE_METADATA = useSelector(({ verse }: RootState) => verse.view.scene)
+  const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
   const hasNext = DIALOG_BOX.step + 1 < DIALOG_BOX.session.length
   const { owner, nftList: SCENE_NFT_LIST } = SCENE_METADATA
 

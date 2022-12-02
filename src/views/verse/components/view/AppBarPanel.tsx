@@ -70,7 +70,7 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 const AppBarPanel = () => {
   // ** Hooks
   const auth = useAuth()
-  const UI_LAYOUT = useSelector(({ verse }: RootState) => verse.uiLayout)
+  const UI_LAYOUT = useSelector(({ verse }: RootState) => verse.view.uiLayout)
 
   return (
     <RootBox sx={{ display: UI_LAYOUT.appBarShow ? 'flex' : 'none' }}>

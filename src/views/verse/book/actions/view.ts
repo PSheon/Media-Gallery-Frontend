@@ -7,17 +7,21 @@ import {
   setSettingPanelShow,
   setStatsBoxShow,
   setGuiContainerShow
-} from 'src/store/verse/uiLayoutSlice'
-import { setLoadingProgress } from 'src/store/verse/loadingScreenSlice'
-import { showStartPanel, setStartPanel } from 'src/store/verse/startPanelSlice'
-import { showControlHintPanel, setControlHintPanel, hideControlHintPanel } from 'src/store/verse/controlHintPanelSlice'
+} from 'src/store/verse/view/uiLayoutSlice'
+import { setLoadingProgress } from 'src/store/verse/view/loadingScreenSlice'
+import { showStartPanel, setStartPanel } from 'src/store/verse/view/startPanelSlice'
+import {
+  showControlHintPanel,
+  setControlHintPanel,
+  hideControlHintPanel
+} from 'src/store/verse/view/controlHintPanelSlice'
 import {
   showDialogBox,
   setDialogBoxStep,
   setDialogBox,
   setDialogBoxHover,
   hideDialogBox
-} from 'src/store/verse/dialogBoxSlice'
+} from 'src/store/verse/view/dialogBoxSlice'
 
 import { generateDialogBoxPayload } from 'src/utils/generate-dialog-box-payload'
 
@@ -57,7 +61,7 @@ export const HIDE_GUI_CONTAINER = () => dispatch(setGuiContainerShow(false))
 
 /* Start Panel */
 export const SHOW_START_PANEL_ACTION = () => {
-  const startPanelShowStatus = getState().verse.startPanel.show
+  const startPanelShowStatus = getState().verse.view.startPanel.show
   if (!startPanelShowStatus) {
     dispatch(hideControlHintPanel())
     dispatch(showStartPanel())
@@ -75,7 +79,7 @@ export const SET_START_PANEL_ACTION = (payload: {
 
 /* Control Hint Panel */
 export const SHOW_CONTROL_HINT_PANEL_ACTION = () => {
-  const controlHintPanelShowStatus = getState().verse.controlHintPanel.show
+  const controlHintPanelShowStatus = getState().verse.view.controlHintPanel.show
   if (!controlHintPanelShowStatus) {
     dispatch(showControlHintPanel())
   }
@@ -87,7 +91,7 @@ export const SET_CONTROL_HINT_PANEL_ACTION = (payload: { title: string; content:
 
 /* Dialog Box */
 export const SHOW_DIALOG_BOX_ACTION = () => {
-  const dialogBoxShowStatus = getState().verse.dialogBox.show
+  const dialogBoxShowStatus = getState().verse.view.dialogBox.show
   if (dialogBoxShowStatus) {
     dispatch(setDialogBoxStep())
   } else {
@@ -97,7 +101,7 @@ export const SHOW_DIALOG_BOX_ACTION = () => {
 }
 
 export const SET_DIALOG_BOX_ACTION = (payload: { displayName: string; objectType: string }) => {
-  const currentHoverStatus = getState().verse.dialogBox.hover
+  const currentHoverStatus = getState().verse.view.dialogBox.hover
 
   if (!currentHoverStatus) {
     const dialogBoxPayload = generateDialogBoxPayload(payload)
@@ -106,7 +110,7 @@ export const SET_DIALOG_BOX_ACTION = (payload: { displayName: string; objectType
 }
 
 export const UN_HOVER_DIALOG_BOX_ACTION = () => {
-  const currentHoverStatus = getState().verse.dialogBox.hover
+  const currentHoverStatus = getState().verse.view.dialogBox.hover
 
   if (currentHoverStatus) {
     dispatch(setDialogBoxHover(false))
@@ -114,7 +118,7 @@ export const UN_HOVER_DIALOG_BOX_ACTION = () => {
 }
 
 export const HIDE_DIALOG_BOX_ACTION = () => {
-  const dialogBoxShowStatus = getState().verse.dialogBox.show
+  const dialogBoxShowStatus = getState().verse.view.dialogBox.show
   if (dialogBoxShowStatus) {
     dispatch(hideDialogBox())
   }

@@ -41,7 +41,7 @@ const StyledContentBox = styled(Box)(({ theme }) => ({
 
 const ControlHintBox = () => {
   // ** Hooks
-  const CONTROL_HINT_PANEL = useSelector(({ verse }: RootState) => verse.controlHintPanel)
+  const CONTROL_HINT_PANEL = useSelector(({ verse }: RootState) => verse.view.controlHintPanel)
 
   // ** States
   const [chatControlHintPanelOpen, setControlHintPanelOpen] = useState(false)

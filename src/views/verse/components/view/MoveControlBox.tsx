@@ -27,8 +27,8 @@ const RootBox = styled(Box)(({ theme }) => ({
 
 const MoveControlBox = () => {
   // ** Hooks
-  const UI_LAYOUT = useSelector(({ verse }: RootState) => verse.uiLayout)
-  const worldInstance = useSelector(({ verse }: RootState) => verse.scene.worldInstance)
+  const UI_LAYOUT = useSelector(({ verse }: RootState) => verse.view.uiLayout)
+  const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
   // ** States

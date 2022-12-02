@@ -43,7 +43,7 @@ import {
   SHOW_START_PANEL_ACTION,
   SET_START_PANEL_ACTION,
   SET_CONTROL_HINT_PANEL_ACTION
-} from 'src/views/verse/book/actions'
+} from 'src/views/verse/book/actions/view'
 
 export class World {
   public renderer: THREE.WebGLRenderer

@@ -8,8 +8,8 @@ import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 
 // ** Custom Components
-import ControlHintBox from 'src/views/verse/components/settingPanel/ControlHintBox'
-import SettingBox from 'src/views/verse/components/settingPanel/SettingBox'
+import ControlHintBox from 'src/views/verse/components/view/settingPanel/ControlHintBox'
+import SettingBox from 'src/views/verse/components/view/settingPanel/SettingBox'
 
 // ** Types
 import { RootState } from 'src/store'
@@ -37,7 +37,7 @@ const PanelCard = styled(Card)(({ theme }) => ({
 
 const SettingPanel = () => {
   // ** Hooks
-  const UI_LAYOUT = useSelector(({ verse }: RootState) => verse.uiLayout)
+  const UI_LAYOUT = useSelector(({ verse }: RootState) => verse.view.uiLayout)
 
   return (
     <RootBox style={{ display: UI_LAYOUT.settingPanelShow ? 'block' : 'none' }}>

@@ -11,7 +11,7 @@ import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 
 // ** Actions Imports
-import { showDialogBox } from 'src/store/verse/dialogBoxSlice'
+import { showDialogBox } from 'src/store/verse/view/dialogBoxSlice'
 
 // ** Types
 import { RootState } from 'src/store'
@@ -43,9 +43,9 @@ const PanelCard = styled(Card)(({ theme }) => ({
 const HintBox = () => {
   // ** Hooks
   const dispatch = useDispatch()
-  const LOADING_SCREEN_SHOW = useSelector(({ verse }: RootState) => verse.uiLayout.loadingScreenShow)
-  const DIALOG_BOX = useSelector(({ verse }: RootState) => verse.dialogBox)
-  const SCENE_NFT_LIST = useSelector(({ verse }: RootState) => verse.scene.nftList)
+  const LOADING_SCREEN_SHOW = useSelector(({ verse }: RootState) => verse.view.uiLayout.loadingScreenShow)
+  const DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.dialogBox)
+  const SCENE_NFT_LIST = useSelector(({ verse }: RootState) => verse.view.scene.nftList)
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
   // ** States

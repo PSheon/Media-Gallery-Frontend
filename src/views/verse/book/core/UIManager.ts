@@ -7,7 +7,7 @@ import {
   HIDE_MOVE_CONTROL,
   SHOW_SETTING_PANEL,
   HIDE_SETTING_PANEL
-} from 'src/views/verse/book/actions'
+} from 'src/views/verse/book/actions/view'
 
 export class UIManager {
   public static setUserInterfaceVisible(show: boolean): void {

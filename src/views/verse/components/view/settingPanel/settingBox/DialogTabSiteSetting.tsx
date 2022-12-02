@@ -25,7 +25,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 
 const DialogTabSiteSetting = () => {
   // ** Hooks
-  const worldInstance = useSelector(({ verse }: RootState) => verse.scene.worldInstance)
+  const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
   // ** State

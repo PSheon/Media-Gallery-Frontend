@@ -10,18 +10,18 @@ import Box from '@mui/material/Box'
 import { World } from 'src/views/verse/book/world/World'
 
 // ** Custom Components Imports
-import LoadingScreen from 'src/views/verse/components/LoadingScreen'
-import AppBarPanel from 'src/views/verse/components/AppBarPanel'
-import StartPanel from 'src/views/verse/components/StartPanel'
-import SettingPanel from 'src/views/verse/components/SettingPanel'
-import DialogBox from 'src/views/verse/components/DialogBox'
-import HintBox from 'src/views/verse/components/HintBox'
-import MoveControlBox from 'src/views/verse/components/MoveControlBox'
+import LoadingScreen from 'src/views/verse/components/view/LoadingScreen'
+import AppBarPanel from 'src/views/verse/components/view/AppBarPanel'
+import StartPanel from 'src/views/verse/components/view/StartPanel'
+import SettingPanel from 'src/views/verse/components/view/SettingPanel'
+import DialogBox from 'src/views/verse/components/view/DialogBox'
+import HintBox from 'src/views/verse/components/view/HintBox'
+import MoveControlBox from 'src/views/verse/components/view/MoveControlBox'
 
 // import SocialPanel from './components/SocialPanel'
 
 // ** Actions Imports
-import { setWorldInstance } from 'src/store/verse/sceneSlice'
+import { setWorldInstance } from 'src/store/verse/view/sceneSlice'
 
 // ** Styled RootBox component
 const StyledRootBox = styled(Box)(() => ({
