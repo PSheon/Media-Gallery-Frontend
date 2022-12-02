@@ -66,8 +66,8 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
       back: new KeyBinding('KeyS'),
       left: new KeyBinding('KeyA'),
       right: new KeyBinding('KeyD'),
-      up: new KeyBinding('KeyE'),
-      down: new KeyBinding('KeyQ'),
+      up: new KeyBinding('KeyQ'),
+      down: new KeyBinding('KeyZ'),
       fast: new KeyBinding('ShiftLeft')
     }
 
