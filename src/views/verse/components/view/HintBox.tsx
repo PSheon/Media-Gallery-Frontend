@@ -11,7 +11,7 @@ import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 
 // ** Actions Imports
-import { showDialogBox } from 'src/store/verse/view/dialogBoxSlice'
+import { showViewDialogBox } from 'src/store/verse/view/viewDialogBoxSlice'
 
 // ** Types
 import { RootState } from 'src/store'
@@ -22,9 +22,10 @@ const RootBox = styled(Box)(({ theme }) => ({
   margin: theme.spacing(2),
 
   left: '50%',
-  bottom: 48,
+  bottom: theme.spacing(16),
   backgroundColor: 'transparent',
-  transform: 'translateX(-50%)'
+  transform: 'translateX(-50%)',
+  cursor: 'pointer'
 }))
 
 // ** Styled PanelCard component
@@ -44,7 +45,7 @@ const HintBox = () => {
   // ** Hooks
   const dispatch = useDispatch()
   const LOADING_SCREEN_SHOW = useSelector(({ verse }: RootState) => verse.view.uiLayout.loadingScreenShow)
-  const DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.dialogBox)
+  const VIEW_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.viewDialogBox)
   const SCENE_NFT_LIST = useSelector(({ verse }: RootState) => verse.view.scene.nftList)
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
@@ -54,23 +55,25 @@ const HintBox = () => {
 
   // ** Logics
   const handleClick = () => {
-    dispatch(showDialogBox())
+    dispatch(showViewDialogBox())
   }
 
   // ** Side Effect
   useEffect(() => {
-    const nftDetail = SCENE_NFT_LIST.find(nftDetail => nftDetail.frameId === DIALOG_BOX.speaker)
+    const nftDetail = SCENE_NFT_LIST.find(nftDetail => nftDetail.frameId === VIEW_DIALOG_BOX.speaker)
     if (nftDetail) {
       setFrameDisplayName(nftDetail.displayName)
       setFrameDescription(nftDetail.description)
     } else {
-      setFrameDisplayName(DIALOG_BOX.speaker)
+      setFrameDisplayName(VIEW_DIALOG_BOX.speaker)
       setFrameDescription('')
     }
-  }, [SCENE_NFT_LIST, DIALOG_BOX.speaker])
+  }, [SCENE_NFT_LIST, VIEW_DIALOG_BOX.speaker])
 
   return (
-    <RootBox style={{ display: !LOADING_SCREEN_SHOW && !DIALOG_BOX.show && DIALOG_BOX.hover ? 'block' : 'none' }}>
+    <RootBox
+      style={{ display: !LOADING_SCREEN_SHOW && !VIEW_DIALOG_BOX.show && VIEW_DIALOG_BOX.hover ? 'block' : 'none' }}
+    >
       <PanelCard onClick={handleClick}>
         <Typography variant='subtitle1'>{frameDisplayName}</Typography>
         {frameDescription && <Typography variant='subtitle2'>{frameDescription}</Typography>}

@@ -12,7 +12,7 @@ import {
   StartWalkRight,
   Walk
 } from 'src/views/verse/book/characters/character_states/_stateLibrary'
-import { Character } from 'src/views/verse/book/characters/Character'
+import { Character } from 'src/views/verse/book/characters/view/Character'
 import { ICharacterState } from 'src/views/verse/book/interfaces/ICharacterState'
 
 export abstract class CharacterStateBase implements ICharacterState {

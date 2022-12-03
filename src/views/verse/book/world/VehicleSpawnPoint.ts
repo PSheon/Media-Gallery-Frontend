@@ -6,9 +6,9 @@ import { Airplane } from 'src/views/verse/book/vehicles/Airplane'
 import { Car } from 'src/views/verse/book/vehicles/Car'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
-import { Character } from 'src/views/verse/book/characters/Character'
+import { Character } from 'src/views/verse/book/characters/view/Character'
 import { FollowPath } from 'src/views/verse/book/characters/character_ai/FollowPath'
-import { LoadingManager } from 'src/views/verse/book/core/LoadingManager'
+import { LoadingManager } from 'src/views/verse/book/core/view/LoadingManager'
 
 export class VehicleSpawnPoint implements ISpawnPoint {
   public type: string

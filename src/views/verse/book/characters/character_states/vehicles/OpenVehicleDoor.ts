@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { CharacterStateBase } from 'src/views/verse/book/characters/character_states/_stateLibrary'
-import { Character } from 'src/views/verse/book/characters/Character'
+import { Character } from 'src/views/verse/book/characters/view/Character'
 import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
 import { Side } from 'src/views/verse/book/enums/Side'
 import { Idle } from 'src/views/verse/book/characters/character_states/Idle'

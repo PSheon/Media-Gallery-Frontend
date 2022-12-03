@@ -4,7 +4,7 @@ import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
 import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
 import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
-import { IWorldEntity } from 'src/views/verse/book/interfaces/IWorldEntity'
+import { IWorldEntity } from 'src/views/verse/book/interfaces/view/IWorldEntity'
 import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
 import { World } from 'src/views/verse/book/world/World'
 import { EntityType } from 'src/views/verse/book/enums/EntityType'

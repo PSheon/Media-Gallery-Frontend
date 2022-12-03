@@ -1,4 +1,4 @@
-import { Character } from 'src/views/verse/book/characters/Character'
+import { Character } from 'src/views/verse/book/characters/view/Character'
 import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import { World } from 'src/views/verse/book/world/World'
@@ -11,7 +11,7 @@ import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { CollisionGroups } from 'src/views/verse/book/enums/CollisionGroups'
 import { SwitchingSeats } from 'src/views/verse/book/characters/character_states/vehicles/SwitchingSeats'
 import { EntityType } from 'src/views/verse/book/enums/EntityType'
-import { IWorldEntity } from 'src/views/verse/book/interfaces/IWorldEntity'
+import { IWorldEntity } from 'src/views/verse/book/interfaces/view/IWorldEntity'
 
 export abstract class Vehicle extends THREE.Object3D implements IWorldEntity {
   public updateOrder = 2

@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import { ISpawnPoint } from 'src/views/verse/book/interfaces/ISpawnPoint'
 import { World } from 'src/views/verse/book/world/World'
-import { Character } from 'src/views/verse/book/characters/Character'
-import { LoadingManager } from 'src/views/verse/book/core/LoadingManager'
+import { Character } from 'src/views/verse/book/characters/view/Character'
+import { LoadingManager } from 'src/views/verse/book/core/view/LoadingManager'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
 export class CharacterSpawnPoint implements ISpawnPoint {

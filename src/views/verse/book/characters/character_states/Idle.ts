@@ -1,6 +1,6 @@
 import { CharacterStateBase, JumpIdle, Walk } from 'src/views/verse/book/characters/character_states/_stateLibrary'
 import { ICharacterState } from 'src/views/verse/book/interfaces/ICharacterState'
-import { Character } from 'src/views/verse/book/characters/Character'
+import { Character } from 'src/views/verse/book/characters/view/Character'
 
 export class Idle extends CharacterStateBase implements ICharacterState {
   constructor(character: Character) {

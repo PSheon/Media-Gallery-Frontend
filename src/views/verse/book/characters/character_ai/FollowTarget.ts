@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { ICharacterAI } from 'src/views/verse/book/interfaces/ICharacterAI'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
-import { Character } from 'src/views/verse/book/characters/Character'
+import { Character } from 'src/views/verse/book/characters/view/Character'
 import { Car } from 'src/views/verse/book/vehicles/Car'
 import { EntityType } from 'src/views/verse/book/enums/EntityType'
 

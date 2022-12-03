@@ -5,5 +5,4 @@ export interface IInitialState {
   socialPanelShow: boolean
   settingPanelShow: boolean
   statsBoxShow: boolean
-  guiContainerShow: boolean
 }

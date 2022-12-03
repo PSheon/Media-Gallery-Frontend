@@ -4,7 +4,7 @@ import { Side } from 'src/views/verse/book/enums/Side'
 import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
 import { VehicleDoor } from 'src/views/verse/book/vehicles/VehicleDoor'
 import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
-import { Character } from 'src/views/verse/book/characters/Character'
+import { Character } from 'src/views/verse/book/characters/view/Character'
 
 export class VehicleSeat {
   public vehicle: IControllable

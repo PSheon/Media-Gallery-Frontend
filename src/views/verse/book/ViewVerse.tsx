@@ -14,7 +14,7 @@ import LoadingScreen from 'src/views/verse/components/view/LoadingScreen'
 import AppBarPanel from 'src/views/verse/components/view/AppBarPanel'
 import StartPanel from 'src/views/verse/components/view/StartPanel'
 import SettingPanel from 'src/views/verse/components/view/SettingPanel'
-import DialogBox from 'src/views/verse/components/view/DialogBox'
+import ViewDialogBox from 'src/views/verse/components/view/viewDialogBox'
 import HintBox from 'src/views/verse/components/view/HintBox'
 import MoveControlBox from 'src/views/verse/components/view/MoveControlBox'
 
@@ -53,7 +53,7 @@ const Book = () => {
       <AppBarPanel />
       <StartPanel />
       <SettingPanel />
-      <DialogBox />
+      <ViewDialogBox />
       <HintBox />
       <MoveControlBox />
 

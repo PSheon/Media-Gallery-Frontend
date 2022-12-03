@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
-import { Character } from 'src/views/verse/book/characters/Character'
+import { Character } from 'src/views/verse/book/characters/view/Character'
 import { Side } from 'src/views/verse/book/enums/Side'
 import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
 import { Idle } from 'src/views/verse/book/characters/character_states/Idle'

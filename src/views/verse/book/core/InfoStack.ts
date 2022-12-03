@@ -1,5 +1,5 @@
 import { InfoStackMessage } from 'src/views/verse/book/core/InfoStackMessage'
-import { IWorldEntity } from 'src/views/verse/book/interfaces/IWorldEntity'
+import { IWorldEntity } from 'src/views/verse/book/interfaces/view/IWorldEntity'
 import { EntityType } from 'src/views/verse/book/enums/EntityType'
 import { World } from 'src/views/verse/book/world/World'
 

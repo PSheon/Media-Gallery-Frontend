@@ -1,4 +1,4 @@
-import { Character } from 'src/views/verse/book/characters/Character'
+import { Character } from 'src/views/verse/book/characters/view/Character'
 
 export interface ICharacterAI {
   character: Character

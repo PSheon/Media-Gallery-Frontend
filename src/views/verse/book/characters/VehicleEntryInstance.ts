@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { VehicleSeat } from 'src/views/verse/book/vehicles/VehicleSeat'
-import { Character } from 'src/views/verse/book/characters/Character'
+import { Character } from 'src/views/verse/book/characters/view/Character'
 
 export class VehicleEntryInstance {
   public character: Character
