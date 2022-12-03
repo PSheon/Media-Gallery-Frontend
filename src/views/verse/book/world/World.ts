@@ -42,7 +42,7 @@ import { Ocean } from 'src/views/verse/book/world/view/Ocean'
 import {
   SHOW_START_PANEL_ACTION,
   SET_START_PANEL_ACTION,
-  SET_CONTROL_HINT_PANEL_ACTION
+  SET_CONTROL_HINT_BOX_ACTION
 } from 'src/views/verse/book/actions/view'
 
 export class World {
@@ -648,7 +648,7 @@ export class World {
   }
 
   public updateControls(controls: any): void {
-    SET_CONTROL_HINT_PANEL_ACTION({
+    SET_CONTROL_HINT_BOX_ACTION({
       title: 'Controls',
       content: controls
     })

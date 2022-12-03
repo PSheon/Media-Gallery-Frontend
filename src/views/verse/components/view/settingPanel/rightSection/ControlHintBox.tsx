@@ -20,27 +20,51 @@ import { RootState } from 'src/store'
 
 const ControlHintBox = () => {
   // ** Hooks
-  const CONTROL_HINT_PANEL = useSelector(({ verse }: RootState) => verse.view.controlHintPanel)
+  const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
+  const CONTROL_HINT_BOX = useSelector(({ verse }: RootState) => verse.view.controlHintBox)
 
   // ** States
-  const [controlHintPanelOpen, setControlHintPanelOpen] = useState(false)
+  const [controlHintDialogOpen, setControlHintDialogOpen] = useState(false)
 
-  const handleControlHintPanelOpen = () => setControlHintPanelOpen(true)
-  const handleControlHintPanelClose = () => setControlHintPanelOpen(false)
+  const handleControlHintDialogOpen = () => setControlHintDialogOpen(true)
+  const handleControlHintDialogClose = () => setControlHintDialogOpen(false)
+
+  // ** Side Effect
+  if (worldInstance) {
+    if (controlHintDialogOpen) {
+      worldInstance.setDialogMode(true)
+    } else {
+      worldInstance.setDialogMode(false)
+    }
+  }
 
   return (
     <Fragment>
       <Tooltip title='Control Hint' placement='top' arrow>
-        <IconButton color='secondary' onClick={handleControlHintPanelOpen}>
-          <Icon icon='mdi:gamepad-variant' fontSize={20} />
-        </IconButton>
+        <Box
+          onClick={handleControlHintDialogOpen}
+          sx={{
+            p: 4,
+            height: '100%',
+            display: 'flex',
+            borderRadius: 1,
+            cursor: 'pointer',
+            position: 'relative',
+            alignItems: 'center',
+            flexDirection: 'column',
+            border: theme => `1px solid ${theme.palette.divider}`,
+            '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` }
+          }}
+        >
+          <Icon icon='mdi:gamepad-variant' fontSize={24} />
+        </Box>
       </Tooltip>
 
-      <Dialog fullWidth maxWidth='xs' onClose={handleControlHintPanelClose} open={controlHintPanelOpen}>
+      <Dialog fullWidth maxWidth='xs' onClose={handleControlHintDialogClose} open={controlHintDialogOpen}>
         <DialogContent sx={{ backgroundColor: theme => theme.palette.action.hover }}>
           <IconButton
             size='small'
-            onClick={handleControlHintPanelClose}
+            onClick={handleControlHintDialogClose}
             sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
           >
             <Icon icon='mdi:close-circle' fontSize={20} />
@@ -50,13 +74,13 @@ const ControlHintBox = () => {
               Control
             </Typography>
           </Box>
-          {CONTROL_HINT_PANEL.content.map((row, rid) => (
+          {CONTROL_HINT_BOX.content.map((row, rid) => (
             <Box
               key={`row-${rid}`}
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                ...(rid !== CONTROL_HINT_PANEL.content.length - 1 ? { mb: 4 } : {})
+                ...(rid !== CONTROL_HINT_BOX.content.length - 1 ? { mb: 4 } : {})
               }}
             >
               <Box

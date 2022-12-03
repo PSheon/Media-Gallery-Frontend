@@ -7,10 +7,9 @@ import { IInitialState } from 'src/types/verse/view/uiLayoutTypes'
 const initialState: IInitialState = {
   loadingScreenShow: true,
   appBarShow: false,
-  moveControlShow: false,
-  socialPanelShow: false,
   settingPanelShow: false,
-  statsBoxShow: false
+  moveControlShow: false,
+  socialPanelShow: false
 }
 
 const uiLayoutSlice = createSlice({
@@ -23,29 +22,20 @@ const uiLayoutSlice = createSlice({
     setAppBarShow: (state, action) => {
       state.appBarShow = action.payload
     },
+    setSettingPanelShow: (state, action) => {
+      state.settingPanelShow = action.payload
+    },
     setMoveControlShow: (state, action) => {
       state.moveControlShow = action.payload
     },
     setSocialPanelShow: (state, action) => {
       state.socialPanelShow = action.payload
-    },
-    setSettingPanelShow: (state, action) => {
-      state.settingPanelShow = action.payload
-    },
-    setStatsBoxShow: (state, action) => {
-      state.statsBoxShow = action.payload
     }
   },
   extraReducers: {}
 })
 
-export const {
-  setLoadingScreenShow,
-  setAppBarShow,
-  setMoveControlShow,
-  setSocialPanelShow,
-  setSettingPanelShow,
-  setStatsBoxShow
-} = uiLayoutSlice.actions
+export const { setLoadingScreenShow, setAppBarShow, setMoveControlShow, setSocialPanelShow, setSettingPanelShow } =
+  uiLayoutSlice.actions
 
 export default uiLayoutSlice.reducer

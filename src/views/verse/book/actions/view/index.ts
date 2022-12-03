@@ -4,12 +4,11 @@ import {
   setAppBarShow,
   setMoveControlShow,
   setSocialPanelShow,
-  setSettingPanelShow,
-  setStatsBoxShow
+  setSettingPanelShow
 } from 'src/store/verse/view/uiLayoutSlice'
 import { setLoadingProgress } from 'src/store/verse/view/loadingScreenSlice'
 import { showStartPanel, setStartPanel } from 'src/store/verse/view/startPanelSlice'
-import { setControlHintPanel } from 'src/store/verse/view/controlHintPanelSlice'
+import { setControlHintBox } from 'src/store/verse/view/controlHintBoxSlice'
 import {
   showViewDialogBox,
   setViewDialogBoxStep,
@@ -46,10 +45,6 @@ export const SHOW_SETTING_PANEL = () => dispatch(setSettingPanelShow(true))
 
 export const HIDE_SETTING_PANEL = () => dispatch(setSettingPanelShow(false))
 
-export const SHOW_STATS_BOX = () => dispatch(setStatsBoxShow(true))
-
-export const HIDE_STATS_BOX = () => dispatch(setStatsBoxShow(false))
-
 /* Start Panel */
 export const SHOW_START_PANEL_ACTION = () => {
   const startPanelShowStatus = getState().verse.view.startPanel.show
@@ -69,8 +64,8 @@ export const SET_START_PANEL_ACTION = (payload: {
 
 /* Control Hint Panel */
 
-export const SET_CONTROL_HINT_PANEL_ACTION = (payload: { title: string; content: string }) => {
-  dispatch(setControlHintPanel(payload))
+export const SET_CONTROL_HINT_BOX_ACTION = (payload: { title: string; content: string }) => {
+  dispatch(setControlHintBox(payload))
 }
 
 /* Dialog Box */

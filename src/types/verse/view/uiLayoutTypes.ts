@@ -4,5 +4,4 @@ export interface IInitialState {
   moveControlShow: boolean
   socialPanelShow: boolean
   settingPanelShow: boolean
-  statsBoxShow: boolean
 }

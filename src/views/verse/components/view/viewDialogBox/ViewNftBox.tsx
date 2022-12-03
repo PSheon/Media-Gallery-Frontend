@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
 // ** Actions Imports
-import { hideDialogBox } from 'src/store/verse/view/viewDialogBoxSlice'
+import { hideViewDialogBox } from 'src/store/verse/view/viewDialogBoxSlice'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -56,7 +56,7 @@ const ViewNftBox = (props: Props) => {
 
   // ** Logics
   const handleDialogClose = () => {
-    dispatch(hideDialogBox())
+    dispatch(hideViewDialogBox())
   }
 
   return (

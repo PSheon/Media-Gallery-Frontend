@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 // ** Actions Imports
-import { hideDialogBox } from './editDialogBoxSlice'
+import { hideEditDialogBox } from './editDialogBoxSlice'
 
 // ** Axios Imports
 import axios from 'axios'
@@ -138,7 +138,7 @@ export const patchSceneFrame = createAsyncThunk(
       }
     })
 
-    dispatch(hideDialogBox())
+    dispatch(hideEditDialogBox())
 
     if (worldInstance?.updateNftFrame) {
       worldInstance.updateNftFrame(nftFrameId, {
@@ -217,7 +217,7 @@ const sceneSlice = createSlice({
       state.nftList = []
       state.allowedVisitors = []
 
-      const newURL = new URL(window.location)
+      const newURL = new URL(window.location.href)
       newURL.searchParams.delete('scene')
       window.history.pushState({}, '', newURL)
     })

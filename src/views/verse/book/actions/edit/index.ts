@@ -7,7 +7,7 @@ import {
 } from 'src/store/verse/edit/uiLayoutSlice'
 import { setLoadingProgress } from 'src/store/verse/edit/loadingScreenSlice'
 
-import { setControlHintPanel } from 'src/store/verse/edit/controlHintBoxSlice'
+import { setControlHintBox } from 'src/store/verse/edit/controlHintBoxSlice'
 
 import {
   showEditDialogBox,
@@ -38,9 +38,9 @@ export const SHOW_SETTING_PANEL = () => dispatch(setSettingPanelShow(true))
 
 export const HIDE_SETTING_PANEL = () => dispatch(setSettingPanelShow(false))
 
-/* Control Hint Panel */
-export const SET_CONTROL_HINT_PANEL_ACTION = (payload: { title: string; content: string }) => {
-  dispatch(setControlHintPanel(payload))
+/* Control Hint Box */
+export const SET_CONTROL_HINT_BOX_ACTION = (payload: { title: string; content: string }) => {
+  dispatch(setControlHintBox(payload))
 }
 
 /* Edit Dialog Box */

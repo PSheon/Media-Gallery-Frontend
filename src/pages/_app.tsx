@@ -26,6 +26,9 @@ import themeConfig from 'src/configs/themeConfig'
 // ** Fake-DB Import
 import 'src/@fake-db'
 
+// ** 100ms Imports
+import { HMSRoomProvider } from '@100mslive/react-sdk'
+
 // ** Wagmi Imports
 import { WagmiConfig, createClient, defaultChains, configureChains } from 'wagmi'
 import { infuraProvider } from 'wagmi/providers/infura'
@@ -162,41 +165,46 @@ const App = (props: ExtendedAppProps) => {
 
   return (
     <WagmiConfig client={client}>
-      <Provider store={store}>
-        <CacheProvider value={emotionCache}>
-          <Head>
-            <title>{`${themeConfig.templateName} - Buy and Sell digital assets`}</title>
-            <meta name='description' content={`${themeConfig.templateName} – Buy and Sell digital assets.`} />
-            <meta name='keywords' content='NFT,Web3,Eth,Btc' />
-            <meta name='viewport' content='initial-scale=1, width=device-width' />
-          </Head>
+      <HMSRoomProvider>
+        <Provider store={store}>
+          <CacheProvider value={emotionCache}>
+            <Head>
+              <title>{`${themeConfig.templateName} - Buy and Sell digital assets`}</title>
+              <meta name='description' content={`${themeConfig.templateName} – Buy and Sell digital assets.`} />
+              <meta name='keywords' content='NFT,Web3,Eth,Btc' />
+              <meta name='viewport' content='initial-scale=1, width=device-width' />
+            </Head>
 
-          <AuthProvider>
-            <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
-              <QueryClientProvider client={queryClient}>
-                <SettingsConsumer>
-                  {({ settings }) => {
-                    return (
-                      <ThemeComponent settings={settings}>
-                        <WindowWrapper>
-                          <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                            <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
-                              {getLayout(<Component {...pageProps} />)}
-                            </AclGuard>
-                          </Guard>
-                        </WindowWrapper>
-                        <ReactHotToast>
-                          <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                        </ReactHotToast>
-                      </ThemeComponent>
-                    )
-                  }}
-                </SettingsConsumer>
-              </QueryClientProvider>
-            </SettingsProvider>
-          </AuthProvider>
-        </CacheProvider>
-      </Provider>
+            <AuthProvider>
+              <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
+                <QueryClientProvider client={queryClient}>
+                  <SettingsConsumer>
+                    {({ settings }) => {
+                      return (
+                        <ThemeComponent settings={settings}>
+                          <WindowWrapper>
+                            <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                              <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
+                                {getLayout(<Component {...pageProps} />)}
+                              </AclGuard>
+                            </Guard>
+                          </WindowWrapper>
+                          <ReactHotToast>
+                            <Toaster
+                              position={settings.toastPosition}
+                              toastOptions={{ className: 'react-hot-toast' }}
+                            />
+                          </ReactHotToast>
+                        </ThemeComponent>
+                      )
+                    }}
+                  </SettingsConsumer>
+                </QueryClientProvider>
+              </SettingsProvider>
+            </AuthProvider>
+          </CacheProvider>
+        </Provider>
+      </HMSRoomProvider>
     </WagmiConfig>
   )
 }

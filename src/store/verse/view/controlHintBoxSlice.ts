@@ -9,11 +9,11 @@ const initialState: IInitialState = {
   content: []
 }
 
-const controlHintPanelSlice = createSlice({
-  name: 'verse/view/controlHintPanel',
+const controlHintBoxSlice = createSlice({
+  name: 'verse/view/controlHintBox',
   initialState,
   reducers: {
-    setControlHintPanel: (state, action) => {
+    setControlHintBox: (state, action) => {
       state.title = action.payload.title
       state.content = action.payload.content
     }
@@ -21,6 +21,6 @@ const controlHintPanelSlice = createSlice({
   extraReducers: {}
 })
 
-export const { setControlHintPanel } = controlHintPanelSlice.actions
+export const { setControlHintBox } = controlHintBoxSlice.actions
 
-export default controlHintPanelSlice.reducer
+export default controlHintBoxSlice.reducer

@@ -20,11 +20,7 @@ import { RootState } from 'src/store'
 const RootBox = styled(Box)(({ theme }) => ({
   position: 'fixed',
   margin: theme.spacing(2),
-
-  left: '50%',
-  bottom: theme.spacing(16),
   backgroundColor: 'transparent',
-  transform: 'translateX(-50%)',
   cursor: 'pointer'
 }))
 
@@ -72,6 +68,12 @@ const HintBox = () => {
 
   return (
     <RootBox
+      sx={{
+        left: isDesktop ? 'inherit' : '50%',
+        right: theme => (isDesktop ? theme.spacing(2) : 'inherit'),
+        bottom: theme => (isDesktop ? theme.spacing(24) : theme.spacing(16)),
+        transform: isDesktop ? 'inherit' : 'translateX(-50%)'
+      }}
       style={{ display: !LOADING_SCREEN_SHOW && !VIEW_DIALOG_BOX.show && VIEW_DIALOG_BOX.hover ? 'block' : 'none' }}
     >
       <PanelCard onClick={handleClick}>

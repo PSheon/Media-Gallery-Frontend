@@ -18,8 +18,6 @@ import ViewDialogBox from 'src/views/verse/components/view/viewDialogBox'
 import HintBox from 'src/views/verse/components/view/HintBox'
 import MoveControlBox from 'src/views/verse/components/view/MoveControlBox'
 
-// import SocialPanel from './components/SocialPanel'
-
 // ** Actions Imports
 import { setWorldInstance } from 'src/store/verse/view/sceneSlice'
 
@@ -56,8 +54,6 @@ const Book = () => {
       <ViewDialogBox />
       <HintBox />
       <MoveControlBox />
-
-      {/* <SocialPanel /> */}
     </StyledRootBox>
   )
 }

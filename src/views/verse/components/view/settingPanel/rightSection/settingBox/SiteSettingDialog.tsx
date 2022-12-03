@@ -10,8 +10,6 @@ import Typography from '@mui/material/Typography'
 import Switch from '@mui/material/Switch'
 import Grid from '@mui/material/Grid'
 
-// import Slider from '@mui/material/Slider'
-
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -23,7 +21,7 @@ import { RootState } from 'src/store'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
-const DialogTabSiteSetting = () => {
+const SiteSettingDialog = () => {
   // ** Hooks
   const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
@@ -272,4 +270,4 @@ const DialogTabSiteSetting = () => {
   )
 }
 
-export default DialogTabSiteSetting
+export default SiteSettingDialog

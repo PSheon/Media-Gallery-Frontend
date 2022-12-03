@@ -6,22 +6,20 @@ import uiLayout from './uiLayoutSlice'
 import loadingScreen from './loadingScreenSlice'
 import startPanel from './startPanelSlice'
 import scene from './sceneSlice'
+import controlHintBox from './controlHintBoxSlice'
 import viewDialogBox from './viewDialogBoxSlice'
-import controlHintPanel from './controlHintPanelSlice'
 
 // import identity from './identitySlice'
-// import explore from './exploreSlice'
 
 const viewVerseReducers = combineReducers({
   uiLayout,
   loadingScreen,
   startPanel,
   scene,
-  viewDialogBox,
-  controlHintPanel
+  controlHintBox,
+  viewDialogBox
 
   // identity,
-  // explore
 })
 
 export default viewVerseReducers

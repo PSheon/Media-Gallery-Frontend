@@ -16,8 +16,8 @@ import Typography from '@mui/material/Typography'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Tab Content
-import DialogTabSiteSetting from 'src/views/verse/components/view/settingPanel/settingBox/DialogTabSiteSetting'
+// ** Component Imports
+import SiteSettingDialog from 'src/views/verse/components/view/settingPanel/rightSection/settingBox/SiteSettingDialog'
 
 // ** Types
 import { RootState } from 'src/store'
@@ -31,7 +31,7 @@ const Transition = forwardRef(function Transition(
 
 const SettingBox = () => {
   // ** Hooks
-  const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
+  const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
 
   // ** States
   const [open, setOpen] = useState<boolean>(false)
@@ -51,10 +51,24 @@ const SettingBox = () => {
 
   return (
     <Fragment>
-      <Tooltip title='Share' placement='top' arrow>
-        <IconButton color='secondary' onClick={handleSettingBoxOpen}>
-          <Icon icon='mdi:cog' fontSize={20} />
-        </IconButton>
+      <Tooltip title='Setting' placement='top' arrow>
+        <Box
+          onClick={handleSettingBoxOpen}
+          sx={{
+            p: 4,
+            height: '100%',
+            display: 'flex',
+            borderRadius: 1,
+            cursor: 'pointer',
+            position: 'relative',
+            alignItems: 'center',
+            flexDirection: 'column',
+            border: theme => `1px solid ${theme.palette.divider}`,
+            '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` }
+          }}
+        >
+          <Icon icon='mdi:cog' fontSize={24} />
+        </Box>
       </Tooltip>
 
       <Dialog
@@ -90,7 +104,7 @@ const SettingBox = () => {
           </Box>
 
           <Box sx={{ width: '100%' }}>
-            <DialogTabSiteSetting />
+            <SiteSettingDialog />
           </Box>
         </DialogContent>
       </Dialog>

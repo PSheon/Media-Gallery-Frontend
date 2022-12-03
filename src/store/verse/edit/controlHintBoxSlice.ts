@@ -13,7 +13,7 @@ const ControlHintBoxSlice = createSlice({
   name: 'verse/edit/ControlHintBox',
   initialState,
   reducers: {
-    setControlHintPanel: (state, action) => {
+    setControlHintBox: (state, action) => {
       state.title = action.payload.title
       state.content = action.payload.content
     }
@@ -21,6 +21,6 @@ const ControlHintBoxSlice = createSlice({
   extraReducers: {}
 })
 
-export const { setControlHintPanel } = ControlHintBoxSlice.actions
+export const { setControlHintBox } = ControlHintBoxSlice.actions
 
 export default ControlHintBoxSlice.reducer
