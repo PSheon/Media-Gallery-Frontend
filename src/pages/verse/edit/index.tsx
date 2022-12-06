@@ -1,24 +1,16 @@
-// ** React Imports
-import { ReactNode } from 'react'
-
 // ** Next Import
-import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 
-// ** Component Import
-import BlankLayout from 'src/@core/layouts/BlankLayout'
+const EditSketchbookPage = () => {
+  // ** Hooks
+  const router = useRouter()
 
-// ** Edit Book Import
-const EditSketchbook = dynamic(() => import('src/views/verse/book/EditVerse'), { ssr: false })
-
-function EditSketchbookPage() {
-  return <EditSketchbook />
+  router.push('/')
 }
 
 EditSketchbookPage.acl = {
   action: 'read',
   subject: 'user-page'
 }
-
-EditSketchbookPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
 export default EditSketchbookPage

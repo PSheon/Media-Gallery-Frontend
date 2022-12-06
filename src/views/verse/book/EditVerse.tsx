@@ -21,25 +21,44 @@ import MoveControlBox from 'src/views/verse/components/edit/MoveControlBox'
 // ** Actions Imports
 import { setWorldInstance } from 'src/store/verse/edit/sceneSlice'
 
+// ** Types
+import { IScene } from 'src/types/scene/sceneTypes'
+
+interface Props {
+  sceneBase: IScene
+}
+
 // ** Styled RootBox component
 const StyledRootBox = styled(Box)(() => ({
   width: '100%',
   height: '100%'
 }))
 
-const Book = () => {
+const Book = (props: Props) => {
+  // ** Props
+  const { sceneBase } = props
+
   // ** Hooks
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const world = new EditWorld()
+    const world = new EditWorld({
+      owner: sceneBase?.attributes?.owner?.data?.attributes?.username || 'Anonymous',
+      displayName: sceneBase?.attributes?.displayName || 'Untitled',
+      description: sceneBase?.attributes?.description || 'Nope',
+      worldScenePaths: sceneBase?.attributes.sceneModel.data?.attributes.worldScenePaths || [],
+
+      // nftList: sceneBase?.attributes?.assetList?.data || []
+      nftList: []
+    })
 
     dispatch(setWorldInstance(world))
 
     return () => {
       world.destroy()
     }
-  }, [dispatch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <StyledRootBox id='world'>

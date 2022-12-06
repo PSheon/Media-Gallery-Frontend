@@ -108,9 +108,10 @@ export class World {
 
   private lastScenarioID: string | undefined
 
-  constructor() {
+  constructor(sceneMetadata: IWorldMetadata) {
     const scope = this
     this.scope = scope
+    this.metadata = sceneMetadata
 
     // WebGL not supported
     if (!Detector.webgl) {
@@ -206,7 +207,7 @@ export class World {
   }
 
   public async initScene() {
-    await this.setSceneMetadata()
+    // await this.setSceneMetadata()
     const worldScenePaths = this.metadata.worldScenePaths
 
     worldScenePaths.forEach((worldScenePath, loadingOrder) => {
@@ -227,24 +228,8 @@ export class World {
     })
   }
 
-  /* TODO integrate backend function */
-  async setSceneMetadata() {
-    this.metadata = {
-      owner: 'owner',
-      displayName: 'Display Name',
-      description: 'Description',
-      worldScenePaths: [
-        '/assets/glb/scene/advanced-gallery/draco-p1.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p2.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p3.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p4.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p5.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p6.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p7.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p8.glb'
-      ],
-      nftList: []
-    }
+  async setSceneMetadata(newSceneMetadata: IWorldMetadata) {
+    this.metadata = newSceneMetadata
   }
 
   public setDialogMode(newDialogMode: boolean): void {

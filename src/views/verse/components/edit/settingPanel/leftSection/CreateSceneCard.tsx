@@ -11,8 +11,14 @@ const CreateSceneCard = () => {
   // ** Hooks
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
+  // ** Logics
+  const handleRedirectToSceneCreate = () => {
+    window.location.href = `/verse/create`
+  }
+
   return (
     <Box
+      onClick={() => handleRedirectToSceneCreate()}
       sx={{
         p: 4,
         height: '100%',

@@ -14,16 +14,23 @@ import MenuItem from '@mui/material/MenuItem'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
+// ** Config
+import apiConfig from 'src/configs/api'
+
+// ** Types
+import { IScene } from 'src/types/scene/sceneTypes'
+
 const ITEM_HEIGHT = 48
 
 interface Props {
+  sceneBase?: IScene
   isCurrentScene?: boolean
   withControl?: boolean
 }
 
 const SceneCard = (props: Props) => {
   // ** Props
-  const { isCurrentScene = false, withControl = false } = props
+  const { sceneBase, isCurrentScene = false, withControl = false } = props
 
   // ** Hooks
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
@@ -43,7 +50,8 @@ const SceneCard = (props: Props) => {
   return (
     <Box
       sx={{
-        p: 4,
+        px: 4,
+        py: 2,
         width: '100%',
         height: '100%',
         display: 'flex',
@@ -55,23 +63,39 @@ const SceneCard = (props: Props) => {
       }}
     >
       <Box>
-        <Avatar
-          alt={'auth.user.username'}
-          src={'/images/avatars/1.png'}
-          sx={{
-            width: isDesktop ? '5.8rem' : '4rem',
-            height: isDesktop ? '3.6rem' : '2.4rem',
-            borderRadius: '.2rem',
-            boxShadow: theme => theme.shadows[9]
-          }}
-        />
+        {sceneBase?.attributes?.cover?.data?.attributes?.url ? (
+          <Avatar
+            src={`${apiConfig.publicFolderUrl}${sceneBase.attributes.cover.data.attributes.url}`}
+            alt={sceneBase?.attributes.owner?.data?.attributes?.username}
+            sx={{
+              width: isDesktop ? '5.8rem' : '4.5rem',
+              height: isDesktop ? '3.6rem' : '2.4rem',
+              borderRadius: '.2rem',
+              boxShadow: theme => theme.shadows[9]
+            }}
+          />
+        ) : (
+          <Box
+            sx={{
+              width: isDesktop ? '5.8rem' : '4.5rem',
+              height: isDesktop ? '3.6rem' : '2.4rem',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: '.2rem',
+              border: theme => `1px dashed ${theme.palette.divider}`
+            }}
+          >
+            <Icon icon='material-symbols:add' fontSize={24} />
+          </Box>
+        )}
       </Box>
       <Box sx={{ display: 'flex', maxWidth: '8rem', ml: 4, mr: 2, flexDirection: 'column' }}>
         <Typography sx={{ fontWeight: 600 }} color='common.white' noWrap>
-          auth.user.username auth.user.username
+          {sceneBase?.attributes.displayName || 'Untitled'}
         </Typography>
         <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }} noWrap>
-          auth.user.username. auth.user.username
+          {sceneBase?.attributes.description || 'description...'}
         </Typography>
       </Box>
 
@@ -105,7 +129,9 @@ const SceneCard = (props: Props) => {
               }
             }}
           >
-            <MenuItem onClick={handleClose}>Delete scene</MenuItem>
+            <MenuItem disabled onClick={handleClose}>
+              Delete scene
+            </MenuItem>
           </Menu>
         </Box>
       )}

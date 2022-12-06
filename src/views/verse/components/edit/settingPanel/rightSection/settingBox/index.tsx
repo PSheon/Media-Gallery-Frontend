@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Component Imports
+// ** Components Imports
 import SiteSettingDialog from 'src/views/verse/components/edit/settingPanel/rightSection/settingBox/SiteSettingDialog'
 
 // ** Types

@@ -13,7 +13,7 @@ const LeftSection = () => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
   return (
-    <Grid container spacing={4} justifyContent='flex-start' alignItems='center' sx={{ p: 4 }}>
+    <Grid container spacing={4} justifyContent='flex-start' alignItems='center' sx={{ pl: 4, py: 2, flex: 2 }}>
       <Grid item>
         <SceneListMenu />
       </Grid>

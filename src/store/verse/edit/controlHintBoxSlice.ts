@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 // ** Types
-import { IInitialState } from 'src/types/verse/edit/ControlHintBoxTypes'
+import { IInitialState } from 'src/types/verse/edit/controlHintBoxTypes'
 
 const initialState: IInitialState = {
   title: '',

@@ -19,7 +19,7 @@ const RightSection = () => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
   return (
-    <Grid container spacing={4} justifyContent='flex-end' alignItems='center' sx={{ p: 4 }}>
+    <Grid container spacing={4} justifyContent='flex-end' alignItems='center' sx={{ pr: 4, py: 2, flex: 2 }}>
       {isDesktop && (
         <Grid item>
           <CollaboratorListMenu />
@@ -57,8 +57,10 @@ const RightSection = () => {
               '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` }
             }}
           >
-            <Icon icon='material-symbols:arrow-outward-rounded' fontSize={24} style={{ marginBottom: 8 }} />
-            <Typography sx={{ fontWeight: 500, my: 'auto' }}>Preview</Typography>
+            <Icon icon='material-symbols:arrow-outward-rounded' fontSize={20} />
+            <Typography variant='subtitle1' sx={{ fontWeight: 500, my: 'auto' }}>
+              Preview
+            </Typography>
           </Box>
         </Grid>
       )}

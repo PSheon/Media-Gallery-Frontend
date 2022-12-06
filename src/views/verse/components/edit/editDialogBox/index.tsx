@@ -20,6 +20,11 @@ import TextField from '@mui/material/TextField'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
+// ** Utils Imports
+import axios from 'axios'
+import { useQuery, useMutation } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
+
 // ** Action Imports
 import { hideEditDialogBox } from 'src/store/verse/edit/editDialogBoxSlice'
 
@@ -30,6 +35,20 @@ const EditDialogBox = () => {
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
   const EDIT_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.edit.editDialogBox)
+  const {
+    isLoading: isQueryLoading,
+    data: ownNftList,
+    refetch
+  } = useQuery({
+    queryKey: ['own-nft-list'],
+    queryFn: () =>
+      axios({
+        method: 'GET',
+        url: `/api/own-nft-image`
+      }).then(response => response.data),
+    retry: 0
+  })
+  console.log('ownNftList, ', ownNftList)
 
   // ** State
   const [addAssetsType, setAddAssetsType] = useState<string>('nft')
@@ -65,7 +84,11 @@ const EditDialogBox = () => {
                 <Button
                   fullWidth
                   variant='contained'
-                  onClick={() => handleAddAssetsType('nft')}
+                  onClick={() => {
+                    // NOTE
+                    refetch()
+                    handleAddAssetsType('nft')
+                  }}
                   color={addAssetsType === 'nft' ? 'primary' : 'secondary'}
                   startIcon={<Icon icon='ph:image-square-fill' />}
                   sx={{

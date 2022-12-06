@@ -21,7 +21,7 @@ const RootBox = styled(Box)(({ theme }) => ({
   position: 'fixed',
   margin: theme.spacing(2),
   right: theme.spacing(2),
-  bottom: theme.spacing(32),
+  bottom: theme.spacing(26),
   backgroundColor: 'transparent',
   cursor: 'pointer'
 }))

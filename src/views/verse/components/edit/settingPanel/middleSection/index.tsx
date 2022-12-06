@@ -43,8 +43,8 @@ const MiddleSection = () => {
   }
 
   return (
-    <Grid container spacing={4} justifyContent='center' sx={{ p: 4 }}>
-      <Grid item xs={4}>
+    <Grid container spacing={4} justifyContent='center' sx={{ px: 4, py: 2, flex: 1 }}>
+      <Grid item xs={6}>
         <Box
           onClick={handleStatisticsDialogClose}
           sx={{
@@ -62,11 +62,13 @@ const MiddleSection = () => {
               : { '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` } })
           }}
         >
-          <Icon icon='material-symbols:add-box' fontSize={24} style={{ marginBottom: 8 }} />
-          <Typography sx={{ fontWeight: 500, my: 'auto' }}>Edit</Typography>
+          <Icon icon='material-symbols:add-box' fontSize={20} />
+          <Typography variant='subtitle1' sx={{ fontWeight: 500, my: 'auto' }}>
+            Edit
+          </Typography>
         </Box>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={6}>
         <Box
           onClick={handleStatisticsDialogOpen}
           sx={{
@@ -84,8 +86,10 @@ const MiddleSection = () => {
               : { '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` } })
           }}
         >
-          <Icon icon='gridicons:stats-alt' fontSize={24} style={{ marginBottom: 8 }} />
-          <Typography sx={{ fontWeight: 500, my: 'auto' }}>Statistics</Typography>
+          <Icon icon='gridicons:stats-alt' fontSize={20} />
+          <Typography variant='subtitle1' sx={{ fontWeight: 500, my: 'auto' }}>
+            Statistics
+          </Typography>
         </Box>
       </Grid>
 
