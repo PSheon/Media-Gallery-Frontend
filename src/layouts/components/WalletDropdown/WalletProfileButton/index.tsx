@@ -23,7 +23,7 @@ import Icon from 'src/@core/components/icon'
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
 
-// ** Component Imports
+// ** Components Imports
 import EditProfileItem from './EditProfileItem'
 
 // ** Type Imports

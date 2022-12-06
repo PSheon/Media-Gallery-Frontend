@@ -43,7 +43,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 // ** Third Party Import
 import { Toaster } from 'react-hot-toast'
 
-// ** Component Imports
+// ** Components Imports
 import UserLayout from 'src/layouts/UserLayout'
 import AclGuard from 'src/@core/components/auth/AclGuard'
 import ThemeComponent from 'src/@core/theme/ThemeComponent'

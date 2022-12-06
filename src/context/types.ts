@@ -18,6 +18,7 @@ export type RegisterParams = {
 }
 
 export type GuestDataType = {
+  id?: number
   role: 'guest'
   email: string
   fullName: string

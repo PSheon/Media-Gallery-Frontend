@@ -1,7 +1,7 @@
 // ** React Imports
 import { ReactNode, useContext } from 'react'
 
-// ** Component Imports
+// ** Components Imports
 import { AbilityContext } from 'src/layouts/components/acl/Can'
 
 // ** Types

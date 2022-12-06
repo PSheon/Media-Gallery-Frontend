@@ -19,7 +19,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 
-// ** Component Imports
+// ** Components Imports
 // import NftImageList from './NftImageList'
 
 // ** React Query Imports

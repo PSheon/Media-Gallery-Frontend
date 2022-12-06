@@ -23,7 +23,7 @@ import axios from 'axios'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Component Imports
+// ** Components Imports
 import ConnectorIcon from './ConnectorIcon'
 
 // ** Hooks
