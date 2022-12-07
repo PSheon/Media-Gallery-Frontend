@@ -1,7 +1,7 @@
-import { ISpawnPoint } from 'src/views/verse/book/interfaces/ISpawnPoint'
-import { VehicleSpawnPoint } from 'src/views/verse/book/world/VehicleSpawnPoint'
-import { CharacterSpawnPoint } from 'src/views/verse/book/world/CharacterSpawnPoint'
-import { NpcSpawnPoint } from 'src/views/verse/book/world/NpcSpawnPoint'
+import { ISpawnPoint } from 'src/views/verse/book/interfaces/view/ISpawnPoint'
+import { VehicleSpawnPoint } from 'src/views/verse/book/world/view/VehicleSpawnPoint'
+import { CharacterSpawnPoint } from 'src/views/verse/book/world/view/CharacterSpawnPoint'
+import { NpcSpawnPoint } from 'src/views/verse/book/world/view/NpcSpawnPoint'
 import { World } from 'src/views/verse/book/world/World'
 import { LoadingManager } from 'src/views/verse/book/core/view/LoadingManager'
 

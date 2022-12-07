@@ -12,26 +12,22 @@ import { Detector } from 'src/views/verse/lib/utils/Detector'
 import { Stats } from 'src/views/verse/lib/utils/Stats'
 
 import { CannonDebugRenderer } from 'src/views/verse/lib/cannon/CannonDebugRenderer'
-import { Room } from 'colyseus.js'
 import * as _ from 'lodash'
 
 import { InputManager } from 'src/views/verse/book/core/edit/InputManager'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { LoadingManager } from 'src/views/verse/book/core/edit/LoadingManager'
-import { InfoStack } from 'src/views/verse/book/core/InfoStack'
 import { UIManager } from 'src/views/verse/book/core/edit/UIManager'
 import { IWorldMetadata } from 'src/views/verse/book/interfaces/IWorldMetadata'
 import { INftMetadata } from 'src/views/verse/book/interfaces/INftMetadata'
 import { IWorldEntity } from 'src/views/verse/book/interfaces/edit/IWorldEntity'
 import { IUpdatable } from 'src/views/verse/book/interfaces/IUpdatable'
 import { IParams } from 'src/views/verse/book/interfaces/IParams'
-import { Character } from 'src/views/verse/book/characters/edit/Character'
 import { CollisionGroups } from 'src/views/verse/book/enums/CollisionGroups'
 import { BoxCollider } from 'src/views/verse/book/physics/colliders/BoxCollider'
 import { TrimeshCollider } from 'src/views/verse/book/physics/colliders/TrimeshCollider'
-import { Vehicle } from 'src/views/verse/book/vehicles/Vehicle'
 import { Scenario } from 'src/views/verse/book/world/edit/Scenario'
-import { Path } from 'src/views/verse/book/world/Path'
+import { Path } from 'src/views/verse/book/world/view/Path'
 import { Nft } from 'src/views/verse/book/world/edit/Nft'
 import { Sky } from 'src/views/verse/book/world/edit/Sky'
 import { Ocean } from 'src/views/verse/book/world/edit/Ocean'
@@ -45,7 +41,6 @@ export class World {
   public stats: Stats
   public graphicsWorld: THREE.Scene
   public sky: Sky
-  public room: Room | undefined
   public physicsWorld: CANNON.World
   public physicsFrameRate: number
   public physicsFrameTime: number
@@ -54,26 +49,21 @@ export class World {
   public clock: THREE.Clock
   public renderDelta: number
   public logicDelta: number
-  public requestDelta: number
+  public requestDelta = 0.01
   public sinceLastFrame: number
   public justRendered: boolean
   public inputManager: InputManager
   public cameraOperator: CameraOperator
   public timeScaleTarget = 1
-  public console: InfoStack
   public cursorBox: THREE.Mesh
   public cannonDebugRenderer: CannonDebugRenderer | undefined
   public scenarios: Scenario[] = []
   public gltfScenes: THREE.Scene[] = []
   public physicsBodyList: CANNON.body[] = []
-  public visitors: Record<string, Character> = {}
-  public characters: Character[] = []
-  public vehicles: Vehicle[] = []
   public nfts: Nft[] = []
   public paths: Path[] = []
   public updatableList: IUpdatable[] = []
   public mixer: Record<string, THREE.AnimationMixer> = {}
-  public localPlayer: Character | undefined = undefined
   public dialogMode = false
   public metadata: IWorldMetadata = {
     owner: '',
@@ -261,20 +251,20 @@ export class World {
     // Step the physics world
     this.physicsWorld.step(this.physicsFrameTime, timeStep)
 
-    this.characters.forEach(char => {
-      if (this.isOutOfBounds(char.characterCapsule.body.position)) {
-        this.outOfBoundsRespawn(char.characterCapsule.body)
-      }
-    })
+    // this.characters.forEach(char => {
+    //   if (this.isOutOfBounds(char.characterCapsule.body.position)) {
+    //     this.outOfBoundsRespawn(char.characterCapsule.body)
+    //   }
+    // })
 
-    this.vehicles.forEach(vehicle => {
-      if (this.isOutOfBounds(vehicle.rayCastVehicle.chassisBody.position)) {
-        const worldPos = new THREE.Vector3()
-        vehicle.spawnPoint.getWorldPosition(worldPos)
-        worldPos.y += 1
-        this.outOfBoundsRespawn(vehicle.rayCastVehicle.chassisBody, Utils.cannonVector(worldPos))
-      }
-    })
+    // this.vehicles.forEach(vehicle => {
+    //   if (this.isOutOfBounds(vehicle.rayCastVehicle.chassisBody.position)) {
+    //     const worldPos = new THREE.Vector3()
+    //     vehicle.spawnPoint.getWorldPosition(worldPos)
+    //     worldPos.y += 1
+    //     this.outOfBoundsRespawn(vehicle.rayCastVehicle.chassisBody, Utils.cannonVector(worldPos))
+    //   }
+    // })
   }
 
   public isOutOfBounds(position: CANNON.Vec3): boolean {
@@ -450,11 +440,6 @@ export class World {
   public launchScenario(scenarioID: string, loadingManager?: LoadingManager): void {
     this.lastScenarioID = scenarioID
 
-    if (this.localPlayer) {
-      this.localPlayer.removeFromWorld(this)
-      this.localPlayer = undefined
-    }
-
     this.clearEntities()
 
     // Launch default scenario
@@ -477,15 +462,7 @@ export class World {
   }
 
   public clearEntities(): void {
-    for (let i = 0; i < this.characters.length; i++) {
-      this.remove(this.characters[i])
-      i--
-    }
-
-    for (let i = 0; i < this.vehicles.length; i++) {
-      this.remove(this.vehicles[i])
-      i--
-    }
+    console.log('cleaned')
   }
 
   public scrollTheTimeScale(scrollAmount: number): void {
@@ -526,23 +503,7 @@ export class World {
   }
 
   adjustLabelVisible(newLabelVisible: boolean): void {
-    if (newLabelVisible) {
-      this.characters.forEach(char => {
-        char.setLabelVisible(true)
-      })
-      Object.values(this.visitors).forEach(visitor => {
-        visitor.setLabelVisible(true)
-      })
-      this.params.Label_Visible = true
-    } else {
-      this.characters.forEach(char => {
-        char.setLabelVisible(false)
-      })
-      Object.values(this.visitors).forEach(visitor => {
-        visitor.setLabelVisible(false)
-      })
-      this.params.Label_Visible = false
-    }
+    console.log('unsupported', newLabelVisible)
   }
 
   adjustShadows(newShadowsStatus: boolean): void {
@@ -574,10 +535,6 @@ export class World {
       this.cannonDebugRenderer = undefined
       this.params.Debug_Physics = false
     }
-    this.scope.characters.forEach(char => {
-      char.raycastBox.visible = newPhysicDebugStatus
-      char.raycastHoverBox.visible = newPhysicDebugStatus
-    })
   }
 
   adjustFpsDebug(newFpsDebugStatus: boolean): void {
@@ -585,18 +542,10 @@ export class World {
   }
 
   public dispose() {
-    if (this.room !== undefined) {
-      this.room?.leave()
-    }
     this.clearEntities()
-    if (this.localPlayer) {
-      this.localPlayer.removeFromWorld(this)
-    }
+
     this.physicsBodyList.forEach(body => {
       this.physicsWorld.remove(body)
-    })
-    Object.values(this.visitors).forEach(visitor => {
-      visitor.removeFromWorld(this)
     })
 
     this.renderer.renderLists.dispose()
@@ -612,14 +561,11 @@ export class World {
       this.graphicsWorld.remove(scene)
     })
 
-    this.room = undefined
-    this.localPlayer = undefined
     this.scenarios = []
 
     this.gltfScenes = []
     this.physicsBodyList = []
-    this.vehicles = []
-    this.visitors = {}
+
     this.nfts = []
   }
 

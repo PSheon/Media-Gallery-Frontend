@@ -1,23 +1,20 @@
-import { ISpawnPoint } from 'src/views/verse/book/interfaces/ISpawnPoint'
-import { VehicleSpawnPoint } from 'src/views/verse/book/world/VehicleSpawnPoint'
-import { CharacterSpawnPoint } from 'src/views/verse/book/world/CharacterSpawnPoint'
-import { NpcSpawnPoint } from 'src/views/verse/book/world/NpcSpawnPoint'
+import { ISpawnPoint } from 'src/views/verse/book/interfaces/edit/ISpawnPoint'
 import { World } from 'src/views/verse/book/world/EditWorld'
 import { LoadingManager } from 'src/views/verse/book/core/edit/LoadingManager'
 
 export class Scenario {
   public id: string
-  public name: string
+  public name = 'edit'
   public spawnAlways = false
   public default = false
   public world: World
-  public descriptionTitle: string
-  public descriptionContent: string
+  public descriptionTitle = 'Edit Scene'
+  public descriptionContent = 'Welcome to edit mode'
 
   private rootNode: THREE.Object3D
   private spawnPoints: ISpawnPoint[] = []
   private invisible = false
-  private initialCameraAngle: number
+  private initialCameraAngle = 0
 
   constructor(root: THREE.Object3D, world: World) {
     this.rootNode = root
@@ -26,6 +23,7 @@ export class Scenario {
 
     // Scenario
     if (root.userData.hasOwnProperty('name')) {
+      console.log('root.userData.name, ', root.userData.name)
       this.name = root.userData.name
     }
     if (root.userData.hasOwnProperty('default') && root.userData.default === 'true') {
@@ -53,26 +51,7 @@ export class Scenario {
     root.traverse(child => {
       if (child.hasOwnProperty('userData') && child.userData.hasOwnProperty('data')) {
         if (child.userData.data === 'spawn') {
-          if (child.userData.type === 'car' || child.userData.type === 'airplane' || child.userData.type === 'heli') {
-            const sp = new VehicleSpawnPoint(child)
-
-            if (child.userData.hasOwnProperty('type')) {
-              sp.type = child.userData.type
-            }
-
-            if (child.userData.hasOwnProperty('driver')) {
-              sp.driver = child.userData.driver
-
-              if (child.userData.driver === 'ai' && child.userData.hasOwnProperty('first_node')) {
-                sp.firstAINode = child.userData.first_node
-              }
-            }
-
-            this.spawnPoints.push(sp)
-          } else if (child.userData.type === 'player') {
-            // const sp = new CharacterSpawnPoint(child)
-            // this.spawnPoints.push(sp)
-          } else if (child.userData.type === 'npc') {
+          if (child.userData.type === 'npc') {
             // const sp = new NpcSpawnPoint(child)
             // this.spawnPoints.push(sp)
           }

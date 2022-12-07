@@ -4,8 +4,6 @@ import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { World } from 'src/views/verse/book/world/EditWorld'
 import { IInputReceiver } from 'src/views/verse/book/interfaces/IInputReceiver'
 import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
-import { Character } from 'src/views/verse/book/characters/edit/Character'
-import { CollisionGroups } from 'src/views/verse/book/enums/CollisionGroups'
 import { IUpdatable } from 'src/views/verse/book/interfaces/IUpdatable'
 import _ from 'lodash'
 
@@ -43,8 +41,6 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
   public rightVelocity = 0
 
   public followMode = false
-
-  public characterCaller: Character | undefined
 
   constructor(world: World, camera: THREE.Camera, sensitivityX = 1, sensitivityY: number = sensitivityX * 0.8) {
     this.world = world
@@ -169,15 +165,12 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
   public handleKeyboardEvent(event: KeyboardEvent, code: string, pressed: boolean): void {
     // Free camera
     if (this.world.dialogMode) return
-    if (code === 'KeyC' && pressed === true && event.shiftKey === true) {
-      if (this.characterCaller !== undefined) {
-        this.world.inputManager.setInputReceiver(this.characterCaller)
-        this.characterCaller = undefined
-      }
-    } else if (code === 'KeyE' && pressed === true) {
+    if (code === 'KeyE' && pressed === true) {
       if (this.hoverObjectDisplayName) {
+        this.world?.setDialogMode(true)
         SHOW_EDIT_DIALOG_BOX_ACTION()
       } else {
+        this.world?.setDialogMode(false)
         HIDE_EDIT_DIALOG_BOX_ACTION()
       }
     } else {

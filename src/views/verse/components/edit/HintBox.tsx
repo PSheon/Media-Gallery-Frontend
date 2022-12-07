@@ -42,6 +42,7 @@ const PanelCard = styled(Card)(({ theme }) => ({
 const HintBox = () => {
   // ** Hooks
   const dispatch = useDispatch()
+  const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
   const LOADING_SCREEN_SHOW = useSelector(({ verse }: RootState) => verse.edit.uiLayout.loadingScreenShow)
   const EDIT_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.edit.editDialogBox)
   const SCENE_NFT_LIST = useSelector(({ verse }: RootState) => verse.edit.scene.nftList)
@@ -53,6 +54,9 @@ const HintBox = () => {
 
   // ** Logics
   const handleClick = () => {
+    if (worldInstance) {
+      worldInstance.setDialogMode(true)
+    }
     dispatch(showEditDialogBox())
   }
 

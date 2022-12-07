@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import TextField from '@mui/material/TextField'
+import Skeleton from '@mui/material/Skeleton'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -28,27 +29,34 @@ import toast from 'react-hot-toast'
 // ** Action Imports
 import { hideEditDialogBox } from 'src/store/verse/edit/editDialogBoxSlice'
 
+// ** Config
+import apiConfig from 'src/configs/api'
+
 // ** Types
 import { AppDispatch, RootState } from 'src/store'
+import { IAsset } from 'src/types/scene/assetTypes'
 
 const EditDialogBox = () => {
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
+  const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
   const EDIT_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.edit.editDialogBox)
   const {
     isLoading: isQueryLoading,
-    data: ownNftList,
+    data: ownNftList = [],
     refetch
   } = useQuery({
     queryKey: ['own-nft-list'],
     queryFn: () =>
       axios({
         method: 'GET',
-        url: `/api/own-nft-image`
-      }).then(response => response.data),
+        url: `/api/own-nft-list`,
+        params: {
+          populate: ['cover']
+        }
+      }).then(response => response.data.data as IAsset[]),
     retry: 0
   })
-  console.log('ownNftList, ', ownNftList)
 
   // ** State
   const [addAssetsType, setAddAssetsType] = useState<string>('nft')
@@ -58,7 +66,135 @@ const EditDialogBox = () => {
     setAddAssetsType(newAddAssetsType)
   }
   const handleEditDialogBoxClose = () => {
+    if (worldInstance) {
+      worldInstance.setDialogMode(false)
+    }
     dispatch(hideEditDialogBox())
+  }
+
+  const renderNft = (ownNft: IAsset) => {
+    if (
+      ownNft?.attributes?.coverFileType === 'png' ||
+      ownNft?.attributes?.coverFileType === 'gif' ||
+      ownNft?.attributes?.coverFileType === 'jpg'
+    ) {
+      return (
+        <Box
+          sx={{
+            height: theme => theme.spacing(40),
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '.2rem'
+          }}
+        >
+          <img
+            src={`${apiConfig.publicFolderUrl}${ownNft?.attributes?.cover?.data?.attributes.url}`}
+            alt={ownNft?.attributes.displayName}
+          />
+          <Box sx={{ position: 'absolute', top: 0, p: 2, width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+            <Box
+              sx={{
+                px: 2,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: theme => theme.palette.background.paper,
+                borderRadius: theme => theme.shape.borderRadius
+              }}
+            >
+              <Box
+                sx={{
+                  width: '8px',
+                  height: '8px',
+                  mr: 2,
+                  backgroundColor: theme => theme.palette.success.main,
+                  borderRadius: '50%'
+                }}
+              />
+              <Typography variant='subtitle2'>{ownNft.attributes.coverFileType!}</Typography>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              p: 2,
+              width: '100%',
+              height: '80%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+              background: `linear-gradient(to top, rgba(0, 0, 0, 0.89), rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1), transparent)`
+            }}
+          >
+            <Typography variant='caption'>{ownNft?.attributes.displayName}</Typography>
+          </Box>
+        </Box>
+      )
+    }
+
+    if (ownNft?.attributes?.coverFileType === 'mp4') {
+      return (
+        <Box
+          sx={{
+            height: theme => theme.spacing(40),
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '.2rem'
+          }}
+        >
+          <video
+            width='100%'
+            height='auto'
+            src={`${apiConfig.publicFolderUrl}${ownNft?.attributes?.cover?.data?.attributes.url}`}
+          />
+          <Box sx={{ position: 'absolute', top: 0, p: 2, width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+            <Box
+              sx={{
+                px: 2,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: theme => theme.palette.background.paper,
+                borderRadius: theme => theme.shape.borderRadius
+              }}
+            >
+              <Box
+                sx={{
+                  width: '8px',
+                  height: '8px',
+                  mr: 2,
+                  backgroundColor: theme => theme.palette.success.main,
+                  borderRadius: '50%'
+                }}
+              />
+              <Typography variant='subtitle2'>{ownNft.attributes.coverFileType!}</Typography>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              p: 2,
+              width: '100%',
+              height: '80%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+              background: `linear-gradient(to top, rgba(0, 0, 0, 0.89), rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1), transparent)`
+            }}
+          >
+            <Typography variant='caption'>{ownNft?.attributes.displayName}</Typography>
+          </Box>
+        </Box>
+      )
+    }
   }
 
   return (
@@ -161,59 +297,82 @@ const EditDialogBox = () => {
 
           <Grid item xs={12}>
             <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <Box
-                  sx={{
-                    height: '100%',
-                    display: 'flex',
-                    borderRadius: 1,
-                    cursor: 'pointer',
-                    overflow: 'hidden',
-                    position: 'relative',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    border: theme => `2px solid ${theme.palette.divider}`,
-                    ...(false
-                      ? { borderColor: `primary.main` }
-                      : { '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` } }),
-                    '& img': {
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
-                    }
-                  }}
-                >
-                  <Image width={140} height={140} src='/images/pages/background-3.jpg' alt='something' />
-                </Box>
-              </Grid>
+              {isQueryLoading &&
+                [...Array(6).keys()].map(aIndex => (
+                  <Grid key={`scene-assets-skeleton-${aIndex}`} item xs={6} sm={4}>
+                    <Skeleton variant='rounded' height={125} />
+                  </Grid>
+                ))}
 
-              <Grid item xs={4}>
-                <Box
-                  sx={{
-                    height: '100%',
-                    display: 'flex',
-                    borderRadius: 1,
-                    cursor: 'pointer',
-                    overflow: 'hidden',
-                    position: 'relative',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    border: theme => `2px solid ${theme.palette.divider}`,
-                    ...(false
-                      ? { borderColor: `primary.main` }
-                      : { '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` } }),
-                    '& img': {
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
-                    }
-                  }}
-                >
-                  <Image width={140} height={140} src='/images/pages/background-3.jpg' alt='something' />
-                </Box>
-              </Grid>
+              {ownNftList.map(ownNft => {
+                return (
+                  <Grid key={ownNft.id} item xs={4}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        borderRadius: 1,
+                        cursor: 'pointer',
+                        overflow: 'hidden',
+                        position: 'relative',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        border: theme => `2px solid ${theme.palette.divider}`,
+                        '&:hover': {
+                          borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)`
+                        },
+                        '& img': {
+                          width: '100%',
+                          objectFit: 'cover'
+                        }
+                      }}
+                    >
+                      {ownNft?.attributes.fetchStatus === 'fetching' && (
+                        <Box
+                          sx={{
+                            height: theme => theme.spacing(40),
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: '.2rem'
+                          }}
+                        >
+                          <Icon icon='eos-icons:loading' fontSize={24} />
+                          <Box sx={{ position: 'absolute', bottom: 0 }}>
+                            <Typography variant='caption'>Fetching...</Typography>
+                          </Box>
+                        </Box>
+                      )}
+                      {ownNft?.attributes.fetchStatus === 'failed' && (
+                        <Box
+                          sx={{
+                            height: theme => theme.spacing(40),
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: '.2rem'
+                          }}
+                        >
+                          <Icon icon='material-symbols:question-mark-rounded' fontSize={24} />
+                          <Box
+                            sx={{
+                              position: 'absolute',
+                              bottom: 0,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center'
+                            }}
+                          >
+                            <Typography variant='caption'>{ownNft?.attributes.displayName}</Typography>
+                            <Typography variant='caption'>Fetch failed</Typography>
+                          </Box>
+                        </Box>
+                      )}
+                      {ownNft?.attributes.fetchStatus === 'fetched' && renderNft(ownNft)}
+                    </Box>
+                  </Grid>
+                )
+              })}
             </Grid>
           </Grid>
         </Grid>
