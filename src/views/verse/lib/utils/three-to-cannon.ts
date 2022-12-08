@@ -1,10 +1,12 @@
+/* eslint-disable */
+// @ts-nocheck
 import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import { quickhull } from './THREE.quickhull'
 
-var PI_2 = Math.PI / 2
+const PI_2 = Math.PI / 2
 
-var Type = {
+const Type = {
   BOX: 'Box',
   CYLINDER: 'Cylinder',
   SPHERE: 'Sphere',
@@ -20,7 +22,7 @@ var Type = {
 export const threeToCannon = function (object, options) {
   options = options || {}
 
-  var geometry
+  let geometry
 
   if (options.type === Type.BOX) {
     return createBoundingBoxShape(object)
@@ -41,7 +43,7 @@ export const threeToCannon = function (object, options) {
   geometry = getGeometry(object)
   if (!geometry) return null
 
-  var type = geometry.metadata ? geometry.metadata.type : geometry.type
+  const type = geometry.metadata ? geometry.metadata.type : geometry.type
 
   switch (type) {
     case 'BoxGeometry':
@@ -78,12 +80,12 @@ threeToCannon.Type = Type
  * @return {CANNON.Shape}
  */
 function createBoxShape(geometry) {
-  var vertices = getVertices(geometry)
+  const vertices = getVertices(geometry)
 
   if (!vertices.length) return null
 
   geometry.computeBoundingBox()
-  var box = geometry.boundingBox
+  const box = geometry.boundingBox
 
   return new CANNON.Box(
     new CANNON.Vec3((box.max.x - box.min.x) / 2, (box.max.y - box.min.y) / 2, (box.max.z - box.min.z) / 2)
@@ -96,11 +98,11 @@ function createBoxShape(geometry) {
  * @return {CANNON.Shape}
  */
 function createBoundingBoxShape(object) {
-  var shape,
+  let shape,
     localPosition,
     box = new THREE.Box3()
 
-  var clone = object.clone()
+  const clone = object.clone()
   clone.quaternion.set(0, 0, 0, 1)
   clone.updateMatrixWorld()
 
@@ -126,7 +128,7 @@ function createBoundingBoxShape(object) {
  * @return {CANNON.Shape}
  */
 function createConvexPolyhedron(object) {
-  var i,
+  let i,
     vertices,
     faces,
     hull,
@@ -165,7 +167,7 @@ function createConvexPolyhedron(object) {
  * @return {CANNON.Shape}
  */
 function createCylinderShape(geometry) {
-  var shape,
+  let shape,
     params = geometry.metadata ? geometry.metadata.parameters : geometry.parameters
   shape = new CANNON.Cylinder(params.radiusTop, params.radiusBottom, params.height, params.radialSegments)
 
@@ -187,7 +189,7 @@ function createCylinderShape(geometry) {
  * @return {CANNON.Shape}
  */
 function createBoundingCylinderShape(object, options) {
-  var shape,
+  let shape,
     height,
     radius,
     box = new THREE.Box3(),
@@ -225,7 +227,7 @@ function createBoundingCylinderShape(object, options) {
  */
 function createPlaneShape(geometry) {
   geometry.computeBoundingBox()
-  var box = geometry.boundingBox
+  const box = geometry.boundingBox
 
   return new CANNON.Box(
     new CANNON.Vec3(
@@ -241,7 +243,7 @@ function createPlaneShape(geometry) {
  * @return {CANNON.Shape}
  */
 function createSphereShape(geometry) {
-  var params = geometry.metadata ? geometry.metadata.parameters : geometry.parameters
+  const params = geometry.metadata ? geometry.metadata.parameters : geometry.parameters
 
   return new CANNON.Sphere(params.radius)
 }
@@ -254,7 +256,7 @@ function createBoundingSphereShape(object, options) {
   if (options.sphereRadius) {
     return new CANNON.Sphere(options.sphereRadius)
   }
-  var geometry = getGeometry(object)
+  const geometry = getGeometry(object)
   if (!geometry) return null
   geometry.computeBoundingSphere()
 
@@ -266,7 +268,7 @@ function createBoundingSphereShape(object, options) {
  * @return {CANNON.Shape}
  */
 function createTrimeshShape(geometry) {
-  var indices,
+  let indices,
     vertices = getVertices(geometry)
 
   if (!vertices.length) return null
@@ -287,7 +289,7 @@ function createTrimeshShape(geometry) {
  * @return {THREE.Geometry}
  */
 function getGeometry(object) {
-  var matrix,
+  let matrix,
     mesh,
     meshes = getMeshes(object),
     tmp = new THREE.Geometry(),
@@ -297,7 +299,7 @@ function getGeometry(object) {
 
   // Apply scale  – it can't easily be applied to a CANNON.Shape later.
   if (meshes.length === 1) {
-    var position = new THREE.Vector3(),
+    const position = new THREE.Vector3(),
       quaternion = new THREE.Quaternion(),
       scale = new THREE.Vector3()
     if (meshes[0].geometry.isBufferGeometry) {
@@ -319,7 +321,7 @@ function getGeometry(object) {
     mesh.updateMatrixWorld()
     if (mesh.geometry.isBufferGeometry) {
       if (mesh.geometry.attributes.position && mesh.geometry.attributes.position.itemSize > 2) {
-        var tmpGeom = new THREE.Geometry()
+        const tmpGeom = new THREE.Geometry()
         tmpGeom.fromBufferGeometry(mesh.geometry)
         combined.merge(tmpGeom, mesh.matrixWorld)
         tmpGeom.dispose()
@@ -357,7 +359,7 @@ function getVertices(geometry) {
  * @return {Array<THREE.Mesh>}
  */
 function getMeshes(object) {
-  var meshes = []
+  const meshes = []
   object.traverse(function (o) {
     if (o.type === 'Mesh') {
       meshes.push(o)

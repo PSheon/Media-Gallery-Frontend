@@ -7,16 +7,24 @@ import { LoadingManager } from 'src/views/verse/book/core/view/LoadingManager'
 
 export class Scenario {
   public id: string
+
+  // @ts-ignore
   public name: string
   public spawnAlways = false
   public default = false
   public world: World
+
+  // @ts-ignore
   public descriptionTitle: string
+
+  // @ts-ignore
   public descriptionContent: string
 
   private rootNode: THREE.Object3D
   private spawnPoints: ISpawnPoint[] = []
   private invisible = false
+
+  // @ts-ignore
   private initialCameraAngle: number
 
   constructor(root: THREE.Object3D, world: World) {
@@ -82,6 +90,7 @@ export class Scenario {
   }
 
   public createLaunchLink(): void {
+    // @ts-ignore
     this.world.params[this.name] = () => {
       this.world.launchScenario(this.id)
     }

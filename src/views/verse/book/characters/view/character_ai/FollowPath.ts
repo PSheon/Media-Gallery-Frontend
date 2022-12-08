@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+
+// @ts-ignore
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 

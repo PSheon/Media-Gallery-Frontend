@@ -1,9 +1,11 @@
 import * as THREE from 'three'
 import { SeatType } from 'src/views/verse/book/enums/SeatType'
-import { Side } from 'src/views/verse/book/enums/Side'
+
+// import { Side } from 'src/views/verse/book/enums/Side'
 import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
 import { VehicleDoor } from 'src/views/verse/book/vehicles/view/VehicleDoor'
-import { Vehicle } from 'src/views/verse/book/vehicles/view/Vehicle'
+
+// import { Vehicle } from 'src/views/verse/book/vehicles/view/Vehicle'
 import { Character } from 'src/views/verse/book/characters/view/Character'
 
 export class VehicleSeat {
@@ -11,14 +13,18 @@ export class VehicleSeat {
   public seatPointObject: THREE.Object3D
 
   // String of names of connected seats
+  // @ts-ignore
   public connectedSeatsString: string
 
   // Actual seatPoint objects, need to be identified
   // by parsing connectedSeatsString *after* all seats are imported
   public connectedSeats: VehicleSeat[] = []
 
+  // @ts-ignore
   public type: SeatType
   public entryPoints: THREE.Object3D[] = []
+
+  // @ts-ignore
   public door: VehicleDoor
 
   public occupiedBy: Character | undefined

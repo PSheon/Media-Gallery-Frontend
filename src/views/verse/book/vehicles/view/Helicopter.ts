@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+
+// @ts-ignore
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
@@ -6,7 +8,8 @@ import { Vehicle } from 'src/views/verse/book/vehicles/view/Vehicle'
 import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
 import { IWorldEntity } from 'src/views/verse/book/interfaces/view/IWorldEntity'
 import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
-import { World } from 'src/views/verse/book/world/World'
+
+// import { World } from 'src/views/verse/book/world/World'
 import { EntityType } from 'src/views/verse/book/enums/EntityType'
 
 export class Helicopter extends Vehicle implements IControllable, IWorldEntity {
@@ -92,9 +95,9 @@ export class Helicopter extends Vehicle implements IControllable, IWorldEntity {
     }
 
     // Vertical stabilization
-    const gravity = heli.world.physicsWorld.gravity
+    const gravity = heli.world?.physicsWorld.gravity
     let gravityCompensation = new CANNON.Vec3(-gravity.x, -gravity.y, -gravity.z).length()
-    gravityCompensation *= heli.world.physicsFrameTime
+    gravityCompensation *= heli!.world!.physicsFrameTime
     gravityCompensation *= 0.98
     const dot = globalUp.dot(up)
     gravityCompensation *= Math.sqrt(THREE.MathUtils.clamp(dot, 0, 1))
@@ -170,6 +173,7 @@ export class Helicopter extends Vehicle implements IControllable, IWorldEntity {
   }
 
   public readHelicopterData(gltf: any): void {
+    // @ts-ignore
     gltf.scene.traverse(child => {
       if (child.hasOwnProperty('userData')) {
         if (child.userData.hasOwnProperty('data')) {
@@ -184,7 +188,7 @@ export class Helicopter extends Vehicle implements IControllable, IWorldEntity {
   public inputReceiverInit(): void {
     super.inputReceiverInit()
 
-    this.world.updateControls([
+    this.world?.updateControls([
       {
         keys: ['Shift'],
         desc: 'Ascend'

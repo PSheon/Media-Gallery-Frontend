@@ -3,6 +3,7 @@ import { ICharacterAI } from 'src/views/verse/book/interfaces/ICharacterAI'
 import { Character } from 'src/views/verse/book/characters/view/Character'
 
 export class RandomBehaviour implements ICharacterAI {
+  // @ts-ignore
   public character: Character
   private randomFrequency: number
 

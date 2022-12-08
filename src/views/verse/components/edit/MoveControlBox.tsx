@@ -8,12 +8,19 @@ import { styled, Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 
 // ** Utils Imports
-import ReactNipple from 'react-nipple'
+// @ts-ignore
+import ReactNipple from 'react-nipple' // NOTE
 
 // ** Types
 import { RootState } from 'src/store'
 
 import 'react-nipple/lib/styles.css'
+
+interface INippleData {
+  direction: {
+    angle: 'left' | 'up' | 'right' | 'down'
+  }
+}
 
 // ** Styled RootBox component
 const RootBox = styled(Box)(({ theme }) => ({
@@ -57,7 +64,7 @@ const MoveControlBox = () => {
     return keyCode
   }
 
-  const handleDirection = (event: KeyboardEvent, data) => {
+  const handleDirection = (event: KeyboardEvent, data: INippleData) => {
     const angle = data?.direction?.angle
 
     if (angle) {
@@ -73,7 +80,7 @@ const MoveControlBox = () => {
     }
   }
 
-  const handleRelease = (event: KeyboardEvent, data) => {
+  const handleRelease = (event: KeyboardEvent) => {
     if (currentKeyCode && worldInstance?.inputManager.inputReceiver !== undefined) {
       worldInstance.inputManager.inputReceiver.handleKeyboardEvent(event, currentKeyCode, false)
       setCurrentKeyCode(() => '')

@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+
+// @ts-ignore
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
@@ -21,7 +23,6 @@ import * as _ from 'lodash'
 import { InputManager } from 'src/views/verse/book/core/view/InputManager'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { LoadingManager } from 'src/views/verse/book/core/view/LoadingManager'
-import { InfoStack } from 'src/views/verse/book/core/InfoStack'
 import { UIManager } from 'src/views/verse/book/core/view/UIManager'
 import { IWorldMetadata } from 'src/views/verse/book/interfaces/IWorldMetadata'
 import { INftMetadata } from 'src/views/verse/book/interfaces/INftMetadata'
@@ -50,6 +51,8 @@ export class World {
   public labelRenderer: CSS2DRenderer
   public camera: THREE.PerspectiveCamera
   public composer: any
+
+  // @ts-ignore
   public stats: Stats
   public graphicsWorld: THREE.Scene
   public sky: Sky
@@ -62,13 +65,12 @@ export class World {
   public clock: THREE.Clock
   public renderDelta: number
   public logicDelta: number
-  public requestDelta: number
+  public requestDelta = 0.01
   public sinceLastFrame: number
   public justRendered: boolean
   public inputManager: InputManager
   public cameraOperator: CameraOperator
   public timeScaleTarget = 1
-  public console: InfoStack
   public cursorBox: THREE.Mesh
   public cannonDebugRenderer: CannonDebugRenderer | undefined
   public scenarios: Scenario[] = []
@@ -88,9 +90,7 @@ export class World {
     displayName: '',
     description: '',
     worldScenePaths: [],
-    nftList: []
-
-    // allowedVisitors: [] // NOTE
+    assetList: []
   }
   public params: IParams = {
     Label_Visible:
@@ -118,6 +118,7 @@ export class World {
   }
 
   private lastScenarioID: string | undefined
+  private cursorBoxHover = false
 
   constructor() {
     const scope = this
@@ -152,6 +153,8 @@ export class World {
       scope.camera.updateProjectionMatrix()
       scope.renderer.setSize(window.innerWidth, window.innerHeight)
       scope.labelRenderer.setSize(window.innerWidth, window.innerHeight)
+
+      // @ts-ignore
       fxaaPass.uniforms['resolution'].value.set(
         1 / (window.innerWidth * pixelRatio),
         1 / (window.innerHeight * pixelRatio)
@@ -171,7 +174,11 @@ export class World {
 
     // FXAA
     const pixelRatio = this.renderer.getPixelRatio()
+
+    // @ts-ignore
     fxaaPass.material['uniforms'].resolution.value.x = 1 / (window.innerWidth * pixelRatio)
+
+    // @ts-ignore
     fxaaPass.material['uniforms'].resolution.value.y = 1 / (window.innerHeight * pixelRatio)
 
     // Composer
@@ -271,12 +278,36 @@ export class World {
         '/assets/glb/scene/advanced-gallery/draco-p7.glb',
         '/assets/glb/scene/advanced-gallery/draco-p8.glb'
       ],
-      nftList: []
+      assetList: []
     }
   }
 
   public setDialogMode(newDialogMode: boolean): void {
     this.dialogMode = newDialogMode
+  }
+
+  public setCursorBoxHover(newHoverStatus: boolean): void {
+    if (newHoverStatus) {
+      if (this.cursorBoxHover === false) {
+        this.cursorBoxHover = true
+
+        // @ts-ignore
+        this.cursorBox.material.color.setHex(0x7cf1ae)
+
+        // @ts-ignore
+        this.cursorBox.material.opacity = 1
+      }
+    } else {
+      if (this.cursorBoxHover === true) {
+        this.cursorBoxHover = false
+
+        // @ts-ignore
+        this.cursorBox.material.color.setHex(0xced3dc)
+
+        // @ts-ignore
+        this.cursorBox.material.opacity = 0.3
+      }
+    }
   }
 
   // Update
@@ -421,8 +452,11 @@ export class World {
       if (child.hasOwnProperty('userData')) {
         if (child.type === 'Mesh') {
           Utils.setupMeshProperties(child)
+
+          // @ts-ignore
           this.sky.csm.setupMaterial(child.material)
 
+          // @ts-ignore
           if (child.material.name === 'ocean') {
             this.registerUpdatable(new Ocean(child, this))
           }
@@ -440,6 +474,7 @@ export class World {
                 phys.body.quaternion.copy(Utils.cannonQuat(child.quaternion))
                 phys.body.computeAABB()
 
+                // @ts-ignore
                 phys.body.shapes.forEach(shape => {
                   shape.collisionFilterMask = ~CollisionGroups.TrimeshColliders
                 })
@@ -536,6 +571,7 @@ export class World {
         this.room = room
         const gltfLoader = loadingManager.gltfLoader
 
+        // @ts-ignore
         room.state.players.onAdd = (player, sessionId) => {
           if (room.sessionId !== sessionId) {
             gltfLoader.load(`/assets/glb/character/${player.metadata.avatarModel}.glb`, model => {
@@ -554,7 +590,9 @@ export class World {
               visitor.setPosition(player.position.x, player.position.y, player.position.z)
 
               // Update player metadata based on changes from the server.
+              // @ts-ignore
               player.metadata.onChange = changes => {
+                // @ts-ignore
                 changes.forEach(change => {
                   if (change.field === 'displayName') {
                     this.visitors[sessionId].setMetadata({
@@ -600,6 +638,7 @@ export class World {
           }
         }
 
+        // @ts-ignore
         room.state.players.onRemove = (player, sessionId: string): void => {
           this.visitors[sessionId].removeFromWorld(this)
           delete this.visitors[sessionId]
@@ -693,10 +732,12 @@ export class World {
 
   adjustShadows(newShadowsStatus: boolean): void {
     if (newShadowsStatus) {
+      // @ts-ignore
       this.sky.csm.lights.forEach(light => {
         light.castShadow = true
       })
     } else {
+      // @ts-ignore
       this.sky.csm.lights.forEach(light => {
         light.castShadow = false
       })
@@ -749,8 +790,12 @@ export class World {
 
     this.gltfScenes.forEach(scene => {
       scene.traverse(child => {
+        // @ts-ignore
         if (child.removable) {
+          // @ts-ignore
           child.geometry.dispose()
+
+          // @ts-ignore
           child.material.dispose()
         }
       })

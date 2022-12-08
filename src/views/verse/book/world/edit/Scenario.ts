@@ -60,6 +60,7 @@ export class Scenario {
   }
 
   public createLaunchLink(): void {
+    // @ts-ignore
     this.world.params[this.name] = () => {
       this.world.launchScenario(this.id)
     }
@@ -69,6 +70,7 @@ export class Scenario {
 
   public launch(loadingManager: LoadingManager, world: World): void {
     this.spawnPoints.forEach(sp => {
+      // @ts-ignore
       sp.spawn(loadingManager, world)
     })
 

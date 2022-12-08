@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+
+// @ts-ignore
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { World } from 'src/views/verse/book/world/EditWorld'
@@ -93,6 +95,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
     this.phi = Math.min(85, Math.max(-85, this.phi))
   }
 
+  // eslint-disable-next-line
   public update(timeScale: number): void {
     if (this.followMode === true) {
       this.camera.position.y = THREE.MathUtils.clamp(this.camera.position.y, this.target.y, Number.POSITIVE_INFINITY)
@@ -195,6 +198,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
     }
   }
 
+  // eslint-disable-next-line
   public handleMouseWheel(event: WheelEvent, value: number): void {
     // this.world.scrollTheTimeScale(value)
   }

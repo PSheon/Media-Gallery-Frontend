@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+
+// @ts-ignore
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 
 import { CameraOperator } from 'src/views/verse/book/core/edit/CameraOperator'
@@ -38,6 +40,8 @@ export class World {
   public renderer: THREE.WebGLRenderer
   public camera: THREE.PerspectiveCamera
   public composer: any
+
+  // @ts-ignore
   public stats: Stats
   public graphicsWorld: THREE.Scene
   public sky: Sky
@@ -70,10 +74,7 @@ export class World {
     displayName: '',
     description: '',
     worldScenePaths: [],
-    nftList: [],
     assetList: []
-
-    // allowedVisitors: [] // NOTE
   }
   public params: IParams = {
     Label_Visible: false,
@@ -126,6 +127,8 @@ export class World {
       scope.camera.aspect = window.innerWidth / window.innerHeight
       scope.camera.updateProjectionMatrix()
       scope.renderer.setSize(window.innerWidth, window.innerHeight)
+
+      // @ts-ignore
       fxaaPass.uniforms['resolution'].value.set(
         1 / (window.innerWidth * pixelRatio),
         1 / (window.innerHeight * pixelRatio)
@@ -145,7 +148,11 @@ export class World {
 
     // FXAA
     const pixelRatio = this.renderer.getPixelRatio()
+
+    // @ts-ignore
     fxaaPass.material['uniforms'].resolution.value.x = 1 / (window.innerWidth * pixelRatio)
+
+    // @ts-ignore
     fxaaPass.material['uniforms'].resolution.value.y = 1 / (window.innerHeight * pixelRatio)
 
     // Composer
@@ -232,13 +239,21 @@ export class World {
     if (newHoverStatus) {
       if (this.cursorBoxHover === false) {
         this.cursorBoxHover = true
+
+        // @ts-ignore
         this.cursorBox.material.color.setHex(0x7cf1ae)
+
+        // @ts-ignore
         this.cursorBox.material.opacity = 1
       }
     } else {
       if (this.cursorBoxHover === true) {
         this.cursorBoxHover = false
+
+        // @ts-ignore
         this.cursorBox.material.color.setHex(0xced3dc)
+
+        // @ts-ignore
         this.cursorBox.material.opacity = 0.3
       }
     }
@@ -384,8 +399,11 @@ export class World {
       if (child.hasOwnProperty('userData')) {
         if (child.type === 'Mesh') {
           Utils.setupMeshProperties(child)
+
+          // @ts-ignore
           this.sky.csm.setupMaterial(child.material)
 
+          // @ts-ignore
           if (child.material.name === 'ocean') {
             this.registerUpdatable(new Ocean(child, this))
           }
@@ -403,6 +421,7 @@ export class World {
                 phys.body.quaternion.copy(Utils.cannonQuat(child.quaternion))
                 phys.body.computeAABB()
 
+                // @ts-ignore
                 phys.body.shapes.forEach(shape => {
                   shape.collisionFilterMask = ~CollisionGroups.TrimeshColliders
                 })
@@ -516,8 +535,6 @@ export class World {
   public updateAssetFrame(framePosition: string, newAssetMetadata: IAsset) {
     const selectedNft = this.nfts.find(nft => nft.position === framePosition)
     if (selectedNft) {
-      console.log('newAssetMeta ', newAssetMetadata['attributes'])
-
       const isDelete = newAssetMetadata['attributes'].framePosition === null
 
       if (isDelete) {
@@ -546,10 +563,12 @@ export class World {
 
   adjustShadows(newShadowsStatus: boolean): void {
     if (newShadowsStatus) {
+      // @ts-ignore
       this.sky.csm.lights.forEach(light => {
         light.castShadow = true
       })
     } else {
+      // @ts-ignore
       this.sky.csm.lights.forEach(light => {
         light.castShadow = false
       })
@@ -590,8 +609,12 @@ export class World {
 
     this.gltfScenes.forEach(scene => {
       scene.traverse(child => {
+        // @ts-ignore
         if (child.removable) {
+          // @ts-ignore
           child.geometry.dispose()
+
+          // @ts-ignore
           child.material.dispose()
         }
       })

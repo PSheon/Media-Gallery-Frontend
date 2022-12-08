@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** MUI Imports
@@ -42,11 +42,14 @@ const HintBox = () => {
   const dispatch = useDispatch()
   const LOADING_SCREEN_SHOW = useSelector(({ verse }: RootState) => verse.view.uiLayout.loadingScreenShow)
   const VIEW_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.viewDialogBox)
-  const SCENE_NFT_LIST = useSelector(({ verse }: RootState) => verse.view.scene.nftList)
+
+  // const SCENE_NFT_LIST = useSelector(({ verse }: RootState) => verse.view.scene.nftList)
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
   // ** States
+  // eslint-disable-next-line
   const [frameDisplayName, setFrameDisplayName] = useState('Fetching...')
+  // eslint-disable-next-line
   const [frameDescription, setFrameDescription] = useState('')
 
   // ** Logics
@@ -55,16 +58,16 @@ const HintBox = () => {
   }
 
   // ** Side Effect
-  useEffect(() => {
-    const nftDetail = SCENE_NFT_LIST.find(nftDetail => nftDetail.frameId === VIEW_DIALOG_BOX.speaker)
-    if (nftDetail) {
-      setFrameDisplayName(nftDetail.displayName)
-      setFrameDescription(nftDetail.description)
-    } else {
-      setFrameDisplayName(VIEW_DIALOG_BOX.speaker)
-      setFrameDescription('')
-    }
-  }, [SCENE_NFT_LIST, VIEW_DIALOG_BOX.speaker])
+  // useEffect(() => {
+  //   const nftDetail = SCENE_NFT_LIST.find(nftDetail => nftDetail.frameId === VIEW_DIALOG_BOX.speaker)
+  //   if (nftDetail) {
+  //     setFrameDisplayName(nftDetail.displayName)
+  //     setFrameDescription(nftDetail.description)
+  //   } else {
+  //     setFrameDisplayName(VIEW_DIALOG_BOX.speaker)
+  //     setFrameDescription('')
+  //   }
+  // }, [SCENE_NFT_LIST, VIEW_DIALOG_BOX.speaker])
 
   return (
     <RootBox

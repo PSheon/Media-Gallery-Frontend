@@ -3,11 +3,15 @@ import { ICharacterAI } from 'src/views/verse/book/interfaces/ICharacterAI'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { Vehicle } from 'src/views/verse/book/vehicles/view/Vehicle'
 import { Character } from 'src/views/verse/book/characters/view/Character'
-import { Car } from 'src/views/verse/book/vehicles/view/Car'
-import { EntityType } from 'src/views/verse/book/enums/EntityType'
+
+// import { Car } from 'src/views/verse/book/vehicles/view/Car'
+// import { EntityType } from 'src/views/verse/book/enums/EntityType'
 
 export class FollowTarget implements ICharacterAI {
+  // @ts-ignore
   public character: Character
+
+  // @ts-ignore
   public isTargetReached: boolean
 
   public target: THREE.Object3D
@@ -22,6 +26,7 @@ export class FollowTarget implements ICharacterAI {
     this.target = target
   }
 
+  // eslint-disable-next-line
   public update(timeStep: number): void {
     if (this.character.controlledObject !== undefined) {
       const source = new THREE.Vector3()
@@ -48,7 +53,8 @@ export class FollowTarget implements ICharacterAI {
 
       const goingForward =
         forward.dot(Utils.threeVector((this.character.controlledObject as unknown as Vehicle).collision.velocity)) > 0
-      const speed = (this.character.controlledObject as unknown as Vehicle).collision.velocity.length()
+
+      // const speed = (this.character.controlledObject as unknown as Vehicle).collision.velocity.length()
 
       if (forward.dot(viewVector) < 0.0) {
         this.character.controlledObject.triggerAction('reverse', true)

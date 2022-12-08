@@ -14,6 +14,8 @@ export abstract class ExitingStateBase extends CharacterStateBase {
   protected endPosition: THREE.Vector3 = new THREE.Vector3()
   protected startRotation: THREE.Quaternion = new THREE.Quaternion()
   protected endRotation: THREE.Quaternion = new THREE.Quaternion()
+
+  // @ts-ignore
   protected exitPoint: THREE.Object3D
   protected dummyObj: THREE.Object3D
 
@@ -35,7 +37,7 @@ export abstract class ExitingStateBase extends CharacterStateBase {
   public detachCharacterFromVehicle(): void {
     this.character.controlledObject = undefined
     this.character.resetOrientation()
-    this.character.world.graphicsWorld.attach(this.character)
+    this.character?.world?.graphicsWorld.attach(this.character)
     this.character.resetVelocity()
     this.character.setPhysicsEnabled(true)
     this.character.setPosition(this.character.position.x, this.character.position.y, this.character.position.z)
@@ -51,11 +53,11 @@ export abstract class ExitingStateBase extends CharacterStateBase {
     forward.y = 0
     forward.normalize()
 
-    this.character.world.graphicsWorld.attach(this.dummyObj)
+    this.character.world?.graphicsWorld.attach(this.dummyObj)
     this.exitPoint.getWorldPosition(this.dummyObj.position)
     const target = this.dummyObj.position.clone().add(forward)
     this.dummyObj.lookAt(target)
-    this.seat.seatPointObject.parent.attach(this.dummyObj)
+    this.seat.seatPointObject?.parent?.attach(this.dummyObj)
     this.endRotation.copy(this.dummyObj.quaternion)
   }
 }

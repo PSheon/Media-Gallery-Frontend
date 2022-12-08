@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+
+// @ts-ignore
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { World } from 'src/views/verse/book/world/World'
@@ -92,6 +94,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
     this.phi = Math.min(85, Math.max(-85, this.phi))
   }
 
+  // eslint-disable-next-line
   public update(timeScale: number): void {
     if (this.followMode === true) {
       this.camera.position.y = THREE.MathUtils.clamp(this.camera.position.y, this.target.y, Number.POSITIVE_INFINITY)
@@ -185,15 +188,16 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
         if (this.rayHasHit) {
           this.world.cursorBox.position.copy(this.rayResult.hitPointWorld)
           if (this.rayResult.body?.displayName && this.rayResult.body?.objectType) {
-            this.world.cursorBox.material.color.setHex(0xbbe6e4)
-            this.world.cursorBox.material.opacity = 1
+            this.world.setCursorBoxHover(true)
             this.hoverObjectDisplayName = this.rayResult.body.displayName
             this.hoverObjectType = this.rayResult.body.objectType
           } else {
+            this.world.setCursorBoxHover(false)
             delete this.hoverObjectDisplayName
             delete this.hoverObjectType
           }
         } else {
+          this.world.setCursorBoxHover(false)
           delete this.hoverObjectDisplayName
           delete this.hoverObjectType
         }
@@ -237,6 +241,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
     }
   }
 
+  // eslint-disable-next-line
   public handleMouseWheel(event: WheelEvent, value: number): void {
     // this.world.scrollTheTimeScale(value)
   }

@@ -93,6 +93,7 @@ export class InputManager implements IUpdatable {
     this.pointerLock = enabled
   }
 
+  // eslint-disable-next-line
   public onPointerlockChange(event: MouseEvent): void {
     if (document.pointerLockElement === this.domElement) {
       this.domElement.addEventListener('mousemove', this.boundOnMouseMove, false)
@@ -105,6 +106,7 @@ export class InputManager implements IUpdatable {
     }
   }
 
+  // eslint-disable-next-line
   public onPointerlockError(event: MouseEvent): void {
     console.error('PointerLockControls: Unable to use Pointer Lock API')
   }
@@ -139,6 +141,7 @@ export class InputManager implements IUpdatable {
     }
   }
 
+  // eslint-disable-next-line
   public onTouchStart(event: TouchEvent) {
     this.domElement.addEventListener('touchmove', this.boundOnTouchMove, false)
     this.domElement.addEventListener('touchend', this.boundOnTouchEnd, false)
@@ -165,7 +168,8 @@ export class InputManager implements IUpdatable {
     }
   }
 
-  public onTouchEnd(/* event: TouchEvent */) {
+  // eslint-disable-next-line
+  public onTouchEnd(event: TouchEvent) {
     this.domElement.removeEventListener('touchmove', this.boundOnTouchMove, false)
     this.domElement.removeEventListener('touchend', this.boundOnTouchEnd, false)
 

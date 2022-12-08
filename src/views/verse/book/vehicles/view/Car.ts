@@ -1,12 +1,11 @@
+// @ts-ignore
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
-
 import { Vehicle } from 'src/views/verse/book/vehicles/view/Vehicle'
 import { IControllable } from 'src/views/verse/book/interfaces/IControllable'
 import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
 import * as THREE from 'three'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { SpringSimulator } from 'src/views/verse/book/physics/spring_simulation/SpringSimulator'
-import { World } from 'src/views/verse/book/world/World'
 import { EntityType } from 'src/views/verse/book/enums/EntityType'
 
 export class Car extends Vehicle implements IControllable {
@@ -18,6 +17,7 @@ export class Car extends Vehicle implements IControllable {
   private _speed = 0
 
   // private wheelsDebug: THREE.Mesh[] = [];
+  // @ts-ignore
   private steeringWheel: THREE.Object3D
   private airSpinTimer = 0
 
@@ -25,6 +25,7 @@ export class Car extends Vehicle implements IControllable {
   private gear = 1
 
   // Transmission
+  // @ts-ignore
   private shiftTimer: number
   private timeToShift = 0.2
 
@@ -91,7 +92,7 @@ export class Car extends Vehicle implements IControllable {
     // Engine
     const engineForce = 500
     const maxGears = 5
-    const gearsMaxSpeeds = {
+    const gearsMaxSpeeds: Record<string, number> = {
       R: -4,
       '0': 0,
       '1': 5,
@@ -163,6 +164,7 @@ export class Car extends Vehicle implements IControllable {
     this.applyEngineForce(0)
   }
 
+  // eslint-disable-next-line
   public physicsPreStep(body: CANNON.Body, car: Car): void {
     // Constants
     const quat = Utils.threeQuat(body.quaternion)
@@ -275,7 +277,7 @@ export class Car extends Vehicle implements IControllable {
   public inputReceiverInit(): void {
     super.inputReceiverInit()
 
-    this.world.updateControls([
+    this.world?.updateControls([
       {
         keys: ['W', 'S'],
         desc: 'Accelerate, Brake / Reverse'

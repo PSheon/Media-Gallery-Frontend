@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+
+// @ts-ignore
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -12,10 +14,20 @@ import { EntityType } from 'src/views/verse/book/enums/EntityType'
 
 export class Airplane extends Vehicle implements IControllable, IWorldEntity {
   public entityType: EntityType = EntityType.Airplane
+
+  // @ts-ignore
   public rotor: THREE.Object3D
+
+  // @ts-ignore
   public leftAileron: THREE.Object3D
+
+  // @ts-ignore
   public rightAileron: THREE.Object3D
+
+  // @ts-ignore
   public elevators: THREE.Object3D[] = []
+
+  // @ts-ignore
   public rudder: THREE.Object3D
 
   private steeringSimulator: SpringSimulator
@@ -333,7 +345,7 @@ export class Airplane extends Vehicle implements IControllable, IWorldEntity {
   public inputReceiverInit(): void {
     super.inputReceiverInit()
 
-    this.world.updateControls([
+    this.world?.updateControls([
       {
         keys: ['Shift'],
         desc: 'Accelerate'

@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 import * as THREE from 'three'
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import { Detector } from '../utils/Detector'

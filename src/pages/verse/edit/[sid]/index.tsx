@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode, useEffect } from 'react'
+import { ReactNode } from 'react'
 
 // ** Next Import
 import dynamic from 'next/dynamic'
@@ -12,7 +12,6 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Utils Imports
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { useHMSActions } from '@100mslive/react-sdk'
 import { useQuery } from '@tanstack/react-query'
 
 // ** Edit Book Import
@@ -23,7 +22,6 @@ import { IScene } from 'src/types/scene/sceneTypes'
 
 function EditSketchbookPage() {
   // ** Hooks
-  const hmsActions = useHMSActions()
   const router = useRouter()
   const { sid } = router.query
   const {
@@ -31,25 +29,28 @@ function EditSketchbookPage() {
     data: sceneBase,
     isError: isQueryError
   } = useQuery({
-    queryKey: ['scene'],
+    queryKey: ['scene_assetList'],
     queryFn: () =>
       axios({
         method: 'GET',
         url: `/api/scenes/${sid}`,
         params: {
-          populate: ['cover', 'owner', 'collaborators', 'assetList', 'sceneModel']
+          populate: {
+            cover: true,
+            owner: true,
+            collaborators: true,
+            assetList: {
+              populate: {
+                cover: true
+              }
+            },
+            sceneModel: true
+          }
         }
       }).then(response => response.data.data as IScene),
     enabled: !!sid,
     retry: 0
   })
-
-  // ** Side Effect
-  useEffect(() => {
-    return () => {
-      hmsActions.leave()
-    }
-  }, [hmsActions])
 
   if (isQueryError) {
     toast.error('Fetch scene failed')

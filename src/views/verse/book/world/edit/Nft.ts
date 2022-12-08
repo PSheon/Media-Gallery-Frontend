@@ -80,6 +80,8 @@ export class Nft {
       const texture = this.textureLoader.load(imageURL)
       texture.flipY = false
       texture.encoding = THREE.sRGBEncoding
+
+      // @ts-ignore
       this.object.material.map = texture
     }
 
@@ -97,12 +99,18 @@ export class Nft {
         texture.flipY = false
         texture.minFilter = THREE.LinearFilter
         texture.encoding = THREE.sRGBEncoding
+
+        // @ts-ignore
         this.object.material.map = texture
+
+        // @ts-ignore
         this.object.material.transparent = true
       } else {
         const texture = this.textureLoader.load('/images/verse/wrong-asset.jpg')
         texture.flipY = false
         texture.encoding = THREE.sRGBEncoding
+
+        // @ts-ignore
         this.object.material.map = texture
       }
     }
@@ -129,12 +137,15 @@ export class Nft {
         texture.format = THREE.RGBFormat
         texture.flipY = false
 
+        // @ts-ignore
         this.object.material.map = texture
       } else {
         this.streamingPlayer = undefined
         const texture = this.textureLoader.load('/images/verse/wrong-asset.jpg')
         texture.flipY = false
         texture.encoding = THREE.sRGBEncoding
+
+        // @ts-ignore
         this.object.material.map = texture
       }
     }
@@ -152,6 +163,8 @@ export class Nft {
       const texture = this.textureLoader.load(imageURL)
       texture.flipY = false
       texture.encoding = THREE.sRGBEncoding
+
+      // @ts-ignore
       this.object.material.map = texture
     }
 
@@ -181,12 +194,15 @@ export class Nft {
         texture.format = THREE.RGBFormat
         texture.flipY = false
 
+        // @ts-ignore
         this.object.material.map = texture
       } else {
         this.streamingPlayer = undefined
         const texture = this.textureLoader.load('/images/verse/wrong-asset.jpg')
         texture.flipY = false
         texture.encoding = THREE.sRGBEncoding
+
+        // @ts-ignore
         this.object.material.map = texture
       }
     }
@@ -210,6 +226,8 @@ export class Nft {
     const texture = this.textureLoader.load('/images/verse/add-asset.jpg')
     texture.flipY = false
     texture.encoding = THREE.sRGBEncoding
+
+    // @ts-ignore
     this.object.material.map = texture
   }
 }

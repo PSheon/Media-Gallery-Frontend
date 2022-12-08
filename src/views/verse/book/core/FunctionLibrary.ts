@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+
+// @ts-ignore
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as _ from 'lodash'
 import { SimulationFrame } from 'src/views/verse/book/physics/spring_simulation/SimulationFrame'
@@ -8,6 +10,7 @@ import { Space } from 'src/views/verse/book/enums/Space'
 export function createCapsuleGeometry(radius = 1, height = 2, N = 32): THREE.Geometry {
   const geometry = new THREE.Geometry()
   const TWOPI = Math.PI * 2
+  // eslint-disable-next-line
   const PID2 = 1.570796326794896619231322
 
   const normals = []

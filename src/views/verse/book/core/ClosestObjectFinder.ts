@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 
 export class ClosestObjectFinder<T> {
+  // @ts-ignore
   public closestObject: T
 
   private closestDistance: number = Number.POSITIVE_INFINITY

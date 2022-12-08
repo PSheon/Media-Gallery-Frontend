@@ -17,6 +17,8 @@ import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import Card from '@mui/material/Card'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import Backdrop from '@mui/material/Backdrop'
+import CircularProgress from '@mui/material/CircularProgress'
 
 // ** Components Imports
 import StatisticsHorizontalCard from 'src/views/verse/components/edit/settingPanel/middleSection/StatisticsHorizontalCard'
@@ -45,23 +47,6 @@ interface FormData {
     scene: string | null
   }
 }
-
-// interface TableBodyRowType {
-//   id: number
-//   attributes: {
-//     cover?: {
-//       data: {
-//         id: number
-//         attributes: {
-//           url: string
-//         }
-//       }
-//     }
-//     displayName: string
-//     framePosition: string
-//     views: number
-//   }
-// }
 
 interface CellType {
   row: IAsset
@@ -370,6 +355,19 @@ const MiddleSection = () => {
                   pagination={undefined}
                   sx={{ height: '20rem' }}
                 />
+
+                <Backdrop
+                  open={isQuerySceneBaseLoading || isUpdateAssetFrameLoading}
+                  sx={{
+                    position: 'absolute',
+                    color: 'common.white',
+                    backgroundColor: theme =>
+                      theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)',
+                    zIndex: theme => theme.zIndex.mobileStepper - 1
+                  }}
+                >
+                  <CircularProgress color='inherit' />
+                </Backdrop>
               </Card>
             </Grid>
           </Grid>

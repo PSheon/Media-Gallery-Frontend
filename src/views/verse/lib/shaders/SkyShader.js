@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 /**
  * Based on "A Practical Analytic Model for Daylight"
  * aka The Preetham Model, the de facto standard analytic skydome model

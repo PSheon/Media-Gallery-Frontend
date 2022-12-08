@@ -1,4 +1,5 @@
-/* eslint-disable no-var*/
+/* eslint-disable */
+// @ts-nocheck
 
 /**
  * @author alteredq / http://alteredqualia.com/

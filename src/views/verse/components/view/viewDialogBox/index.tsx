@@ -70,10 +70,12 @@ const ViewDialogBox = () => {
   // ** Hooks
   const dispatch = useDispatch()
   const VIEW_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.viewDialogBox)
-  const SCENE_METADATA = useSelector(({ verse }: RootState) => verse.view.scene)
+
+  // const SCENE_METADATA = useSelector(({ verse }: RootState) => verse.view.scene)
   const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
   const hasNext = VIEW_DIALOG_BOX.step + 1 < VIEW_DIALOG_BOX.session.length
-  const { nftList: SCENE_NFT_LIST } = SCENE_METADATA
+
+  // const { nftList: SCENE_NFT_LIST } = SCENE_METADATA
 
   if (worldInstance) {
     if (VIEW_DIALOG_BOX.show) {
@@ -101,6 +103,7 @@ const ViewDialogBox = () => {
     dispatch(hideViewDialogBox())
   }
 
+  // eslint-disable-next-line
   const renderSession = (currentSession: {
     nftFrameId: string
     playerDisplayName: string
@@ -189,7 +192,9 @@ const ViewDialogBox = () => {
           description: 'Media is so cool...',
           contentURL: '/images/logos/media-app.png'
         },
-        SCENE_NFT_LIST.find(nftData => nftData.frameId === currentSession.nftFrameId)
+        {}
+
+        // SCENE_NFT_LIST.find(nftData => nftData.frameId === currentSession.nftFrameId)
       )
 
       /* NOTE: added public access */
@@ -257,7 +262,8 @@ const ViewDialogBox = () => {
       TransitionComponent={Transition}
       onBackdropClick={handleDialogClose}
     >
-      {renderSession(VIEW_DIALOG_BOX.session[VIEW_DIALOG_BOX.step])}
+      testing
+      {/* {renderSession(VIEW_DIALOG_BOX.session[VIEW_DIALOG_BOX.step])} */}
     </StyledRootDialog>
   )
 }

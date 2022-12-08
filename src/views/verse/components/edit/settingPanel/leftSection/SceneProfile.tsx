@@ -76,6 +76,7 @@ const SceneProfile = () => {
   // ** Hooks
   const router = useRouter()
   const { sid } = router.query
+  // eslint-disable-next-line
   const [files, selectFiles] = useFileUpload()
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
   const {
@@ -172,6 +173,7 @@ const SceneProfile = () => {
   const handleSceneEditPanelOpen = () => setSceneEditPanelOpen(true)
   const handleSceneEditPanelClose = () => setSceneEditPanelOpen(false)
   const handleChangeCoverPhoto = () => {
+    // @ts-ignore
     selectFiles({ accept: 'image/*', multiple: false }, async ({ file }) => {
       const updateSceneCoverFormData = new FormData()
       updateSceneCoverFormData.append('files', file)

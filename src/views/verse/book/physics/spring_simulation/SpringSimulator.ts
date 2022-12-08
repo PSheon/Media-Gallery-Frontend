@@ -9,7 +9,7 @@ export class SpringSimulator extends SimulatorBase {
   public target: number
   public cache: SimulationFrame[]
 
-  constructor(fps: number, mass: number, damping: number, startPosition: number = 0, startVelocity: number = 0) {
+  constructor(fps: number, mass: number, damping: number, startPosition = 0, startVelocity = 0) {
     // Construct base
     super(fps, mass, damping)
 
@@ -43,6 +43,7 @@ export class SpringSimulator extends SimulatorBase {
   /**
    * Gets another simulation frame
    */
+  // eslint-disable-next-line
   public getFrame(isLastFrame: boolean): SimulationFrame {
     return spring(this.lastFrame().position, this.target, this.lastFrame().velocity, this.mass, this.damping)
   }

@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+
+// @ts-ignore
 import { default as CSM } from 'three-csm'
 import { SkyShader } from 'src/views/verse/lib/shaders/SkyShader'
 import { World } from 'src/views/verse/book/world/EditWorld'
@@ -98,6 +100,7 @@ export class Sky extends THREE.Object3D implements IUpdatable {
     world.registerUpdatable(this)
   }
 
+  // eslint-disable-next-line
   public update(timeScale: number): void {
     this.position.copy(this.world.camera.position)
     this.refreshSunPosition()

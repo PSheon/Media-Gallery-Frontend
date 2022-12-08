@@ -1,5 +1,6 @@
 import * as THREE from 'three'
-import * as CANNON from 'src/views/verse/lib/cannon/cannon'
+
+// import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import { Vehicle } from 'src/views/verse/book/vehicles/view/Vehicle'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { VehicleSeat } from 'src/views/verse/book/vehicles/view/VehicleSeat'

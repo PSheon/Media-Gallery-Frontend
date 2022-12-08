@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as THREE from 'three'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
@@ -6,6 +7,8 @@ import { ICollider } from 'src/views/verse/book/interfaces/ICollider'
 export class SphereCollider implements ICollider {
   public options: any
   public body: CANNON.Body
+
+  // @ts-ignore
   public debugModel: THREE.Mesh
 
   constructor(options: any) {

@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 // Sat, 25 Jan 2020 14:22:34 GMT
 
 /*

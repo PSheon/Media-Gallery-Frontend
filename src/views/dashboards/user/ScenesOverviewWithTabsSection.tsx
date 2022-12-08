@@ -47,143 +47,144 @@ import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useAuth } from 'src/hooks/useAuth'
 
 // ** Types
-import { ThemeColor } from 'src/@core/layouts/types'
+// import { ThemeColor } from 'src/@core/layouts/types'
 import { IAsset } from 'src/types/scene/assetTypes'
 import { IScene } from 'src/types/scene/sceneTypes'
 
-interface StatusObj {
-  [ke: string]: {
-    text: string
-    color: ThemeColor
-  }
-}
-interface TabCoverType {
-  imgWidth: number
-  category: string
-  imgHeight: number
-}
-interface TabContentType {
-  imgAlt: string
-  imgSrc: string
-  product: string
-  revenue: string
-  conversion: string
-  conversionDifference?: 'positive' | 'negative'
-  status: 'in-stock' | 'coming-soon' | 'out-of-stock'
-}
-interface TabContentDataType {
-  mobile: TabContentType[]
-  desktop: TabContentType[]
-  console: TabContentType[]
-}
+// interface StatusObj {
+//   [ke: string]: {
+//     text: string
+//     color: ThemeColor
+//   }
+// }
+// interface TabCoverType {
+//   imgWidth: number
+//   category: string
+//   imgHeight: number
+// }
+// interface TabContentType {
+//   imgAlt: string
+//   imgSrc: string
+//   product: string
+//   revenue: string
+//   conversion: string
+//   conversionDifference?: 'positive' | 'negative'
+//   status: 'in-stock' | 'coming-soon' | 'out-of-stock'
+// }
 
-const statusObj: StatusObj = {
-  'in-stock': { text: 'In Stock', color: 'success' },
-  'coming-soon': { text: 'Coming Soon', color: 'warning' },
-  'out-of-stock': { text: 'Out of Stock', color: 'primary' }
-}
+// interface TabContentDataType {
+//   mobile: TabContentType[]
+//   desktop: TabContentType[]
+//   console: TabContentType[]
+// }
 
-const tabAvatars: TabCoverType[] = [
-  {
-    imgWidth: 30,
-    imgHeight: 58,
-    category: 'mobile'
-  },
-  {
-    imgWidth: 52,
-    imgHeight: 42,
-    category: 'desktop'
-  },
-  {
-    imgWidth: 60,
-    imgHeight: 42,
-    category: 'console'
-  }
-]
+// const statusObj: StatusObj = {
+//   'in-stock': { text: 'In Stock', color: 'success' },
+//   'coming-soon': { text: 'Coming Soon', color: 'warning' },
+//   'out-of-stock': { text: 'Out of Stock', color: 'primary' }
+// }
 
-const tabContentData: TabContentDataType = {
-  mobile: [
-    {
-      revenue: '$12.5k',
-      conversion: '+24',
-      imgAlt: 'samsung-s22',
-      status: 'out-of-stock',
-      product: 'Samsung s22',
-      imgSrc: '/images/cards/samsung-s22.png'
-    },
-    {
-      revenue: '$45k',
-      conversion: '-18',
-      status: 'in-stock',
-      imgAlt: 'apple-iPhone-13-pro',
-      product: 'Apple iPhone 13 Pro',
-      conversionDifference: 'negative',
-      imgSrc: '/images/cards/apple-iPhone-13-pro.png'
-    },
-    {
-      revenue: '$98.2k',
-      conversion: '+55',
-      status: 'coming-soon',
-      imgAlt: 'oneplus-9-pro',
-      product: 'Oneplus 9 Pro',
-      imgSrc: '/images/cards/oneplus-9-pro.png'
-    }
-  ],
-  desktop: [
-    {
-      revenue: '$94.6k',
-      conversion: '+16',
-      status: 'in-stock',
-      imgAlt: 'apple-mac-mini',
-      product: 'Apple Mac Mini',
-      imgSrc: '/images/cards/apple-mac-mini.png'
-    },
-    {
-      revenue: '$76.5k',
-      conversion: '+27',
-      status: 'coming-soon',
-      imgAlt: 'hp-envy-x360',
-      product: 'Newest HP Envy x360',
-      imgSrc: '/images/cards/hp-envy-x360.png'
-    },
-    {
-      revenue: '$69.3k',
-      conversion: '-9',
-      status: 'out-of-stock',
-      imgAlt: 'dell-inspiron-3000',
-      product: 'Dell Inspiron 3000',
-      conversionDifference: 'negative',
-      imgSrc: '/images/cards/dell-inspiron-3000.png'
-    }
-  ],
-  console: [
-    {
-      revenue: '$18.6k',
-      conversion: '+34',
-      status: 'coming-soon',
-      imgAlt: 'sony-play-station-5',
-      product: 'Sony Play Station 5',
-      imgSrc: '/images/cards/sony-play-station-5.png'
-    },
-    {
-      revenue: '$29.7k',
-      conversion: '-21',
-      status: 'out-of-stock',
-      imgAlt: 'xbox-series-x',
-      product: 'XBOX Series X',
-      conversionDifference: 'negative',
-      imgSrc: '/images/cards/xbox-series-x.png'
-    },
-    {
-      revenue: '$10.4k',
-      conversion: '+38',
-      status: 'in-stock',
-      imgAlt: 'nintendo-switch',
-      product: 'Nintendo Switch',
-      imgSrc: '/images/cards/nintendo-switch.png'
-    }
-  ]
-}
+// const tabAvatars: TabCoverType[] = [
+//   {
+//     imgWidth: 30,
+//     imgHeight: 58,
+//     category: 'mobile'
+//   },
+//   {
+//     imgWidth: 52,
+//     imgHeight: 42,
+//     category: 'desktop'
+//   },
+//   {
+//     imgWidth: 60,
+//     imgHeight: 42,
+//     category: 'console'
+//   }
+// ]
+
+// const tabContentData: TabContentDataType = {
+//   mobile: [
+//     {
+//       revenue: '$12.5k',
+//       conversion: '+24',
+//       imgAlt: 'samsung-s22',
+//       status: 'out-of-stock',
+//       product: 'Samsung s22',
+//       imgSrc: '/images/cards/samsung-s22.png'
+//     },
+//     {
+//       revenue: '$45k',
+//       conversion: '-18',
+//       status: 'in-stock',
+//       imgAlt: 'apple-iPhone-13-pro',
+//       product: 'Apple iPhone 13 Pro',
+//       conversionDifference: 'negative',
+//       imgSrc: '/images/cards/apple-iPhone-13-pro.png'
+//     },
+//     {
+//       revenue: '$98.2k',
+//       conversion: '+55',
+//       status: 'coming-soon',
+//       imgAlt: 'oneplus-9-pro',
+//       product: 'Oneplus 9 Pro',
+//       imgSrc: '/images/cards/oneplus-9-pro.png'
+//     }
+//   ],
+//   desktop: [
+//     {
+//       revenue: '$94.6k',
+//       conversion: '+16',
+//       status: 'in-stock',
+//       imgAlt: 'apple-mac-mini',
+//       product: 'Apple Mac Mini',
+//       imgSrc: '/images/cards/apple-mac-mini.png'
+//     },
+//     {
+//       revenue: '$76.5k',
+//       conversion: '+27',
+//       status: 'coming-soon',
+//       imgAlt: 'hp-envy-x360',
+//       product: 'Newest HP Envy x360',
+//       imgSrc: '/images/cards/hp-envy-x360.png'
+//     },
+//     {
+//       revenue: '$69.3k',
+//       conversion: '-9',
+//       status: 'out-of-stock',
+//       imgAlt: 'dell-inspiron-3000',
+//       product: 'Dell Inspiron 3000',
+//       conversionDifference: 'negative',
+//       imgSrc: '/images/cards/dell-inspiron-3000.png'
+//     }
+//   ],
+//   console: [
+//     {
+//       revenue: '$18.6k',
+//       conversion: '+34',
+//       status: 'coming-soon',
+//       imgAlt: 'sony-play-station-5',
+//       product: 'Sony Play Station 5',
+//       imgSrc: '/images/cards/sony-play-station-5.png'
+//     },
+//     {
+//       revenue: '$29.7k',
+//       conversion: '-21',
+//       status: 'out-of-stock',
+//       imgAlt: 'xbox-series-x',
+//       product: 'XBOX Series X',
+//       conversionDifference: 'negative',
+//       imgSrc: '/images/cards/xbox-series-x.png'
+//     },
+//     {
+//       revenue: '$10.4k',
+//       conversion: '+38',
+//       status: 'in-stock',
+//       imgAlt: 'nintendo-switch',
+//       product: 'Nintendo Switch',
+//       imgSrc: '/images/cards/nintendo-switch.png'
+//     }
+//   ]
+// }
 
 const ScenesOverviewWithTabsSection = () => {
   // ** Hooks
@@ -402,8 +403,6 @@ const ScenesOverviewWithTabsSection = () => {
         </TabList>
 
         {ownSceneList.map(ownScene => {
-          console.log('ownScene, ', ownScene)
-
           return (
             <TabPanel key={`own-scene-asset-${ownScene.id}`} sx={{ p: 0 }} value={`own-scene-${ownScene.id}`}>
               <RenderTabContent assetList={ownScene.attributes.assetList.data!} />

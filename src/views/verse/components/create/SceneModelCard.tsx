@@ -21,10 +21,12 @@ const SceneModelCard = (props: Props) => {
     id,
     coverURL,
     displayName = 'Untitled',
-    tagIcon,
+
+    // tagIcon,
     tagTitle,
     frameCount,
-    published,
+
+    // published,
     creatorName = 'Media.app',
     selectedSceneModelId,
     handleChange

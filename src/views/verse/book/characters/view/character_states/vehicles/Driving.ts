@@ -15,7 +15,7 @@ export class Driving extends CharacterStateBase {
 
     this.character.startControllingVehicle(seat.vehicle, this.seat)
     this.seat.vehicle.onInputChange()
-    this.character.vehicleEntryInstance = null
+    this.character.vehicleEntryInstance = undefined
   }
 
   public update(timeStep: number): void {

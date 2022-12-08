@@ -30,15 +30,21 @@ export class Nft {
     world.physicsBodyList.push(phys.body)
     world.physicsWorld.addBody(phys.body)
 
+    // const nftData = Object.assign(
+    //   { type: 'image', displayName: 'Error', displayURL: '/images/logos/media-app.png' },
+    //   world.metadata.assetList.find(nftData => nftData.frameId === this.frameId)
+    // )
     const nftData = Object.assign(
       { type: 'image', displayName: 'Error', displayURL: '/images/logos/media-app.png' },
-      world.metadata.nftList.find(nftData => nftData.frameId === this.frameId)
+      {}
     )
 
     if (nftData.type === 'image') {
       const texture = this.textureLoader.load(nftData.displayURL)
       texture.flipY = false
       texture.encoding = THREE.sRGBEncoding
+
+      // @ts-ignore
       this.object.material.map = texture
     }
   }
@@ -48,6 +54,8 @@ export class Nft {
       const texture = this.textureLoader.load(newNftFrameMetadata.displayURL)
       texture.flipY = false
       texture.encoding = THREE.sRGBEncoding
+
+      // @ts-ignore
       this.object.material.map = texture
     }
   }

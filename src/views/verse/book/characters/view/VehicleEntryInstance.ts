@@ -4,7 +4,11 @@ import { Character } from 'src/views/verse/book/characters/view/Character'
 
 export class VehicleEntryInstance {
   public character: Character
+
+  // @ts-ignore
   public targetSeat: VehicleSeat
+
+  // @ts-ignore
   public entryPoint: THREE.Object3D
   public wantsToDrive = false
 
@@ -12,6 +16,7 @@ export class VehicleEntryInstance {
     this.character = character
   }
 
+  // eslint-disable-next-line
   public update(timeStep: number): void {
     const entryPointWorldPos = new THREE.Vector3()
     this.entryPoint.getWorldPosition(entryPointWorldPos)

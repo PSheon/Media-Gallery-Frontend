@@ -11,8 +11,13 @@ import { FollowPath } from 'src/views/verse/book/characters/view/character_ai/Fo
 import { LoadingManager } from 'src/views/verse/book/core/view/LoadingManager'
 
 export class VehicleSpawnPoint implements ISpawnPoint {
+  // @ts-ignore
   public type: string
+
+  // @ts-ignore
   public driver: string
+
+  // @ts-ignore
   public firstAINode: string
 
   private object: THREE.Object3D

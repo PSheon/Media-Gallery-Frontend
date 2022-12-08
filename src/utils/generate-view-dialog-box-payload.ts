@@ -26,7 +26,7 @@ export const generateViewDialogBoxPayload = ({ displayName = 'default', objectTy
   }
 
   if (objectType === 'npc') {
-    const NPC_SESSION_TABLE = {
+    const NPC_SESSION_TABLE: Record<string, any> = {
       Shark_Bob: {
         speaker: 'Bob',
         session: [

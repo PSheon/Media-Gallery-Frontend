@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+
+// @ts-ignore
 import * as CANNON from 'src/views/verse/lib/cannon/cannon'
 import * as _ from 'lodash'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
@@ -53,7 +55,11 @@ export class Character extends THREE.Object3D implements IWorldEntity {
   public modelContainer: THREE.Group
   public materials: THREE.Material[] = []
   public mixer: THREE.AnimationMixer
+
+  // @ts-ignore
   public animations: any[]
+
+  // @ts-ignore
   public currentClip: string
 
   // Movement
@@ -94,7 +100,11 @@ export class Character extends THREE.Object3D implements IWorldEntity {
   public hoverObjectType: string | undefined
 
   public world: World | undefined
+
+  // @ts-ignore
   public charState: ICharacterState
+
+  // @ts-ignore
   public behaviour: ICharacterAI
 
   // Vehicles
@@ -171,6 +181,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     })
 
     // capsulePhysics.physical.collisionFilterMask = ~CollisionGroups.Trimesh;
+    // @ts-ignore
     this.characterCapsule.body.shapes.forEach(shape => {
       // tslint:disable-next-line: no-bitwise
       shape.collisionFilterMask = ~CollisionGroups.TrimeshColliders
@@ -309,13 +320,14 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     this.physicsEnabled = value
 
     if (value === true) {
-      this.world.physicsWorld.addBody(this.characterCapsule.body)
+      this.world?.physicsWorld.addBody(this.characterCapsule.body)
     } else {
-      this.world.physicsWorld.remove(this.characterCapsule.body)
+      this.world?.physicsWorld.remove(this.characterCapsule.body)
     }
   }
 
   public readCharacterData(gltf: any): void {
+    // @ts-ignore
     gltf.scene.traverse(child => {
       if (child.isMesh) {
         Utils.setupMeshProperties(child)
@@ -793,6 +805,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     this.startControllingVehicle(vehicle, seat)
   }
 
+  // eslint-disable-next-line
   public startControllingVehicle(vehicle: IControllable, seat: VehicleSeat): void {
     if (this.controlledObject !== vehicle) {
       const scope = this
@@ -1041,11 +1054,11 @@ export class Character extends THREE.Object3D implements IWorldEntity {
       // Do hover stuff
       this.world!.cursorBox.position.copy(character.rayHoverResult.hitPointWorld)
       if (character.rayHoverResult.body?.displayName && character.rayHoverResult.body?.objectType) {
-        this.world!.cursorBox.material.color.setHex(0xbbe6e4)
-        this.world!.cursorBox.material.opacity = 1
+        this.world!.setCursorBoxHover(true)
         character.hoverObjectDisplayName = character.rayHoverResult.body.displayName
         character.hoverObjectType = character.rayHoverResult.body.objectType
       } else {
+        this.world!.setCursorBoxHover(false)
         character.hoverObjectDisplayName = undefined
         character.hoverObjectType = undefined
       }
@@ -1053,8 +1066,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
       character.raycastHoverBox.position.z = character.rayHoverResult.hitPointWorld.z
       character.raycastHoverBox.position.x = character.rayHoverResult.hitPointWorld.x
     } else {
-      this.world!.cursorBox.material.color.setHex(0xced3dc)
-      this.world!.cursorBox.material.opacity = 0.3
+      this.world!.setCursorBoxHover(false)
       character.hoverObjectDisplayName = undefined
       character.hoverObjectType = undefined
     }

@@ -4,9 +4,16 @@ import { SimulationFrameVector } from 'src/views/verse/book/physics/spring_simul
 import { springV } from 'src/views/verse/book/core/FunctionLibrary'
 
 export class VectorSpringSimulator extends SimulatorBase {
+  // @ts-ignore
   public position: THREE.Vector3
+
+  // @ts-ignore
   public velocity: THREE.Vector3
+
+  // @ts-ignore
   public target: THREE.Vector3
+
+  // @ts-ignore
   public cache: SimulationFrameVector[]
 
   constructor(fps: number, mass: number, damping: number) {
@@ -44,6 +51,7 @@ export class VectorSpringSimulator extends SimulatorBase {
   /**
    * Gets another simulation frame
    */
+  // eslint-disable-next-line
   public getFrame(isLastFrame: boolean): SimulationFrameVector {
     // Deep clone data from previous frame
     const newSpring = new SimulationFrameVector(this.lastFrame().position.clone(), this.lastFrame().velocity.clone())
