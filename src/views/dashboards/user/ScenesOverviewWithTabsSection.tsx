@@ -369,41 +369,40 @@ const ScenesOverviewWithTabsSection = () => {
               />
             )
           })}
-          {ownSceneList.length < 3 && (
-            <Tab
-              value='default'
-              sx={{ p: 0 }}
-              label={
-                <Avatar
-                  variant='rounded'
+          <Tab
+            disabled={ownSceneList.length >= 3}
+            value='default'
+            sx={{ p: 0 }}
+            label={
+              <Avatar
+                variant='rounded'
+                sx={{
+                  width: theme => theme.spacing(40),
+                  height: theme => theme.spacing(25),
+                  backgroundColor: 'transparent',
+                  border: theme =>
+                    tabValue === 'add'
+                      ? `2px solid ${theme.palette.primary.main}`
+                      : `2px dashed ${theme.palette.divider}`
+                }}
+              >
+                <Box
                   sx={{
-                    width: theme => theme.spacing(40),
-                    height: theme => theme.spacing(25),
-                    backgroundColor: 'transparent',
-                    border: theme =>
-                      tabValue === 'add'
-                        ? `2px solid ${theme.palette.primary.main}`
-                        : `2px dashed ${theme.palette.divider}`
+                    width: 30,
+                    height: 30,
+                    display: 'flex',
+                    borderRadius: '8px',
+                    alignItems: 'center',
+                    color: 'action.active',
+                    justifyContent: 'center',
+                    backgroundColor: theme => hexToRGBA(theme.palette.secondary.main, 0.12)
                   }}
                 >
-                  <Box
-                    sx={{
-                      width: 30,
-                      height: 30,
-                      display: 'flex',
-                      borderRadius: '8px',
-                      alignItems: 'center',
-                      color: 'action.active',
-                      justifyContent: 'center',
-                      backgroundColor: theme => hexToRGBA(theme.palette.secondary.main, 0.12)
-                    }}
-                  >
-                    <Icon icon='mdi:plus' />
-                  </Box>
-                </Avatar>
-              }
-            />
-          )}
+                  <Icon icon='mdi:plus' />
+                </Box>
+              </Avatar>
+            }
+          />
         </TabList>
 
         {ownSceneList.map(ownScene => {
