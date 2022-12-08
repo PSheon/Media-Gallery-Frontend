@@ -91,7 +91,7 @@ const SceneCard = (props: Props) => {
         )}
       </Box>
       <Box sx={{ display: 'flex', maxWidth: '8rem', ml: 4, mr: 2, flexDirection: 'column' }}>
-        <Typography sx={{ fontWeight: 600 }} color='common.white' noWrap>
+        <Typography sx={{ fontWeight: 600 }} noWrap>
           {sceneBase?.attributes.displayName || 'Untitled'}
         </Typography>
         <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }} noWrap>

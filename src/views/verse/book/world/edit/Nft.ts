@@ -169,7 +169,33 @@ export class Nft {
     }
 
     if (newAssetFrameMetadata.coverFileType === 'gif') {
-      /* TODO */
+      const url = newAssetFrameMetadata.cover?.data?.attributes.url
+
+      if (url) {
+        const gifURL = `${apiConfig.publicFolderUrl}${url}`
+        const texture = this.gifLoader.load(
+          gifURL,
+          () => undefined,
+          () => undefined,
+          () => undefined
+        )
+        texture.flipY = false
+        texture.minFilter = THREE.LinearFilter
+        texture.encoding = THREE.sRGBEncoding
+
+        // @ts-ignore
+        this.object.material.map = texture
+
+        // @ts-ignore
+        this.object.material.transparent = true
+      } else {
+        const texture = this.textureLoader.load('/images/verse/wrong-asset.jpg')
+        texture.flipY = false
+        texture.encoding = THREE.sRGBEncoding
+
+        // @ts-ignore
+        this.object.material.map = texture
+      }
     }
 
     if (newAssetFrameMetadata.coverFileType === 'mp4') {
