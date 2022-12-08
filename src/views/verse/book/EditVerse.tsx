@@ -47,6 +47,7 @@ const Book = (props: Props) => {
       displayName: sceneBase?.attributes?.displayName || 'Untitled',
       description: sceneBase?.attributes?.description || 'Nope',
       worldScenePaths: sceneBase?.attributes.sceneModel.data?.attributes.worldScenePaths || [],
+      assetList: sceneBase?.attributes.assetList?.data || [],
 
       // nftList: sceneBase?.attributes?.assetList?.data || []
       nftList: []

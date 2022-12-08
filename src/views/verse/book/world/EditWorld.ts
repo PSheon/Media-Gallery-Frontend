@@ -19,7 +19,7 @@ import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { LoadingManager } from 'src/views/verse/book/core/edit/LoadingManager'
 import { UIManager } from 'src/views/verse/book/core/edit/UIManager'
 import { IWorldMetadata } from 'src/views/verse/book/interfaces/IWorldMetadata'
-import { INftMetadata } from 'src/views/verse/book/interfaces/INftMetadata'
+import { IAsset } from 'src/types/scene/assetTypes'
 import { IWorldEntity } from 'src/views/verse/book/interfaces/edit/IWorldEntity'
 import { IUpdatable } from 'src/views/verse/book/interfaces/IUpdatable'
 import { IParams } from 'src/views/verse/book/interfaces/IParams'
@@ -70,7 +70,8 @@ export class World {
     displayName: '',
     description: '',
     worldScenePaths: [],
-    nftList: []
+    nftList: [],
+    assetList: []
 
     // allowedVisitors: [] // NOTE
   }
@@ -97,6 +98,7 @@ export class World {
   }
 
   private lastScenarioID: string | undefined
+  private cursorBoxHover = false
 
   constructor(sceneMetadata: IWorldMetadata) {
     const scope = this
@@ -224,6 +226,22 @@ export class World {
 
   public setDialogMode(newDialogMode: boolean): void {
     this.dialogMode = newDialogMode
+  }
+
+  public setCursorBoxHover(newHoverStatus: boolean): void {
+    if (newHoverStatus) {
+      if (this.cursorBoxHover === false) {
+        this.cursorBoxHover = true
+        this.cursorBox.material.color.setHex(0x7cf1ae)
+        this.cursorBox.material.opacity = 1
+      }
+    } else {
+      if (this.cursorBoxHover === true) {
+        this.cursorBoxHover = false
+        this.cursorBox.material.color.setHex(0xced3dc)
+        this.cursorBox.material.opacity = 0.3
+      }
+    }
   }
 
   // Update
@@ -401,7 +419,7 @@ export class World {
             }
           }
 
-          if (child.userData.data === 'artwork') {
+          if (child.userData.data === 'asset') {
             this.nfts.push(new Nft(child, this))
           }
 
@@ -495,10 +513,30 @@ export class World {
     this.renderer.domElement.id = 'canvas'
   }
 
-  public updateNftFrame(frameId: string, newNftMetadata: INftMetadata) {
-    const selectedNft = this.nfts.find(nft => nft.frameId === frameId)
+  public updateAssetFrame(framePosition: string, newAssetMetadata: IAsset) {
+    const selectedNft = this.nfts.find(nft => nft.position === framePosition)
     if (selectedNft) {
-      selectedNft.update(newNftMetadata)
+      console.log('newAssetMeta ', newAssetMetadata['attributes'])
+
+      const isDelete = newAssetMetadata['attributes'].framePosition === null
+
+      if (isDelete) {
+        selectedNft.reset()
+        const newSceneAssetListMetadata = this.metadata.assetList.filter(
+          nft => nft?.attributes?.framePosition !== framePosition
+        )
+        this.metadata.assetList = newSceneAssetListMetadata
+      } else {
+        selectedNft.update(newAssetMetadata['attributes'])
+        const newSceneAssetListMetadata = this.metadata.assetList.map(nft => {
+          if (nft?.attributes?.framePosition === framePosition) {
+            return newAssetMetadata
+          } else {
+            return nft
+          }
+        })
+        this.metadata.assetList = newSceneAssetListMetadata
+      }
     }
   }
 
@@ -578,6 +616,8 @@ export class World {
 
   public destroy() {
     /* NOTE: trick to prevent memory leak */
+    this.dispose()
+
     this.render = () => undefined
   }
 }

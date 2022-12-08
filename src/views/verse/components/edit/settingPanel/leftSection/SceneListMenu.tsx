@@ -49,7 +49,14 @@ const SceneListMenu = () => {
           filter: {
             owner: auth.user.id!
           },
-          populate: ['cover']
+          populate: {
+            cover: true,
+            assetList: {
+              populate: {
+                cover: true
+              }
+            }
+          }
         }
       }).then(response => response.data.data as IScene[]),
     retry: 0

@@ -209,7 +209,7 @@ const CollaboratorsGroup = () => {
     data: sceneBase,
     refetch
   } = useQuery({
-    queryKey: ['scene-collaborators'],
+    queryKey: ['scene_collaborators'],
     queryFn: () =>
       axios({
         method: 'GET',

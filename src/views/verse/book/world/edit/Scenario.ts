@@ -23,7 +23,6 @@ export class Scenario {
 
     // Scenario
     if (root.userData.hasOwnProperty('name')) {
-      console.log('root.userData.name, ', root.userData.name)
       this.name = root.userData.name
     }
     if (root.userData.hasOwnProperty('default') && root.userData.default === 'true') {

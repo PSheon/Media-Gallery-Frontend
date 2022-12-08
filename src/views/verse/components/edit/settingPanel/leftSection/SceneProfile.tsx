@@ -300,7 +300,7 @@ const SceneProfile = () => {
                           )
                         }
                         error={Boolean(errors.sceneId)}
-                        placeholder='media-verse'
+                        placeholder={sceneBase?.attributes?.sceneId}
                         InputProps={{
                           startAdornment: <InputAdornment position='start'>media.app/@</InputAdornment>
                         }}

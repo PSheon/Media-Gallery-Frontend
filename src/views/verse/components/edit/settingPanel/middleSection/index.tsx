@@ -4,27 +4,124 @@ import { useState } from 'react'
 // ** Redux Imports
 import { useSelector } from 'react-redux'
 
+// ** Next Import
+import { useRouter } from 'next/router'
+
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
+import Card from '@mui/material/Card'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
 // ** Components Imports
 import StatisticsHorizontalCard from 'src/views/verse/components/edit/settingPanel/middleSection/StatisticsHorizontalCard'
-import AssetsStatsTable from 'src/views/verse/components/edit/settingPanel/middleSection/AssetsStatsTable'
+
+// ** Utils Imports
+import axios from 'axios'
+import moment from 'moment'
+import { useQuery, useMutation } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
+// ** Config
+import apiConfig from 'src/configs/api'
+
 // ** Types
 import { RootState } from 'src/store'
+import { IScene } from 'src/types/scene/sceneTypes'
+import { IAsset } from 'src/types/scene/assetTypes'
+
+interface FormData {
+  aid: number
+  attributes: {
+    framePosition: string | null
+    scene: string | null
+  }
+}
+
+// interface TableBodyRowType {
+//   id: number
+//   attributes: {
+//     cover?: {
+//       data: {
+//         id: number
+//         attributes: {
+//           url: string
+//         }
+//       }
+//     }
+//     displayName: string
+//     framePosition: string
+//     views: number
+//   }
+// }
+
+interface CellType {
+  row: IAsset
+}
 
 const MiddleSection = () => {
   // ** Hooks
+  const router = useRouter()
+  const { sid } = router.query
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
+  const EDIT_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.edit.editDialogBox)
+  const {
+    isLoading: isQuerySceneBaseLoading,
+    data: sceneBase,
+    refetch: refetchSceneBase
+  } = useQuery({
+    queryKey: ['scene_assetList'],
+    queryFn: () =>
+      axios({
+        method: 'GET',
+        url: `/api/scenes/${sid}`,
+        params: {
+          populate: {
+            cover: true,
+            owner: true,
+            collaborators: true,
+            assetList: {
+              populate: {
+                cover: true
+              }
+            },
+            sceneModel: true
+          }
+        }
+      }).then(response => response.data.data as IScene),
+    enabled: !!sid,
+    retry: 0
+  })
+  const { mutate: updateAssetFrame, isLoading: isUpdateAssetFrameLoading } = useMutation({
+    mutationFn: ({ aid, attributes }: FormData) =>
+      axios({
+        method: 'PUT',
+        url: `/api/scene-assets/${aid}`,
+        params: {
+          populate: ['cover']
+        },
+        data: {
+          data: attributes
+        }
+      }),
+    onSuccess: response => {
+      refetchSceneBase()
+      worldInstance?.updateAssetFrame(EDIT_DIALOG_BOX.hoverObjectMetadata!.position!, response.data.data as IAsset)
+      toast.success('Update asset success')
+    },
+    onError: () => {
+      toast.error('Update asset failed')
+    },
+    retry: 0
+  })
 
   // ** State
   const [statisticsDialogOpen, setStatisticsDialogOpen] = useState<boolean>(false)
@@ -32,6 +129,15 @@ const MiddleSection = () => {
   // ** Logics
   const handleStatisticsDialogOpen = () => setStatisticsDialogOpen(true)
   const handleStatisticsDialogClose = () => setStatisticsDialogOpen(false)
+  const handleDeleteAssetFrameClick = (nftData: IAsset) => {
+    updateAssetFrame({
+      aid: nftData.id,
+      attributes: {
+        framePosition: null,
+        scene: null
+      }
+    })
+  }
 
   // ** Side Effect
   if (worldInstance) {
@@ -41,6 +147,119 @@ const MiddleSection = () => {
       worldInstance.setDialogMode(false)
     }
   }
+
+  // ** Render
+  const renderNftBox = (row: IAsset) => {
+    if (
+      row?.attributes?.coverFileType === 'png' ||
+      row?.attributes?.coverFileType === 'jpg' ||
+      row?.attributes?.coverFileType === 'svg' ||
+      row?.attributes?.coverFileType === 'gif'
+    ) {
+      return (
+        <Box
+          sx={{
+            width: theme => theme.spacing(8),
+            height: theme => theme.spacing(8),
+            mr: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '.2rem',
+            '& img': {
+              objectFit: 'cover'
+            }
+          }}
+        >
+          <img
+            width='100%'
+            height='100%'
+            src={`${apiConfig.publicFolderUrl}${row?.attributes?.cover?.data?.attributes.url}`}
+            alt={row?.attributes.displayName}
+          />
+        </Box>
+      )
+    }
+
+    if (row?.attributes?.coverFileType === 'mp4') {
+      return (
+        <Box
+          sx={{
+            width: theme => theme.spacing(8),
+            height: theme => theme.spacing(8),
+            mr: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '.2rem',
+            '& video': {
+              objectFit: 'cover'
+            }
+          }}
+        >
+          <video
+            width='100%'
+            height='100%'
+            src={`${apiConfig.publicFolderUrl}${row?.attributes?.cover?.data?.attributes.url}`}
+            autoPlay
+            loop
+            muted
+            playsInline
+            crossOrigin='anonymous'
+          />
+        </Box>
+      )
+    }
+  }
+  const columns: GridColDef[] = [
+    {
+      flex: 0.5,
+      field: 'asset',
+      minWidth: 200,
+      headerName: 'Asset',
+      renderCell: ({ row }: CellType) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderNftBox(row)}
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
+                {row?.attributes?.displayName}
+              </Typography>
+              <Typography variant='caption' sx={{ lineHeight: 1.6667 }}>
+                {row?.attributes?.framePosition}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.3,
+      minWidth: 75,
+      field: 'views',
+      headerName: 'Views',
+      headerAlign: 'center',
+      align: 'center',
+      renderCell: ({ row }: CellType) => <Typography variant='body2'>{row?.attributes?.views}</Typography>
+    },
+    {
+      flex: 0.2,
+      minWidth: 75,
+      field: 'action',
+      headerName: 'Action',
+      headerAlign: 'center',
+      align: 'center',
+      renderCell: ({ row }: CellType) => (
+        <Box sx={{ px: 2, display: 'flex' }}>
+          <Button variant='outlined' onClick={() => handleDeleteAssetFrameClick(row)}>
+            remove
+          </Button>
+        </Box>
+      )
+    }
+  ]
 
   return (
     <Grid container spacing={4} justifyContent='center' sx={{ px: 4, py: 2, flex: 1 }}>
@@ -115,23 +334,23 @@ const MiddleSection = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} sm={9}>
-              <Grid container spacing={4}>
+              <Grid container spacing={4} justifyContent='flex-end'>
                 <Grid item xs={12} sm={4}>
                   <StatisticsHorizontalCard
-                    stats='8,458'
+                    stats={(5_000).toLocaleString('en-US')}
                     trend='negative'
                     trendNumber='8.1%'
-                    title='New Customers'
-                    icon={<Icon icon={'mdi:account-outline'} />}
+                    title='Total scene views'
+                    icon={<Icon icon={'material-symbols:thumb-up'} />}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <StatisticsHorizontalCard
-                    stats='8,458'
+                    stats={moment().diff(moment(sceneBase?.attributes.createdAt), 'days').toLocaleString('en-US')}
                     trend='negative'
                     trendNumber='8.1%'
-                    title='New Customers'
-                    icon={<Icon icon={'mdi:account-outline'} />}
+                    title='Create days'
+                    icon={<Icon icon={'tabler:brand-days-counter'} />}
                   />
                 </Grid>
               </Grid>
@@ -142,7 +361,16 @@ const MiddleSection = () => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <AssetsStatsTable />
+              <Card>
+                <DataGrid
+                  hideFooter
+                  rows={sceneBase?.attributes?.assetList?.data || []}
+                  columns={columns}
+                  disableSelectionOnClick
+                  pagination={undefined}
+                  sx={{ height: '20rem' }}
+                />
+              </Card>
             </Grid>
           </Grid>
         </DialogContent>

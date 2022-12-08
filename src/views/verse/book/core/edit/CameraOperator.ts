@@ -31,7 +31,12 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 
   public rayHasHit = false
   public rayResult = new CANNON.RaycastResult()
-  public hoverObjectDisplayName: string | undefined
+  public hoverObjectMetadata:
+    | {
+        displayName: string | undefined
+        position?: string
+      }
+    | undefined
   public hoverObjectType: string | undefined
   public movementSpeed: number
   public actions: { [action: string]: KeyBinding }
@@ -140,22 +145,26 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 
       if (this.rayHasHit) {
         this.world.cursorBox.position.copy(this.rayResult.hitPointWorld)
-        if (this.rayResult.body?.displayName && this.rayResult.body?.objectType) {
-          this.world.cursorBox.material.color.setHex(0xbbe6e4)
-          this.world.cursorBox.material.opacity = 1
-          this.hoverObjectDisplayName = this.rayResult.body.displayName
+        if (this.rayResult.body?.objectType) {
+          this.world.setCursorBoxHover(true)
+          this.hoverObjectMetadata = this.rayResult.body.objectMetadata
           this.hoverObjectType = this.rayResult.body.objectType
         } else {
-          delete this.hoverObjectDisplayName
+          this.world.setCursorBoxHover(false)
+          delete this.hoverObjectMetadata
           delete this.hoverObjectType
         }
       } else {
-        delete this.hoverObjectDisplayName
+        this.world.setCursorBoxHover(false)
+        delete this.hoverObjectMetadata
         delete this.hoverObjectType
       }
 
-      if (this.hoverObjectDisplayName && this.hoverObjectType) {
-        SET_EDIT_DIALOG_BOX_ACTION()
+      if (this.hoverObjectType) {
+        SET_EDIT_DIALOG_BOX_ACTION({
+          hoverObjectType: this.hoverObjectType,
+          hoverObjectMetadata: this.hoverObjectMetadata!
+        })
       } else {
         UN_HOVER_EDIT_DIALOG_BOX_ACTION()
       }
@@ -166,7 +175,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
     // Free camera
     if (this.world.dialogMode) return
     if (code === 'KeyE' && pressed === true) {
-      if (this.hoverObjectDisplayName) {
+      if (this.hoverObjectType) {
         this.world?.setDialogMode(true)
         SHOW_EDIT_DIALOG_BOX_ACTION()
       } else {

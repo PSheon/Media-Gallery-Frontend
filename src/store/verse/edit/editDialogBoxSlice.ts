@@ -6,7 +6,9 @@ import { IInitialState } from 'src/types/verse/edit/dialogBoxTypes'
 
 const initialState: IInitialState = {
   show: false,
-  hover: false
+  hover: false,
+  hoverObjectType: undefined,
+  hoverObjectMetadata: {}
 }
 
 const dialogBoxSlice = createSlice({
@@ -16,8 +18,10 @@ const dialogBoxSlice = createSlice({
     showEditDialogBox: state => {
       state.show = true
     },
-    setEditDialogBox: state => {
+    setEditDialogBox: (state, action) => {
       state.hover = true
+      state.hoverObjectType = action.payload.hoverObjectType
+      state.hoverObjectMetadata = action.payload.hoverObjectMetadata
     },
     setEditDialogBoxHover: (state, action) => {
       state.hover = action.payload

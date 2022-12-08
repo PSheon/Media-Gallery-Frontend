@@ -23,7 +23,7 @@ export type IAsset = {
     views: number
     fetchStatus: 'fetching' | 'fetched' | 'failed'
     fetchAttemptCount: number
-    owner: {
+    owner?: {
       data?: {
         id?: number
         attributes: {

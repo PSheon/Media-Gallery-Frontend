@@ -16,7 +16,17 @@ import {
   hideEditDialogBox
 } from 'src/store/verse/edit/editDialogBoxSlice'
 
+import { generateEditDialogBoxPayload } from 'src/utils/generate-edit-dialog-box-payload'
+
 const { dispatch, getState } = STORE
+
+export type IHoverObject = {
+  hoverObjectType?: string
+  hoverObjectMetadata: {
+    displayName?: string
+    position?: string
+  }
+}
 
 /* UI Layout */
 export const SHOW_LOADING_SCREEN = () => dispatch(setLoadingScreenShow(true))
@@ -52,11 +62,12 @@ export const SHOW_EDIT_DIALOG_BOX_ACTION = () => {
   document?.exitPointerLock()
 }
 
-export const SET_EDIT_DIALOG_BOX_ACTION = () => {
+export const SET_EDIT_DIALOG_BOX_ACTION = (payload: IHoverObject) => {
   const currentHoverStatus = getState().verse.edit.editDialogBox.hover
+  const editDialogBoxPayload = generateEditDialogBoxPayload(payload)
 
   if (!currentHoverStatus) {
-    dispatch(setEditDialogBox())
+    dispatch(setEditDialogBox(editDialogBoxPayload))
   }
 }
 

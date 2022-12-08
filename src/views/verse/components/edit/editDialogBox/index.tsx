@@ -3,20 +3,24 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Next Import
-import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 // ** MUI Imports
+import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
+import Backdrop from '@mui/material/Backdrop'
+import CircularProgress from '@mui/material/CircularProgress'
 import Divider from '@mui/material/Divider'
-import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
-import TextField from '@mui/material/TextField'
 import Skeleton from '@mui/material/Skeleton'
+
+// import TextField from '@mui/material/TextField'
+// import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -34,17 +38,37 @@ import apiConfig from 'src/configs/api'
 
 // ** Types
 import { AppDispatch, RootState } from 'src/store'
+import { IScene } from 'src/types/scene/sceneTypes'
 import { IAsset } from 'src/types/scene/assetTypes'
+
+interface FormData {
+  aid: number
+  attributes: {
+    framePosition: string | null
+    scene: string | null
+  }
+}
+
+// ** Styled StyledRootDialog component
+const StyledRootDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialog-container': {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    paddingLeft: theme.spacing(6)
+  }
+}))
 
 const EditDialogBox = () => {
   // ** Hooks
+  const router = useRouter()
+  const { sid } = router.query
   const dispatch = useDispatch<AppDispatch>()
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
   const EDIT_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.edit.editDialogBox)
   const {
-    isLoading: isQueryLoading,
+    isLoading: isQueryOwnNftListLoading,
     data: ownNftList = [],
-    refetch
+    refetch: refetchOwnNftList
   } = useQuery({
     queryKey: ['own-nft-list'],
     queryFn: () =>
@@ -57,6 +81,59 @@ const EditDialogBox = () => {
       }).then(response => response.data.data as IAsset[]),
     retry: 0
   })
+  const {
+    isLoading: isQuerySceneBaseLoading,
+    data: sceneBase,
+    refetch: refetchSceneBase
+  } = useQuery({
+    queryKey: ['scene_assetList'],
+    queryFn: () =>
+      axios({
+        method: 'GET',
+        url: `/api/scenes/${sid}`,
+        params: {
+          populate: {
+            cover: true,
+            owner: true,
+            collaborators: true,
+            assetList: {
+              populate: {
+                cover: true
+              }
+            },
+            sceneModel: true
+          }
+        }
+      }).then(response => response.data.data as IScene),
+    enabled: !!sid,
+    retry: 0
+  })
+  const { mutate: updateAssetFrame, isLoading: isUpdateAssetFrameLoading } = useMutation({
+    mutationFn: ({ aid, attributes }: FormData) =>
+      axios({
+        method: 'PUT',
+        url: `/api/scene-assets/${aid}`,
+        params: {
+          populate: ['cover']
+        },
+        data: {
+          data: attributes
+        }
+      }),
+    onSuccess: response => {
+      refetchOwnNftList()
+      refetchSceneBase()
+      worldInstance?.updateAssetFrame(EDIT_DIALOG_BOX.hoverObjectMetadata!.position!, response.data.data as IAsset)
+      toast.success('Update asset success')
+    },
+    onError: () => {
+      toast.error('Update asset failed')
+    },
+    retry: 0
+  })
+  const currentPlacedAsset = sceneBase?.attributes?.assetList?.data?.find(
+    assetData => assetData?.attributes.framePosition === EDIT_DIALOG_BOX.hoverObjectMetadata?.position
+  )
 
   // ** State
   const [addAssetsType, setAddAssetsType] = useState<string>('nft')
@@ -71,15 +148,95 @@ const EditDialogBox = () => {
     }
     dispatch(hideEditDialogBox())
   }
+  const handleUpdateAssetFrameClick = (nftData: IAsset) => {
+    if (nftData?.attributes?.framePosition) return
 
-  const renderNft = (ownNft: IAsset) => {
+    updateAssetFrame({
+      aid: nftData.id,
+      attributes: {
+        framePosition: EDIT_DIALOG_BOX.hoverObjectMetadata.position!,
+        scene: String(sid)
+      }
+    })
+  }
+  const handleDeleteAssetFrameClick = (nftData: IAsset) => {
+    updateAssetFrame({
+      aid: nftData.id,
+      attributes: {
+        framePosition: null,
+        scene: null
+      }
+    })
+  }
+
+  const renderNftBox = (ownNft: IAsset) => {
     if (
       ownNft?.attributes?.coverFileType === 'png' ||
-      ownNft?.attributes?.coverFileType === 'gif' ||
-      ownNft?.attributes?.coverFileType === 'jpg'
+      ownNft?.attributes?.coverFileType === 'jpg' ||
+      ownNft?.attributes?.coverFileType === 'svg' ||
+      ownNft?.attributes?.coverFileType === 'gif'
     ) {
       return (
         <Box
+          sx={{
+            width: theme => theme.spacing(20),
+            height: theme => theme.spacing(20),
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '.2rem'
+          }}
+        >
+          <img
+            src={`${apiConfig.publicFolderUrl}${currentPlacedAsset?.attributes?.cover?.data?.attributes.url}`}
+            alt={currentPlacedAsset?.attributes.displayName}
+          />
+        </Box>
+      )
+    }
+
+    if (ownNft?.attributes?.coverFileType === 'mp4') {
+      return (
+        <Box
+          sx={{
+            width: theme => theme.spacing(20),
+            height: theme => theme.spacing(20),
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '.2rem',
+            '& video': {
+              objectFit: 'cover'
+            }
+          }}
+        >
+          <video
+            width='100%'
+            height='100%'
+            src={`${apiConfig.publicFolderUrl}${currentPlacedAsset?.attributes?.cover?.data?.attributes.url}`}
+            autoPlay
+            loop
+            muted
+            playsInline
+            crossOrigin='anonymous'
+          />
+        </Box>
+      )
+    }
+  }
+
+  const renderNftSelectBox = (ownNft: IAsset) => {
+    if (
+      ownNft?.attributes?.coverFileType === 'png' ||
+      ownNft?.attributes?.coverFileType === 'jpg' ||
+      ownNft?.attributes?.coverFileType === 'svg' ||
+      ownNft?.attributes?.coverFileType === 'gif'
+    ) {
+      return (
+        <Box
+          onClick={() => handleUpdateAssetFrameClick(ownNft)}
           sx={{
             height: theme => theme.spacing(40),
             position: 'relative',
@@ -87,7 +244,8 @@ const EditDialogBox = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            borderRadius: '.2rem'
+            borderRadius: '.2rem',
+            cursor: ownNft?.attributes?.framePosition ? 'not-allowed' : 'pointer'
           }}
         >
           <img
@@ -110,11 +268,14 @@ const EditDialogBox = () => {
                   width: '8px',
                   height: '8px',
                   mr: 2,
-                  backgroundColor: theme => theme.palette.success.main,
+                  backgroundColor: theme =>
+                    ownNft?.attributes?.framePosition ? theme.palette.warning.main : theme.palette.success.main,
                   borderRadius: '50%'
                 }}
               />
-              <Typography variant='subtitle2'>{ownNft.attributes.coverFileType!}</Typography>
+              <Typography variant='subtitle2'>
+                {ownNft?.attributes?.framePosition ? 'placed' : ownNft.attributes.coverFileType!}
+              </Typography>
             </Box>
           </Box>
           <Box
@@ -139,6 +300,7 @@ const EditDialogBox = () => {
     if (ownNft?.attributes?.coverFileType === 'mp4') {
       return (
         <Box
+          onClick={() => handleUpdateAssetFrameClick(ownNft)}
           sx={{
             height: theme => theme.spacing(40),
             position: 'relative',
@@ -146,12 +308,16 @@ const EditDialogBox = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            borderRadius: '.2rem'
+            borderRadius: '.2rem',
+            cursor: ownNft?.attributes?.framePosition ? 'not-allowed' : 'pointer',
+            '& video': {
+              objectFit: 'cover'
+            }
           }}
         >
           <video
             width='100%'
-            height='auto'
+            height='100%'
             src={`${apiConfig.publicFolderUrl}${ownNft?.attributes?.cover?.data?.attributes.url}`}
           />
           <Box sx={{ position: 'absolute', top: 0, p: 2, width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
@@ -170,11 +336,14 @@ const EditDialogBox = () => {
                   width: '8px',
                   height: '8px',
                   mr: 2,
-                  backgroundColor: theme => theme.palette.success.main,
+                  backgroundColor: theme =>
+                    ownNft?.attributes?.framePosition ? theme.palette.warning.main : theme.palette.success.main,
                   borderRadius: '50%'
                 }}
               />
-              <Typography variant='subtitle2'>{ownNft.attributes.coverFileType!}</Typography>
+              <Typography variant='subtitle2'>
+                {ownNft?.attributes?.framePosition ? 'placed' : ownNft.attributes.coverFileType!}
+              </Typography>
             </Box>
           </Box>
           <Box
@@ -198,86 +367,155 @@ const EditDialogBox = () => {
   }
 
   return (
-    <Dialog fullWidth maxWidth='sm' onClose={handleEditDialogBoxClose} open={EDIT_DIALOG_BOX.show}>
-      <DialogContent sx={{ backgroundColor: theme => theme.palette.action.hover }}>
-        <IconButton
-          size='small'
-          onClick={handleEditDialogBoxClose}
-          sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
-        >
-          <Icon icon='mdi:close-circle' fontSize={20} />
-        </IconButton>
-        <Box sx={{ mb: 8, textAlign: 'center' }}>
-          <Typography variant='h5' sx={{ mb: 3 }}>
-            Add Asset
-          </Typography>
-        </Box>
-
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <Button
-                  fullWidth
-                  variant='contained'
-                  onClick={() => {
-                    // NOTE
-                    refetch()
-                    handleAddAssetsType('nft')
-                  }}
-                  color={addAssetsType === 'nft' ? 'primary' : 'secondary'}
-                  startIcon={<Icon icon='ph:image-square-fill' />}
-                  sx={{
-                    p: 4,
-                    flex: 1,
-                    borderRadius: 1
-                  }}
-                >
-                  NFT
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <Button
-                  disabled
-                  fullWidth
-                  variant='contained'
-                  onClick={() => handleAddAssetsType('youtube')}
-                  color={addAssetsType === 'youtube' ? 'primary' : 'secondary'}
-                  startIcon={<Icon icon='mdi:youtube' />}
-                  sx={{
-                    p: 4,
-                    flex: 1,
-                    borderRadius: 1
-                  }}
-                >
-                  Youtube
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <Button
-                  disabled
-                  fullWidth
-                  variant='contained'
-                  onClick={() => handleAddAssetsType('text')}
-                  color={addAssetsType === 'text' ? 'primary' : 'secondary'}
-                  startIcon={<Icon icon='material-symbols:text-fields-rounded' />}
-                  sx={{
-                    p: 4,
-                    flex: 1,
-                    borderRadius: 1
-                  }}
-                >
-                  Text
-                </Button>
+    <StyledRootDialog fullWidth maxWidth='xs' onClose={handleEditDialogBoxClose} open={EDIT_DIALOG_BOX.show}>
+      {currentPlacedAsset ? (
+        <DialogContent sx={{ backgroundColor: theme => theme.palette.action.hover }}>
+          <IconButton
+            size='small'
+            onClick={handleEditDialogBoxClose}
+            sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
+          >
+            <Icon icon='mdi:close-circle' fontSize={20} />
+          </IconButton>
+          <Box sx={{ mb: 8, textAlign: 'center' }}>
+            <Typography variant='h5' sx={{ mb: 3 }}>
+              Edit Asset
+            </Typography>
+          </Box>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={9}>
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-start',
+                      '& img': {
+                        width: '100%',
+                        objectFit: 'cover'
+                      }
+                    }}
+                  >
+                    {renderNftBox(currentPlacedAsset)}
+                    <Box
+                      sx={{
+                        ml: 4,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        borderRadius: '.2rem'
+                      }}
+                    >
+                      <Typography sx={{ fontWeight: 600 }} color='common.white' noWrap>
+                        {currentPlacedAsset?.attributes.displayName}
+                      </Typography>
+                      <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }} noWrap>
+                        {currentPlacedAsset?.attributes.displayName || 'no description'}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item xs={3}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-end'
+                    }}
+                  >
+                    <IconButton disabled>
+                      <Icon icon='tabler:reload' />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteAssetFrameClick(currentPlacedAsset)}>
+                      <Icon icon='material-symbols:delete-outline' />
+                    </IconButton>
+                  </Box>
+                </Grid>
               </Grid>
             </Grid>
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
           </Grid>
+        </DialogContent>
+      ) : (
+        <DialogContent sx={{ backgroundColor: theme => theme.palette.action.hover }}>
+          <IconButton
+            size='small'
+            onClick={handleEditDialogBoxClose}
+            sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
+          >
+            <Icon icon='mdi:close-circle' fontSize={20} />
+          </IconButton>
+          <Box sx={{ mb: 8, textAlign: 'center' }}>
+            <Typography variant='h5' sx={{ mb: 3 }}>
+              Add Asset
+            </Typography>
+          </Box>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <Button
+                    fullWidth
+                    variant='contained'
+                    onClick={() => handleAddAssetsType('nft')}
+                    color={addAssetsType === 'nft' ? 'primary' : 'secondary'}
+                    startIcon={<Icon icon='ph:image-square-fill' />}
+                    sx={{
+                      p: 4,
+                      flex: 1,
+                      borderRadius: 1
+                    }}
+                  >
+                    NFT
+                  </Button>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button
+                    disabled
+                    fullWidth
+                    variant='contained'
+                    onClick={() => handleAddAssetsType('youtube')}
+                    color={addAssetsType === 'youtube' ? 'primary' : 'secondary'}
+                    startIcon={<Icon icon='mdi:youtube' />}
+                    sx={{
+                      p: 4,
+                      flex: 1,
+                      borderRadius: 1
+                    }}
+                  >
+                    Youtube
+                  </Button>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button
+                    disabled
+                    fullWidth
+                    variant='contained'
+                    onClick={() => handleAddAssetsType('text')}
+                    color={addAssetsType === 'text' ? 'primary' : 'secondary'}
+                    startIcon={<Icon icon='material-symbols:text-fields-rounded' />}
+                    sx={{
+                      p: 4,
+                      flex: 1,
+                      borderRadius: 1
+                    }}
+                  >
+                    Text
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
 
-          <Grid item xs={12}>
+            {/* <Grid item xs={12}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
               <TextField
                 size='small'
@@ -293,91 +531,103 @@ const EditDialogBox = () => {
                 }}
               />
             </Box>
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              {isQueryLoading &&
-                [...Array(6).keys()].map(aIndex => (
-                  <Grid key={`scene-assets-skeleton-${aIndex}`} item xs={6} sm={4}>
-                    <Skeleton variant='rounded' height={125} />
-                  </Grid>
-                ))}
+            <Grid item xs={12}>
+              <Grid container spacing={2} sx={{ maxHeight: '30rem', overflowY: 'scroll' }}>
+                {(isQueryOwnNftListLoading || isQuerySceneBaseLoading) &&
+                  [...Array(6).keys()].map(aIndex => (
+                    <Grid key={`scene-assets-skeleton-${aIndex}`} item xs={6}>
+                      <Skeleton variant='rounded' height={125} />
+                    </Grid>
+                  ))}
 
-              {ownNftList.map(ownNft => {
-                return (
-                  <Grid key={ownNft.id} item xs={4}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        borderRadius: 1,
-                        cursor: 'pointer',
-                        overflow: 'hidden',
-                        position: 'relative',
-                        alignItems: 'center',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        border: theme => `2px solid ${theme.palette.divider}`,
-                        '&:hover': {
-                          borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)`
-                        },
-                        '& img': {
-                          width: '100%',
-                          objectFit: 'cover'
-                        }
-                      }}
-                    >
-                      {ownNft?.attributes.fetchStatus === 'fetching' && (
-                        <Box
-                          sx={{
-                            height: theme => theme.spacing(40),
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: '.2rem'
-                          }}
-                        >
-                          <Icon icon='eos-icons:loading' fontSize={24} />
-                          <Box sx={{ position: 'absolute', bottom: 0 }}>
-                            <Typography variant='caption'>Fetching...</Typography>
-                          </Box>
-                        </Box>
-                      )}
-                      {ownNft?.attributes.fetchStatus === 'failed' && (
-                        <Box
-                          sx={{
-                            height: theme => theme.spacing(40),
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: '.2rem'
-                          }}
-                        >
-                          <Icon icon='material-symbols:question-mark-rounded' fontSize={24} />
+                {ownNftList.map(ownNft => {
+                  return (
+                    <Grid key={ownNft.id} item xs={6}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          borderRadius: 1,
+                          cursor: 'pointer',
+                          overflow: 'hidden',
+                          position: 'relative',
+                          alignItems: 'center',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          border: theme => `2px solid ${theme.palette.divider}`,
+                          '&:hover': {
+                            borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)`
+                          },
+                          '& img': {
+                            width: '100%',
+                            objectFit: 'cover'
+                          }
+                        }}
+                      >
+                        {ownNft?.attributes.fetchStatus === 'fetching' && (
                           <Box
                             sx={{
-                              position: 'absolute',
-                              bottom: 0,
+                              height: theme => theme.spacing(40),
                               display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center'
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              borderRadius: '.2rem'
                             }}
                           >
-                            <Typography variant='caption'>{ownNft?.attributes.displayName}</Typography>
-                            <Typography variant='caption'>Fetch failed</Typography>
+                            <Icon icon='eos-icons:loading' fontSize={24} />
+                            <Box sx={{ position: 'absolute', bottom: 0 }}>
+                              <Typography variant='caption'>Fetching...</Typography>
+                            </Box>
                           </Box>
-                        </Box>
-                      )}
-                      {ownNft?.attributes.fetchStatus === 'fetched' && renderNft(ownNft)}
-                    </Box>
-                  </Grid>
-                )
-              })}
+                        )}
+                        {ownNft?.attributes.fetchStatus === 'failed' && (
+                          <Box
+                            sx={{
+                              height: theme => theme.spacing(40),
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              borderRadius: '.2rem'
+                            }}
+                          >
+                            <Icon icon='material-symbols:question-mark-rounded' fontSize={24} />
+                            <Box
+                              sx={{
+                                position: 'absolute',
+                                bottom: 0,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <Typography variant='caption'>{ownNft?.attributes.displayName}</Typography>
+                              <Typography variant='caption'>Fetch failed</Typography>
+                            </Box>
+                          </Box>
+                        )}
+                        {ownNft?.attributes.fetchStatus === 'fetched' && renderNftSelectBox(ownNft)}
+                      </Box>
+                    </Grid>
+                  )
+                })}
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      )}
+
+      <Backdrop
+        open={isUpdateAssetFrameLoading}
+        sx={{
+          position: 'absolute',
+          color: 'common.white',
+          zIndex: theme => theme.zIndex.mobileStepper - 1
+        }}
+      >
+        <CircularProgress color='inherit' />
+      </Backdrop>
+    </StyledRootDialog>
   )
 }
 
