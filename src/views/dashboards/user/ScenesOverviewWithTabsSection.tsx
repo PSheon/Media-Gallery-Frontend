@@ -216,8 +216,12 @@ const ScenesOverviewWithTabsSection = () => {
   // ** State
   const [tabValue, setTabValue] = useState<string>('default')
 
-  const handleChange = (event: SyntheticEvent, newValue: string) => {
+  // ** Logics
+  const handleTabChange = (event: SyntheticEvent, newValue: string) => {
     setTabValue(newValue)
+  }
+  const handleRedirectToSceneEdit = (sid: number) => {
+    window.location.href = `/verse/edit/${sid}`
   }
 
   const RenderTabCover = ({ sceneBase }: { sceneBase: IScene }) =>
@@ -254,8 +258,8 @@ const ScenesOverviewWithTabsSection = () => {
 
   const RenderTabContent = ({ assetList = [] }: { assetList: IAsset[] }) => {
     return (
-      <TableContainer>
-        <Table>
+      <TableContainer sx={{ height: '20rem' }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow sx={{ '& .MuiTableCell-root': { py: theme => `${theme.spacing(2.5)} !important` } }}>
               <TableCell sx={{ whiteSpace: 'nowrap' }}>Asset</TableCell>
@@ -296,12 +300,12 @@ const ScenesOverviewWithTabsSection = () => {
                           }}
                         />
                       </Box>
-                      <Box sx={{ display: 'flex', maxWidth: '8rem', ml: 4, mr: 2, flexDirection: 'column' }}>
+                      <Box sx={{ display: 'flex', ml: 4, mr: 2, flexDirection: 'column' }}>
                         <Typography sx={{ fontWeight: 600 }} color='common.white' noWrap>
                           {asset?.attributes.displayName || 'Untitled'}
                         </Typography>
                         <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }} noWrap>
-                          {asset?.attributes.description || 'description...'}
+                          {asset?.attributes.description || 'no description'}
                         </Typography>
                       </Box>
                     </Box>
@@ -346,7 +350,7 @@ const ScenesOverviewWithTabsSection = () => {
         <TabList
           variant='scrollable'
           scrollButtons='auto'
-          onChange={handleChange}
+          onChange={handleTabChange}
           aria-label='top referral sources tabs'
           sx={{
             mb: 2.5,
@@ -404,8 +408,31 @@ const ScenesOverviewWithTabsSection = () => {
 
         {ownSceneList.map(ownScene => {
           return (
-            <TabPanel key={`own-scene-asset-${ownScene.id}`} sx={{ p: 0 }} value={`own-scene-${ownScene.id}`}>
+            <TabPanel
+              key={`own-scene-asset-${ownScene.id}`}
+              sx={{ p: 0, display: 'flex', flexDirection: 'column' }}
+              value={`own-scene-${ownScene.id}`}
+            >
               <RenderTabContent assetList={ownScene.attributes.assetList.data!} />
+              <Box
+                sx={{
+                  p: 4,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <Box>
+                  <Button variant='outlined' disabled>
+                    View scene
+                  </Button>
+                </Box>
+                <Box>
+                  <Button variant='contained' onClick={() => handleRedirectToSceneEdit(ownScene.id)}>
+                    Edit scene
+                  </Button>
+                </Box>
+              </Box>
             </TabPanel>
           )
         })}
