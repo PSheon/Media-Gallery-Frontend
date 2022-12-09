@@ -64,9 +64,9 @@ export const SHOW_EDIT_DIALOG_BOX_ACTION = () => {
 
 export const SET_EDIT_DIALOG_BOX_ACTION = (payload: IHoverObject) => {
   const currentHoverStatus = getState().verse.edit.editDialogBox.hover
-  const editDialogBoxPayload = generateEditDialogBoxPayload(payload)
 
   if (!currentHoverStatus) {
+    const editDialogBoxPayload = generateEditDialogBoxPayload(payload)
     dispatch(setEditDialogBox(editDialogBoxPayload))
   }
 }

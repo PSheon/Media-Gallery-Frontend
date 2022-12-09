@@ -9,8 +9,6 @@ import scene from './sceneSlice'
 import controlHintBox from './controlHintBoxSlice'
 import viewDialogBox from './viewDialogBoxSlice'
 
-// import identity from './identitySlice'
-
 const viewVerseReducers = combineReducers({
   uiLayout,
   loadingScreen,
@@ -18,8 +16,6 @@ const viewVerseReducers = combineReducers({
   scene,
   controlHintBox,
   viewDialogBox
-
-  // identity,
 })
 
 export default viewVerseReducers

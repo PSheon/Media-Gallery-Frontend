@@ -30,7 +30,8 @@ import 'src/@fake-db'
 import { HMSRoomProvider } from '@100mslive/react-sdk'
 
 // ** Wagmi Imports
-import { WagmiConfig, createClient, defaultChains, configureChains } from 'wagmi'
+import { WagmiConfig, createClient, configureChains } from 'wagmi'
+import { mainnet, polygon, avalanche, bsc, goerli } from 'wagmi/chains'
 import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
@@ -91,10 +92,10 @@ type GuardProps = {
 }
 
 const clientSideEmotionCache = createEmotionCache()
-const { chains, provider, webSocketProvider } = configureChains(defaultChains, [
-  infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY as string }),
-  publicProvider()
-])
+const { chains, provider, webSocketProvider } = configureChains(
+  [mainnet, polygon, avalanche, bsc, goerli],
+  [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY as string }), publicProvider()]
+)
 const client = createClient({
   autoConnect: true,
   connectors: [

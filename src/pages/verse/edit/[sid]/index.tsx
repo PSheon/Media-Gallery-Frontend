@@ -20,7 +20,7 @@ const EditSketchbook = dynamic(() => import('src/views/verse/book/EditVerse'), {
 // ** Types
 import { IScene } from 'src/types/scene/sceneTypes'
 
-function EditSketchbookPage() {
+function EditVersePage() {
   // ** Hooks
   const router = useRouter()
   const { sid } = router.query
@@ -64,11 +64,11 @@ function EditSketchbookPage() {
   return <EditSketchbook sceneBase={sceneBase!} />
 }
 
-EditSketchbookPage.acl = {
+EditVersePage.acl = {
   action: 'read',
   subject: 'user-page'
 }
 
-EditSketchbookPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+EditVersePage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-export default EditSketchbookPage
+export default EditVersePage

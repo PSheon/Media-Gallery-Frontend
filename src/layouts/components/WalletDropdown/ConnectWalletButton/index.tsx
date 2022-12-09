@@ -14,8 +14,7 @@ import Fade, { FadeProps } from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 
 // ** Wagmi Imports
-import { useConnect, useSignMessage, useDisconnect } from 'wagmi'
-import { Connector } from '@wagmi/core'
+import { useConnect, useSignMessage, useDisconnect, Connector } from 'wagmi'
 
 // ** Axios
 import axios from 'axios'
@@ -83,15 +82,7 @@ const ConnectWalletButton = () => {
       <Button onClick={() => setShow(true)} variant='text'>
         Connect Wallet
       </Button>
-      <Dialog
-        fullWidth
-        open={show}
-        maxWidth='sm'
-        scroll='body'
-        onClose={handleClose}
-        onBackdropClick={handleClose}
-        TransitionComponent={Transition}
-      >
+      <Dialog fullWidth open={show} maxWidth='sm' scroll='body' onClose={handleClose} TransitionComponent={Transition}>
         <DialogContent sx={{ px: { xs: 8, sm: 15 }, py: { xs: 8, sm: 12.5 }, position: 'relative' }}>
           <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
             <Icon icon='mdi:close' />

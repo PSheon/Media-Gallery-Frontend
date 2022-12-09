@@ -51,141 +51,6 @@ import { useAuth } from 'src/hooks/useAuth'
 import { IAsset } from 'src/types/scene/assetTypes'
 import { IScene } from 'src/types/scene/sceneTypes'
 
-// interface StatusObj {
-//   [ke: string]: {
-//     text: string
-//     color: ThemeColor
-//   }
-// }
-// interface TabCoverType {
-//   imgWidth: number
-//   category: string
-//   imgHeight: number
-// }
-// interface TabContentType {
-//   imgAlt: string
-//   imgSrc: string
-//   product: string
-//   revenue: string
-//   conversion: string
-//   conversionDifference?: 'positive' | 'negative'
-//   status: 'in-stock' | 'coming-soon' | 'out-of-stock'
-// }
-
-// interface TabContentDataType {
-//   mobile: TabContentType[]
-//   desktop: TabContentType[]
-//   console: TabContentType[]
-// }
-
-// const statusObj: StatusObj = {
-//   'in-stock': { text: 'In Stock', color: 'success' },
-//   'coming-soon': { text: 'Coming Soon', color: 'warning' },
-//   'out-of-stock': { text: 'Out of Stock', color: 'primary' }
-// }
-
-// const tabAvatars: TabCoverType[] = [
-//   {
-//     imgWidth: 30,
-//     imgHeight: 58,
-//     category: 'mobile'
-//   },
-//   {
-//     imgWidth: 52,
-//     imgHeight: 42,
-//     category: 'desktop'
-//   },
-//   {
-//     imgWidth: 60,
-//     imgHeight: 42,
-//     category: 'console'
-//   }
-// ]
-
-// const tabContentData: TabContentDataType = {
-//   mobile: [
-//     {
-//       revenue: '$12.5k',
-//       conversion: '+24',
-//       imgAlt: 'samsung-s22',
-//       status: 'out-of-stock',
-//       product: 'Samsung s22',
-//       imgSrc: '/images/cards/samsung-s22.png'
-//     },
-//     {
-//       revenue: '$45k',
-//       conversion: '-18',
-//       status: 'in-stock',
-//       imgAlt: 'apple-iPhone-13-pro',
-//       product: 'Apple iPhone 13 Pro',
-//       conversionDifference: 'negative',
-//       imgSrc: '/images/cards/apple-iPhone-13-pro.png'
-//     },
-//     {
-//       revenue: '$98.2k',
-//       conversion: '+55',
-//       status: 'coming-soon',
-//       imgAlt: 'oneplus-9-pro',
-//       product: 'Oneplus 9 Pro',
-//       imgSrc: '/images/cards/oneplus-9-pro.png'
-//     }
-//   ],
-//   desktop: [
-//     {
-//       revenue: '$94.6k',
-//       conversion: '+16',
-//       status: 'in-stock',
-//       imgAlt: 'apple-mac-mini',
-//       product: 'Apple Mac Mini',
-//       imgSrc: '/images/cards/apple-mac-mini.png'
-//     },
-//     {
-//       revenue: '$76.5k',
-//       conversion: '+27',
-//       status: 'coming-soon',
-//       imgAlt: 'hp-envy-x360',
-//       product: 'Newest HP Envy x360',
-//       imgSrc: '/images/cards/hp-envy-x360.png'
-//     },
-//     {
-//       revenue: '$69.3k',
-//       conversion: '-9',
-//       status: 'out-of-stock',
-//       imgAlt: 'dell-inspiron-3000',
-//       product: 'Dell Inspiron 3000',
-//       conversionDifference: 'negative',
-//       imgSrc: '/images/cards/dell-inspiron-3000.png'
-//     }
-//   ],
-//   console: [
-//     {
-//       revenue: '$18.6k',
-//       conversion: '+34',
-//       status: 'coming-soon',
-//       imgAlt: 'sony-play-station-5',
-//       product: 'Sony Play Station 5',
-//       imgSrc: '/images/cards/sony-play-station-5.png'
-//     },
-//     {
-//       revenue: '$29.7k',
-//       conversion: '-21',
-//       status: 'out-of-stock',
-//       imgAlt: 'xbox-series-x',
-//       product: 'XBOX Series X',
-//       conversionDifference: 'negative',
-//       imgSrc: '/images/cards/xbox-series-x.png'
-//     },
-//     {
-//       revenue: '$10.4k',
-//       conversion: '+38',
-//       status: 'in-stock',
-//       imgAlt: 'nintendo-switch',
-//       product: 'Nintendo Switch',
-//       imgSrc: '/images/cards/nintendo-switch.png'
-//     }
-//   ]
-// }
-
 const ScenesOverviewWithTabsSection = () => {
   // ** Hooks
   const auth = useAuth()
@@ -435,8 +300,7 @@ const ScenesOverviewWithTabsSection = () => {
             </TabPanel>
           )
         })}
-        <TabPanel sx={{ p: 0 }} value='default'>
-          {/* <Button>asd</Button> */}
+        <TabPanel sx={{ p: 4 }} value='create'>
           <CardContent sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
             <CustomAvatar skin='light' sx={{ width: 56, height: 56, mb: 2 }}>
               <Icon icon='mdi:help-circle-outline' fontSize='2rem' />
@@ -454,6 +318,19 @@ const ScenesOverviewWithTabsSection = () => {
             >
               Create new
             </Button>
+          </CardContent>
+        </TabPanel>
+        <TabPanel sx={{ p: 4 }} value='default'>
+          <CardContent sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
+            <CustomAvatar skin='light' sx={{ width: 56, height: 56, mb: 2 }}>
+              <Icon icon='file-icons:3d-model' fontSize='2rem' />
+            </CustomAvatar>
+            <Typography variant='h6' sx={{ mb: 2 }}>
+              Scene
+            </Typography>
+            <Typography variant='body2' sx={{ mb: 6.5 }}>
+              Select scene to view your assets.
+            </Typography>
           </CardContent>
         </TabPanel>
       </TabContext>
