@@ -1,81 +1,93 @@
+/* TODO */
 // ** React Imports
 import { Ref, forwardRef, ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+// ** Next Import
+import { useRouter } from 'next/router'
+
 // ** MUI Imports
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import CardContent from '@mui/material/CardContent'
+import Backdrop from '@mui/material/Backdrop'
+import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
-import Fade, { FadeProps } from '@mui/material/Fade'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
+// ** Utils Imports
+import axios from 'axios'
+import { useQuery } from '@tanstack/react-query'
+
 // ** Actions Imports
-import { setViewDialogBoxStep, hideViewDialogBox } from 'src/store/verse/view/viewDialogBoxSlice'
+import { hideViewDialogBox } from 'src/store/verse/view/viewDialogBoxSlice'
 
 // ** Components Imports
-import ViewNftBox from 'src/views/verse/components/view/viewDialogBox/ViewNftBox'
+import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
+// ** Config
+import apiConfig from 'src/configs/api'
+
 // ** Types
 import { RootState } from 'src/store'
-
-const Transition = forwardRef(function Transition(
-  props: FadeProps & { children?: ReactElement<any, any> },
-  ref: Ref<unknown>
-) {
-  return <Fade ref={ref} {...props} />
-})
+import { IScene } from 'src/types/scene/sceneTypes'
+import { IAsset } from 'src/types/scene/assetTypes'
 
 // Styled StyledRootDialog component
 const StyledRootDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-container': {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-end',
-    paddingBottom: theme.spacing(6),
-    zIndex: theme.zIndex.drawer + 1
+    paddingLeft: theme.spacing(6)
   }
 }))
-
-// Styled Grid component
-const StyledGrid = styled(Grid)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  [theme.breakpoints.down('md')]: {
-    borderBottom: `1px solid ${theme.palette.divider}`
-  },
-  [theme.breakpoints.up('md')]: {
-    borderRight: `1px solid ${theme.palette.divider}`
-  }
-}))
-
-// ** Styled component for the image
-const Img = styled('img')({
-  width: '100%',
-  height: '100%',
-  objectPosition: 'center',
-  objectFit: 'cover',
-  borderRadius: '.2rem'
-})
 
 const ViewDialogBox = () => {
   // ** Hooks
+  const router = useRouter()
+  const { sid } = router.query
   const dispatch = useDispatch()
-  const VIEW_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.viewDialogBox)
-
-  // const SCENE_METADATA = useSelector(({ verse }: RootState) => verse.view.scene)
   const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
-  const hasNext = VIEW_DIALOG_BOX.step + 1 < VIEW_DIALOG_BOX.session.length
-
-  // const { nftList: SCENE_NFT_LIST } = SCENE_METADATA
+  const VIEW_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.viewDialogBox)
+  const { isLoading: isQuerySceneBaseLoading, data: sceneBase } = useQuery({
+    queryKey: [
+      'scene',
+      sid,
+      {
+        populate: {
+          cover: true
+        }
+      }
+    ],
+    queryFn: () =>
+      axios({
+        method: 'GET',
+        url: `/api/scenes/${sid}`,
+        params: {
+          populate: {
+            cover: true,
+            owner: true,
+            collaborators: true,
+            assetList: {
+              populate: {
+                cover: true
+              }
+            },
+            sceneModel: true
+          }
+        }
+      }).then(response => response.data.data as IScene),
+    enabled: !!sid,
+    retry: 0
+  })
+  const currentPlacedAsset = sceneBase?.attributes?.assetList?.data?.find(
+    assetData => assetData?.attributes.framePosition === VIEW_DIALOG_BOX.hoverObjectMetadata?.position
+  )
 
   if (worldInstance) {
     if (VIEW_DIALOG_BOX.show) {
@@ -85,169 +97,74 @@ const ViewDialogBox = () => {
     }
   }
 
-  // TODO: fixed redirect duplicated character issues.
-  const handleRestartScene = (destination: string) => {
-    const newURL = new URL(window.location.href)
-    newURL.searchParams.set('scene', destination)
-    window.history.pushState({}, '', newURL)
-
-    dispatch(hideViewDialogBox())
-    worldInstance?.restartScene()
-  }
-
-  const handleNextStep = () => {
-    dispatch(setViewDialogBoxStep())
-  }
-
-  const handleDialogClose = () => {
+  // ** Logics
+  const handleViewDialogBoxClose = () => {
+    if (worldInstance) {
+      worldInstance.setDialogMode(false)
+    }
     dispatch(hideViewDialogBox())
   }
 
-  // eslint-disable-next-line
-  const renderSession = (currentSession: {
-    nftFrameId: string
-    playerDisplayName: string
-    type: string
-    speaker: string
-    content: string
-    destination: string
-  }) => {
-    if (currentSession?.type === 'dialog') {
+  // ** Renders
+  const renderNftBox = (ownNft: IAsset) => {
+    if (
+      ownNft?.attributes?.coverFileType === 'png' ||
+      ownNft?.attributes?.coverFileType === 'jpg' ||
+      ownNft?.attributes?.coverFileType === 'svg' ||
+      ownNft?.attributes?.coverFileType === 'gif'
+    ) {
       return (
-        <DialogContent sx={{ position: 'relative' }}>
-          <IconButton
-            size='small'
-            onClick={handleDialogClose}
-            sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
-          >
-            <Icon icon='mdi:close-circle' fontSize={20} />
-          </IconButton>
-
-          <Box sx={{ px: 4 }}>
-            <Typography variant='h5' sx={{ mb: 3 }}>
-              {currentSession.speaker ?? 'Crazy Bug'}
-            </Typography>
-            <Box sx={{ minHeight: '5rem', display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
-                {currentSession.content}
-              </Typography>
-            </Box>
-          </Box>
-
-          {hasNext && (
-            <Box sx={{ position: 'absolute', right: '1rem', bottom: '1rem' }}>
-              <Button variant={hasNext ? 'text' : 'contained'} onClick={handleNextStep}>
-                <Typography variant='subtitle2' sx={{ fontWeight: 600 }}>
-                  ... more
-                </Typography>
-              </Button>
-            </Box>
-          )}
-        </DialogContent>
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            maxWidth: theme => theme.spacing(80),
+            maxHeight: theme => theme.spacing(80),
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '.2rem'
+          }}
+        >
+          <img
+            src={`${apiConfig.publicFolderUrl}${currentPlacedAsset?.attributes?.cover?.data?.attributes.url}`}
+            alt={currentPlacedAsset?.attributes.displayName}
+          />
+        </Box>
       )
     }
 
-    if (currentSession?.type === 'redirect') {
+    if (ownNft?.attributes?.coverFileType === 'mp4') {
       return (
-        <DialogContent sx={{ position: 'relative' }}>
-          <IconButton size='small' onClick={handleDialogClose} sx={{ position: 'absolute', right: 0, top: 0 }}>
-            <Icon icon='mdi:close-circle' fontSize={20} />
-          </IconButton>
-
-          <Box sx={{ px: 4 }}>
-            <Typography variant='h5' sx={{ mb: 3 }}>
-              {currentSession.speaker ?? 'Crazy Bug'}
-            </Typography>
-            <Box sx={{ minHeight: '5rem', display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
-                {currentSession.content}
-              </Typography>
-            </Box>
-            <Box sx={{ mt: 'auto' }}>
-              <Button variant='contained' onClick={() => handleRestartScene(currentSession.destination)}>
-                <Typography variant='subtitle2' sx={{ fontWeight: 600 }}>
-                  Let's go
-                </Typography>
-              </Button>
-            </Box>
-          </Box>
-
-          {hasNext && (
-            <Box sx={{ position: 'absolute', right: '1rem', bottom: '1rem' }}>
-              <Button variant={hasNext ? 'text' : 'contained'} onClick={handleNextStep}>
-                <Typography variant='subtitle2' sx={{ fontWeight: 600 }}>
-                  ... more
-                </Typography>
-              </Button>
-            </Box>
-          )}
-        </DialogContent>
-      )
-    }
-
-    if (currentSession?.type === 'artworkInfo') {
-      const artworkMetadata = Object.assign(
-        {
-          displayName: 'Media Verse',
-          description: 'Media is so cool...',
-          contentURL: '/images/logos/media-app.png'
-        },
-        {}
-
-        // SCENE_NFT_LIST.find(nftData => nftData.frameId === currentSession.nftFrameId)
-      )
-
-      /* NOTE: added public access */
-      // if (owner === 'media' || owner === account) {
-      //   return <EditNftBox artworkMetadata={artworkMetadata} currentSession={currentSession} />
-      // } else {
-      //   return <ViewNftBox artworkMetadata={artworkMetadata} />
-      // }
-
-      return <ViewNftBox artworkMetadata={artworkMetadata} />
-    }
-
-    if (currentSession?.type === 'playerInfo') {
-      return (
-        <Grid container spacing={6} sx={{ minHeight: '20rem' }}>
-          <StyledGrid item md={4} xs={12}>
-            <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Img alt={currentSession.playerDisplayName} src={'/images/avatars/1.png'} />
-            </CardContent>
-          </StyledGrid>
-          <Grid
-            item
-            xs={12}
-            md={8}
-            sx={{
-              display: 'flex',
-              pt: ['0 !important', '0 !important', '1.5rem !important'],
-              pl: ['1.5rem !important', '1.5rem !important', '0 !important']
-            }}
-          >
-            <CardContent sx={{ position: 'relative', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-              <IconButton
-                size='small'
-                onClick={handleDialogClose}
-                sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
-              >
-                <Icon icon='mdi:close-circle' fontSize={20} />
-              </IconButton>
-
-              <Typography variant='h6' sx={{ mb: 2 }}>
-                {currentSession.playerDisplayName}
-              </Typography>
-
-              <Box sx={{ mt: 'auto' }}>
-                <Button variant='outlined' disabled>
-                  <Typography variant='subtitle2' sx={{ fontWeight: 600 }}>
-                    Add Friend
-                  </Typography>
-                </Button>
-              </Box>
-            </CardContent>
-          </Grid>
-        </Grid>
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            maxWidth: theme => theme.spacing(80),
+            maxHeight: theme => theme.spacing(80),
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '.2rem',
+            '& video': {
+              objectFit: 'cover',
+              borderRadius: '.2rem'
+            }
+          }}
+        >
+          <video
+            width='100%'
+            height='100%'
+            src={`${apiConfig.publicFolderUrl}${currentPlacedAsset?.attributes?.cover?.data?.attributes.url}`}
+            autoPlay
+            loop
+            muted
+            playsInline
+            crossOrigin='anonymous'
+          />
+        </Box>
       )
     }
   }
@@ -255,15 +172,110 @@ const ViewDialogBox = () => {
   return (
     <StyledRootDialog
       fullWidth
-      open={VIEW_DIALOG_BOX.show}
       maxWidth='md'
       scroll='paper'
-      onClose={handleDialogClose}
-      TransitionComponent={Transition}
-      onBackdropClick={handleDialogClose}
+      onClose={handleViewDialogBoxClose}
+      open={VIEW_DIALOG_BOX.show}
     >
-      testing
-      {/* {renderSession(VIEW_DIALOG_BOX.session[VIEW_DIALOG_BOX.step])} */}
+      {currentPlacedAsset ? (
+        <DialogContent sx={{ backgroundColor: theme => theme.palette.action.hover }}>
+          <IconButton
+            size='small'
+            onClick={handleViewDialogBoxClose}
+            sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
+          >
+            <Icon icon='mdi:close-circle' fontSize={20} />
+          </IconButton>
+          <Box sx={{ mb: 8, textAlign: 'center' }}>
+            <Typography variant='h5' sx={{ mb: 3 }}>
+              {currentPlacedAsset?.attributes.displayName}
+            </Typography>
+          </Box>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={5}>
+              {renderNftBox(currentPlacedAsset)}
+            </Grid>
+            <Grid item xs={12} sm={7}>
+              <Grid container spacing={6}>
+                <Grid item xs={12} sm={6}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <CustomAvatar skin='light' variant='rounded' color='primary' sx={{ mr: 4 }}>
+                      <Icon icon='mdi:account-outline' />
+                    </CustomAvatar>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                      <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+                        Owner
+                      </Typography>
+                      <Typography variant='caption'>
+                        {currentPlacedAsset?.attributes?.owner?.data?.attributes.username}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <CustomAvatar skin='light' variant='rounded' color='primary' sx={{ mr: 4 }}>
+                      <Icon icon='mdi:account-outline' />
+                    </CustomAvatar>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                      <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+                        Owner
+                      </Typography>
+                      <Typography variant='caption'>
+                        {currentPlacedAsset?.attributes?.owner?.data?.attributes.username}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant='caption'>description</Typography>
+                  <Typography variant='subtitle2'>
+                    {currentPlacedAsset?.attributes?.description || 'no description'}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </DialogContent>
+      ) : (
+        <DialogContent sx={{ backgroundColor: theme => theme.palette.action.hover }}>
+          <IconButton
+            size='small'
+            onClick={handleViewDialogBoxClose}
+            sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
+          >
+            <Icon icon='mdi:close-circle' fontSize={20} />
+          </IconButton>
+          <Box sx={{ mb: 8, textAlign: 'center' }}>
+            <Typography variant='h5' sx={{ mb: 3 }}>
+              No Asset
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
+            <CustomAvatar skin='light' sx={{ width: 56, height: 56, mb: 2 }}>
+              <Icon icon='mdi:help-circle-outline' fontSize='2rem' />
+            </CustomAvatar>
+            <Typography variant='h6' sx={{ mb: 2 }}>
+              Support
+            </Typography>
+            <Typography variant='body2' sx={{ mb: 6.5 }}>
+              According to us blisters are a very common thing and we come across them very often in our daily lives. It
+              is a very common occurrence like cold or fever depending upon your lifestyle.
+            </Typography>
+          </Box>
+        </DialogContent>
+      )}
+
+      <Backdrop
+        open={isQuerySceneBaseLoading}
+        sx={{
+          position: 'absolute',
+          color: 'common.white',
+          zIndex: theme => theme.zIndex.mobileStepper - 1
+        }}
+      >
+        <CircularProgress color='inherit' />
+      </Backdrop>
     </StyledRootDialog>
   )
 }

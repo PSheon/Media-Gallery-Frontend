@@ -25,7 +25,6 @@ import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { LoadingManager } from 'src/views/verse/book/core/view/LoadingManager'
 import { UIManager } from 'src/views/verse/book/core/view/UIManager'
 import { IWorldMetadata } from 'src/views/verse/book/interfaces/IWorldMetadata'
-import { INftMetadata } from 'src/views/verse/book/interfaces/INftMetadata'
 import { IWorldEntity } from 'src/views/verse/book/interfaces/view/IWorldEntity'
 import { IUpdatable } from 'src/views/verse/book/interfaces/IUpdatable'
 import { IParams } from 'src/views/verse/book/interfaces/IParams'
@@ -120,9 +119,10 @@ export class World {
   private lastScenarioID: string | undefined
   private cursorBoxHover = false
 
-  constructor() {
+  constructor(sceneMetadata: IWorldMetadata) {
     const scope = this
     this.scope = scope
+    this.metadata = sceneMetadata
 
     // WebGL not supported
     if (!Detector.webgl) {
@@ -232,7 +232,7 @@ export class World {
   }
 
   public async initScene() {
-    await this.setSceneMetadata()
+    // await this.setSceneMetadata()
     const worldScenePaths = this.metadata.worldScenePaths
 
     worldScenePaths.forEach((worldScenePath, loadingOrder) => {
@@ -262,24 +262,8 @@ export class World {
     })
   }
 
-  /* TODO integrate backend function */
-  async setSceneMetadata() {
-    this.metadata = {
-      owner: 'owner',
-      displayName: 'Display Name',
-      description: 'Description',
-      worldScenePaths: [
-        '/assets/glb/scene/advanced-gallery/draco-p1.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p2.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p3.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p4.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p5.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p6.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p7.glb',
-        '/assets/glb/scene/advanced-gallery/draco-p8.glb'
-      ],
-      assetList: []
-    }
+  async setSceneMetadata(newSceneMetadata: IWorldMetadata) {
+    this.metadata = newSceneMetadata
   }
 
   public setDialogMode(newDialogMode: boolean): void {
@@ -491,7 +475,7 @@ export class World {
             }
           }
 
-          if (child.userData.data === 'artwork') {
+          if (child.userData.data === 'asset') {
             this.nfts.push(new Nft(child, this))
           }
 
@@ -703,13 +687,6 @@ export class World {
     this.labelRenderer.domElement.id = 'label-canvas'
   }
 
-  public updateNftFrame(frameId: string, newNftMetadata: INftMetadata) {
-    const selectedNft = this.nfts.find(nft => nft.frameId === frameId)
-    if (selectedNft) {
-      selectedNft.update(newNftMetadata)
-    }
-  }
-
   adjustLabelVisible(newLabelVisible: boolean): void {
     if (newLabelVisible) {
       this.characters.forEach(char => {
@@ -823,6 +800,8 @@ export class World {
 
   public destroy() {
     /* NOTE: trick to prevent memory leak */
+    this.dispose()
+
     this.render = () => undefined
   }
 }

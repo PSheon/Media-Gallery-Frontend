@@ -11,7 +11,6 @@ import { showStartPanel, setStartPanel } from 'src/store/verse/view/startPanelSl
 import { setControlHintBox } from 'src/store/verse/view/controlHintBoxSlice'
 import {
   showViewDialogBox,
-  setViewDialogBoxStep,
   setViewDialogBox,
   setViewDialogBoxHover,
   hideViewDialogBox
@@ -20,6 +19,14 @@ import {
 import { generateViewDialogBoxPayload } from 'src/utils/generate-view-dialog-box-payload'
 
 const { dispatch, getState } = STORE
+
+export type IHoverObject = {
+  hoverObjectType?: string
+  hoverObjectMetadata: {
+    displayName?: string
+    position?: string
+  }
+}
 
 /* UI Layout */
 export const SHOW_LOADING_SCREEN = () => dispatch(setLoadingScreenShow(true))
@@ -71,20 +78,26 @@ export const SET_CONTROL_HINT_BOX_ACTION = (payload: { title: string; content: s
 /* Dialog Box */
 export const SHOW_VIEW_DIALOG_BOX_ACTION = () => {
   const dialogBoxShowStatus = getState().verse.view.viewDialogBox.show
-  if (dialogBoxShowStatus) {
-    dispatch(setViewDialogBoxStep())
-  } else {
+
+  // NOTE
+  // if (dialogBoxShowStatus) {
+  //   dispatch(setViewDialogBoxStep())
+  // } else {
+  //   dispatch(showViewDialogBox())
+  // }
+  if (!dialogBoxShowStatus) {
     dispatch(showViewDialogBox())
   }
+
   document?.exitPointerLock()
 }
 
-export const SET_VIEW_DIALOG_BOX_ACTION = (payload: { displayName: string; objectType: string }) => {
+export const SET_VIEW_DIALOG_BOX_ACTION = (payload: IHoverObject) => {
   const currentHoverStatus = getState().verse.view.viewDialogBox.hover
 
   if (!currentHoverStatus) {
-    const dialogBoxPayload = generateViewDialogBoxPayload(payload)
-    dispatch(setViewDialogBox(dialogBoxPayload))
+    const viewDialogBoxPayload = generateViewDialogBoxPayload(payload)
+    dispatch(setViewDialogBox(viewDialogBoxPayload))
   }
 }
 

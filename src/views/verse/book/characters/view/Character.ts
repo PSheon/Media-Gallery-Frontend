@@ -96,7 +96,12 @@ export class Character extends THREE.Object3D implements IWorldEntity {
   public groundImpactData: GroundImpactData = new GroundImpactData()
   public raycastBox: THREE.Mesh
   public raycastHoverBox: THREE.Mesh
-  public hoverObjectDisplayName: string | undefined
+  public hoverObjectMetadata:
+    | {
+        displayName: string | undefined
+        position?: string
+      }
+    | undefined
   public hoverObjectType: string | undefined
 
   public world: World | undefined
@@ -411,9 +416,11 @@ export class Character extends THREE.Object3D implements IWorldEntity {
         this.world!.cameraOperator.characterCaller = scope
         this.world?.inputManager.setInputReceiver(this.world!.cameraOperator)
       } else if (code === 'KeyE' && pressed === true) {
-        if (this.hoverObjectDisplayName) {
+        if (this.hoverObjectType) {
+          this.world?.setDialogMode(true)
           SHOW_VIEW_DIALOG_BOX_ACTION()
         } else {
+          this.world?.setDialogMode(false)
           HIDE_VIEW_DIALOG_BOX_ACTION()
         }
       } else if (code === 'KeyR' && pressed === true && event.shiftKey === true) {
@@ -935,7 +942,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     // const material = new THREE.LineBasicMaterial({ color: 0x0000ff })
     // const geometry = new THREE.BufferGeometry().setFromPoints([start, end])
     // const line = new THREE.Line(geometry, material)
-    // this.world.graphicsWorld.add(line)
+    // this.world!.graphicsWorld.add(line)
 
     this.world!.cursorBox.position.copy(end)
 
@@ -1052,30 +1059,30 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     // If we're hover the item
     if (character.rayHoverHasHit) {
       // Do hover stuff
-      this.world!.cursorBox.position.copy(character.rayHoverResult.hitPointWorld)
-      if (character.rayHoverResult.body?.displayName && character.rayHoverResult.body?.objectType) {
-        this.world!.setCursorBoxHover(true)
-        character.hoverObjectDisplayName = character.rayHoverResult.body.displayName
+      character.world!.cursorBox.position.copy(character.rayHoverResult.hitPointWorld)
+      if (character.rayHoverResult.body?.objectType) {
+        character.world!.setCursorBoxHover(true)
+        character.hoverObjectMetadata = character.rayHoverResult.body.objectMetadata
         character.hoverObjectType = character.rayHoverResult.body.objectType
       } else {
-        this.world!.setCursorBoxHover(false)
-        character.hoverObjectDisplayName = undefined
-        character.hoverObjectType = undefined
+        character.world!.setCursorBoxHover(false)
+        delete character.hoverObjectMetadata
+        delete character.hoverObjectType
       }
       character.raycastHoverBox.position.y = character.rayHoverResult.hitPointWorld.y
       character.raycastHoverBox.position.z = character.rayHoverResult.hitPointWorld.z
       character.raycastHoverBox.position.x = character.rayHoverResult.hitPointWorld.x
     } else {
-      this.world!.setCursorBoxHover(false)
-      character.hoverObjectDisplayName = undefined
-      character.hoverObjectType = undefined
+      character.world!.setCursorBoxHover(false)
+      delete character.hoverObjectMetadata
+      delete character.hoverObjectType
     }
 
     if (character.isPlayer) {
-      if (character.hoverObjectDisplayName && character.hoverObjectType) {
+      if (character.hoverObjectType) {
         SET_VIEW_DIALOG_BOX_ACTION({
-          displayName: character.rayHoverResult.body.displayName,
-          objectType: character.rayHoverResult.body.objectType
+          hoverObjectType: character.hoverObjectType,
+          hoverObjectMetadata: character.hoverObjectMetadata!
         })
       } else {
         UN_HOVER_VIEW_DIALOG_BOX_ACTION()

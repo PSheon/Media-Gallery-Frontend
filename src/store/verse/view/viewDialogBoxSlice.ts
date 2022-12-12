@@ -7,9 +7,8 @@ import { IInitialState } from 'src/types/verse/view/dialogBoxTypes'
 const initialState: IInitialState = {
   show: false,
   hover: false,
-  speaker: '',
-  session: [],
-  step: 0
+  hoverObjectType: undefined,
+  hoverObjectMetadata: {}
 }
 
 const viewDialogBoxSlice = createSlice({
@@ -19,18 +18,10 @@ const viewDialogBoxSlice = createSlice({
     showViewDialogBox: state => {
       state.show = true
     },
-    setViewDialogBoxStep: state => {
-      if (state.step + 1 < state.session.length) {
-        state.step = state.step + 1
-      } else {
-        state.show = false
-        state.step = 0
-      }
-    },
     setViewDialogBox: (state, action) => {
       state.hover = true
-      state.speaker = action.payload.speaker
-      state.session = action.payload.session
+      state.hoverObjectType = action.payload.hoverObjectType
+      state.hoverObjectMetadata = action.payload.hoverObjectMetadata
     },
     setViewDialogBoxHover: (state, action) => {
       state.hover = action.payload
@@ -38,15 +29,12 @@ const viewDialogBoxSlice = createSlice({
     hideViewDialogBox: state => {
       state.show = false
       state.hover = false
-      state.speaker = ''
-      state.step = 0
-      state.session = []
     }
   },
   extraReducers: {}
 })
 
-export const { showViewDialogBox, setViewDialogBoxStep, setViewDialogBox, setViewDialogBoxHover, hideViewDialogBox } =
+export const { showViewDialogBox, setViewDialogBox, setViewDialogBoxHover, hideViewDialogBox } =
   viewDialogBoxSlice.actions
 
 export default viewDialogBoxSlice.reducer

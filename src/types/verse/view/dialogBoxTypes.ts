@@ -1,9 +1,11 @@
 export interface IInitialState {
   show: boolean
   hover: boolean
-  speaker: string
-  session: ISession[]
-  step: number
+  hoverObjectType?: string
+  hoverObjectMetadata: {
+    displayName?: string
+    position?: string
+  }
 }
 
 export interface ISession {

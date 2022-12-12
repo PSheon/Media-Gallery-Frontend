@@ -3,6 +3,7 @@ import { Ref, forwardRef, ReactElement } from 'react'
 
 // ** Next Import
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 // ** Redux Imports
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,15 +11,19 @@ import { useDispatch, useSelector } from 'react-redux'
 // ** MUI Imports
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, Theme } from '@mui/material/styles'
+import LoadingButton from '@mui/lab/LoadingButton'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Badge from '@mui/material/Badge'
 import Grid from '@mui/material/Grid'
 import Dialog from '@mui/material/Dialog'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Fade, { FadeProps } from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
+
+// ** Utils Imports
+import axios from 'axios'
+import { useQuery } from '@tanstack/react-query'
 
 // ** Actions Imports
 import { hideStartPanel } from 'src/store/verse/view/startPanelSlice'
@@ -34,6 +39,7 @@ import apiConfig from 'src/configs/api'
 
 // ** Types
 import { RootState, AppDispatch } from 'src/store'
+import { IScene } from 'src/types/scene/sceneTypes'
 
 const Transition = forwardRef(function Transition(
   props: FadeProps & { children?: ReactElement<any, any> },
@@ -68,10 +74,25 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
 
 const StartPanel = () => {
   // ** Hooks
-  const dispatch = useDispatch<AppDispatch>()
   const auth = useAuth()
+  const router = useRouter()
+  const { sid } = router.query
+  const dispatch = useDispatch<AppDispatch>()
   const START_PANEL = useSelector(({ verse }: RootState) => verse.view.startPanel)
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
+  const { isLoading: isQueryLoading, data: sceneBase } = useQuery({
+    queryKey: ['scene'],
+    queryFn: () =>
+      axios({
+        method: 'GET',
+        url: `/api/scenes/${sid}`,
+        params: {
+          populate: ['cover', 'owner', 'collaborators', 'assetList', 'sceneModel']
+        }
+      }).then(response => response.data.data as IScene),
+    enabled: !!sid,
+    retry: 0
+  })
 
   // ** Logics
   const handleConfirm = () => {
@@ -186,16 +207,16 @@ const StartPanel = () => {
         <Grid container>
           <Grid item xs={12} sx={{ mb: 6 }}>
             <Typography variant='h3' sx={{ mb: 3 }} color='common.white'>
-              {'SCENE_METADATA.displayName'}
+              {sceneBase?.attributes.displayName}
             </Typography>
             <Typography variant='body1' color='common.white'>
-              {'SCENE_METADATA.description' ?? 'Welcome'}
+              {sceneBase?.attributes.description ?? 'no description'}
             </Typography>
           </Grid>
           <Grid item xs={12} sx={{ mt: 6 }}>
-            <Button variant='contained' onClick={handleConfirm} size='large'>
+            <LoadingButton loading={isQueryLoading} variant='contained' onClick={handleConfirm} size='large'>
               Enter World
-            </Button>
+            </LoadingButton>
           </Grid>
         </Grid>
 

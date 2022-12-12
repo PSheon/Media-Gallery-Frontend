@@ -1,24 +1,16 @@
-// ** React Imports
-import { ReactNode } from 'react'
-
 // ** Next Import
-import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 
-// ** Component Import
-import BlankLayout from 'src/@core/layouts/BlankLayout'
+const ViewSketchbookPage = () => {
+  // ** Hooks
+  const router = useRouter()
 
-// ** Book Import
-const ViewVerse = dynamic(() => import('src/views/verse/book/ViewVerse'), { ssr: false })
-
-function ViewVersePage() {
-  return <ViewVerse />
+  router.push('/')
 }
 
-ViewVersePage.acl = {
+ViewSketchbookPage.acl = {
   action: 'read',
-  subject: 'guest-page'
+  subject: 'user-page'
 }
 
-ViewVersePage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
-
-export default ViewVersePage
+export default ViewSketchbookPage

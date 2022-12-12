@@ -1,20 +1,29 @@
 // ** React Imports
-import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+// ** Next Import
+import { useRouter } from 'next/router'
 
 // ** MUI Imports
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Theme } from '@mui/material/styles'
 import { styled } from '@mui/material/styles'
+import Backdrop from '@mui/material/Backdrop'
+import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
+
+// ** Utils Imports
+import axios from 'axios'
+import { useQuery } from '@tanstack/react-query'
 
 // ** Actions Imports
 import { showViewDialogBox } from 'src/store/verse/view/viewDialogBoxSlice'
 
 // ** Types
 import { RootState } from 'src/store'
+import { IScene } from 'src/types/scene/sceneTypes'
 
 // ** Styled RootBox component
 const RootBox = styled(Box)(({ theme }) => ({
@@ -39,35 +48,41 @@ const PanelCard = styled(Card)(({ theme }) => ({
 
 const HintBox = () => {
   // ** Hooks
+  const router = useRouter()
+  const { sid } = router.query
   const dispatch = useDispatch()
+  const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
   const LOADING_SCREEN_SHOW = useSelector(({ verse }: RootState) => verse.view.uiLayout.loadingScreenShow)
   const VIEW_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.viewDialogBox)
-
-  // const SCENE_NFT_LIST = useSelector(({ verse }: RootState) => verse.view.scene.nftList)
+  const { isLoading: isQueryLoading, data: sceneBase } = useQuery({
+    queryKey: [
+      'scene',
+      sid,
+      { populate: { cover: true, owner: true, collaborators: true, assetList: true, sceneModel: true } }
+    ],
+    queryFn: () =>
+      axios({
+        method: 'GET',
+        url: `/api/scenes/${sid}`,
+        params: {
+          populate: ['cover', 'owner', 'collaborators', 'assetList', 'sceneModel']
+        }
+      }).then(response => response.data.data as IScene),
+    enabled: !!sid,
+    retry: 0
+  })
+  const currentPlacedAsset = sceneBase?.attributes?.assetList?.data?.find(
+    assetData => assetData?.attributes.framePosition === VIEW_DIALOG_BOX.hoverObjectMetadata?.position
+  )
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
-
-  // ** States
-  // eslint-disable-next-line
-  const [frameDisplayName, setFrameDisplayName] = useState('Fetching...')
-  // eslint-disable-next-line
-  const [frameDescription, setFrameDescription] = useState('')
 
   // ** Logics
   const handleClick = () => {
+    if (worldInstance) {
+      worldInstance.setDialogMode(true)
+    }
     dispatch(showViewDialogBox())
   }
-
-  // ** Side Effect
-  // useEffect(() => {
-  //   const nftDetail = SCENE_NFT_LIST.find(nftDetail => nftDetail.frameId === VIEW_DIALOG_BOX.speaker)
-  //   if (nftDetail) {
-  //     setFrameDisplayName(nftDetail.displayName)
-  //     setFrameDescription(nftDetail.description)
-  //   } else {
-  //     setFrameDisplayName(VIEW_DIALOG_BOX.speaker)
-  //     setFrameDescription('')
-  //   }
-  // }, [SCENE_NFT_LIST, VIEW_DIALOG_BOX.speaker])
 
   return (
     <RootBox
@@ -79,12 +94,29 @@ const HintBox = () => {
       }}
       style={{ display: !LOADING_SCREEN_SHOW && !VIEW_DIALOG_BOX.show && VIEW_DIALOG_BOX.hover ? 'block' : 'none' }}
     >
-      <PanelCard onClick={handleClick}>
-        <Typography variant='subtitle1'>{frameDisplayName}</Typography>
-        {frameDescription && <Typography variant='subtitle2'>{frameDescription}</Typography>}
+      <PanelCard onClick={handleClick} sx={{ position: 'relative' }}>
+        <Typography variant='subtitle1'>
+          {currentPlacedAsset?.attributes?.displayName || VIEW_DIALOG_BOX.hoverObjectMetadata?.displayName}
+        </Typography>
+        {currentPlacedAsset?.attributes?.description && (
+          <Typography variant='subtitle2'>{currentPlacedAsset.attributes.description}</Typography>
+        )}
         <Typography component='sup' variant='caption'>
           {isDesktop ? `Press "E"` : 'Click for more detail'}
         </Typography>
+
+        <Backdrop
+          open={isQueryLoading}
+          sx={{
+            position: 'absolute',
+            color: 'common.white',
+            backgroundColor: theme =>
+              theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)',
+            zIndex: theme => theme.zIndex.mobileStepper - 1
+          }}
+        >
+          <CircularProgress color='inherit' />
+        </Backdrop>
       </PanelCard>
     </RootBox>
   )

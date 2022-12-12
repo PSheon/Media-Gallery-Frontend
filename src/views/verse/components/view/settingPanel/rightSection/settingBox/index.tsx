@@ -77,7 +77,6 @@ const SettingBox = () => {
         scroll='body'
         maxWidth='sm'
         onClose={handleSettingBoxClose}
-        onBackdropClick={handleSettingBoxClose}
         TransitionComponent={Transition}
       >
         <DialogContent

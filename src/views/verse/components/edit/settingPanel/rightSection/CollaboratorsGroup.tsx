@@ -204,16 +204,23 @@ const CollaboratorsGroup = () => {
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
   const {
     // isLoading: isQueryLoading,
-    data: sceneBase,
-    refetch
+    data: sceneBase
   } = useQuery({
-    queryKey: ['scene_collaborators'],
+    queryKey: [
+      'scene',
+      sid,
+      {
+        collaborators: true
+      }
+    ],
     queryFn: () =>
       axios({
         method: 'GET',
         url: `/api/scenes/${sid}`,
         params: {
-          populate: ['collaborators']
+          populate: {
+            collaborators: true
+          }
         }
       }).then(response => response.data.data as IScene),
     enabled: !!sid,
@@ -224,10 +231,7 @@ const CollaboratorsGroup = () => {
   const [collaboratorsGroupDialogOpen, setCollaboratorsGroupDialogOpen] = useState(false)
 
   // ** Logics
-  const handleCollaboratorsGroupDialogOpen = () => {
-    refetch()
-    setCollaboratorsGroupDialogOpen(true)
-  }
+  const handleCollaboratorsGroupDialogOpen = () => setCollaboratorsGroupDialogOpen(true)
   const handleCollaboratorsGroupDialogClose = () => setCollaboratorsGroupDialogOpen(false)
 
   // ** Side Effect
@@ -242,7 +246,7 @@ const CollaboratorsGroup = () => {
   return (
     <Fragment>
       <Tooltip title='Collaborators' placement='top' arrow>
-        <AvatarGroup max={4} sx={{ cursor: 'pointer' }} onClick={handleCollaboratorsGroupDialogOpen}>
+        <AvatarGroup className='pull-up' max={4} onClick={handleCollaboratorsGroupDialogOpen}>
           <Avatar
             src={
               auth.user.avatar ? `${apiConfig.publicFolderUrl}${auth.user.avatar as string}` : '/images/avatars/1.png'

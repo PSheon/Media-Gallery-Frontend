@@ -35,7 +35,12 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 
   public rayHasHit = false
   public rayResult = new CANNON.RaycastResult()
-  public hoverObjectDisplayName: string | undefined
+  public hoverObjectMetadata:
+    | {
+        displayName: string | undefined
+        position?: string
+      }
+    | undefined
   public hoverObjectType: string | undefined
   public movementSpeed: number
   public actions: { [action: string]: KeyBinding }
@@ -187,25 +192,25 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 
         if (this.rayHasHit) {
           this.world.cursorBox.position.copy(this.rayResult.hitPointWorld)
-          if (this.rayResult.body?.displayName && this.rayResult.body?.objectType) {
+          if (this.rayResult.body?.objectType) {
             this.world.setCursorBoxHover(true)
-            this.hoverObjectDisplayName = this.rayResult.body.displayName
+            this.hoverObjectMetadata = this.rayResult.body.objectMetadata
             this.hoverObjectType = this.rayResult.body.objectType
           } else {
             this.world.setCursorBoxHover(false)
-            delete this.hoverObjectDisplayName
+            delete this.hoverObjectMetadata
             delete this.hoverObjectType
           }
         } else {
           this.world.setCursorBoxHover(false)
-          delete this.hoverObjectDisplayName
+          delete this.hoverObjectMetadata
           delete this.hoverObjectType
         }
 
-        if (this.hoverObjectDisplayName && this.hoverObjectType) {
+        if (this.hoverObjectType) {
           SET_VIEW_DIALOG_BOX_ACTION({
-            displayName: this.rayResult.body.displayName,
-            objectType: this.rayResult.body.objectType
+            hoverObjectType: this.hoverObjectType,
+            hoverObjectMetadata: this.hoverObjectMetadata!
           })
         } else {
           UN_HOVER_VIEW_DIALOG_BOX_ACTION()
@@ -223,9 +228,11 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
         this.characterCaller = undefined
       }
     } else if (code === 'KeyE' && pressed === true) {
-      if (this.hoverObjectDisplayName) {
+      if (this.hoverObjectType) {
+        this.world?.setDialogMode(true)
         SHOW_VIEW_DIALOG_BOX_ACTION()
       } else {
+        this.world?.setDialogMode(false)
         HIDE_VIEW_DIALOG_BOX_ACTION()
       }
     } else {

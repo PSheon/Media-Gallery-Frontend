@@ -57,13 +57,17 @@ const HintBox = () => {
   const LOADING_SCREEN_SHOW = useSelector(({ verse }: RootState) => verse.edit.uiLayout.loadingScreenShow)
   const EDIT_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.edit.editDialogBox)
   const { isLoading: isQueryLoading, data: sceneBase } = useQuery({
-    queryKey: ['scene'],
+    queryKey: [
+      'scene',
+      sid,
+      { populate: { cover: true, owner: true, collaborators: true, assetList: true, sceneModel: true } }
+    ],
     queryFn: () =>
       axios({
         method: 'GET',
         url: `/api/scenes/${sid}`,
         params: {
-          populate: ['cover', 'owner', 'collaborators', 'assetList', 'sceneModel']
+          populate: { cover: true, owner: true, collaborators: true, assetList: true, sceneModel: true }
         }
       }).then(response => response.data.data as IScene),
     enabled: !!sid,

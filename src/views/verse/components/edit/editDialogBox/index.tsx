@@ -311,7 +311,8 @@ const EditDialogBox = () => {
             borderRadius: '.2rem',
             cursor: ownNft?.attributes?.framePosition ? 'not-allowed' : 'pointer',
             '& video': {
-              objectFit: 'cover'
+              objectFit: 'cover',
+              borderRadius: '.2rem'
             }
           }}
         >

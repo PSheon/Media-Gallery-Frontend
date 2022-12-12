@@ -21,24 +21,41 @@ import MoveControlBox from 'src/views/verse/components/view/MoveControlBox'
 // ** Actions Imports
 import { setWorldInstance } from 'src/store/verse/view/sceneSlice'
 
+// ** Types
+import { IScene } from 'src/types/scene/sceneTypes'
+
+interface Props {
+  sceneBase: IScene
+}
+
 // ** Styled RootBox component
 const StyledRootBox = styled(Box)(() => ({
   width: '100%',
   height: '100%'
 }))
 
-const Book = () => {
+const Book = (props: Props) => {
+  // ** Props
+  const { sceneBase } = props
+
   // ** Hooks
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const world = new World()
+    const world = new World({
+      owner: sceneBase?.attributes?.owner?.data?.attributes?.username || 'Anonymous',
+      displayName: sceneBase?.attributes?.displayName || 'Untitled',
+      description: sceneBase?.attributes?.description || 'Nope',
+      worldScenePaths: sceneBase?.attributes.sceneModel.data?.attributes.worldScenePaths || [],
+      assetList: sceneBase?.attributes.assetList?.data || []
+    })
 
     dispatch(setWorldInstance(world))
 
     return () => {
       world.destroy()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
 
   return (
