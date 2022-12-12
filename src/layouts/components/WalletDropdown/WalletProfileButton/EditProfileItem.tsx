@@ -4,7 +4,6 @@ import { Ref, useState, forwardRef, ReactElement, Fragment } from 'react'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import { styled } from '@mui/material/styles'
 import Dialog from '@mui/material/Dialog'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Button from '@mui/material/Button'
@@ -18,15 +17,17 @@ import DialogActions from '@mui/material/DialogActions'
 import InputAdornment from '@mui/material/InputAdornment'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
+import Badge from '@mui/material/Badge'
+import Avatar from '@mui/material/Avatar'
 
 // ** Components Imports
 // import NftImageList from './NftImageList'
 
-// ** React Query Imports
-import { useMutation } from '@tanstack/react-query'
-
-// ** Axios
+// ** Utils Imports
 import axios from 'axios'
+import { useMutation } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
+import { useFileUpload } from 'use-file-upload'
 
 // ** React Hook Form Imports
 import * as yup from 'yup'
@@ -42,16 +43,6 @@ import apiConfig from 'src/configs/api'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-const ProfilePicture = styled('img')(({ theme }) => ({
-  width: 120,
-  height: 120,
-  borderRadius: theme.shape.borderRadius,
-  border: `5px solid ${theme.palette.common.white}`,
-  [theme.breakpoints.down('md')]: {
-    marginBottom: theme.spacing(4)
-  }
-}))
-
 const schema = yup.object().shape({
   username: yup.string().min(3).required()
 })
@@ -59,7 +50,8 @@ const schema = yup.object().shape({
 interface Props {
   handleDropdownClose: () => void
 }
-interface FormData {
+
+interface UpdateUserFormData {
   username: string
 }
 
@@ -76,8 +68,15 @@ const EditProfileItem = (props: Props) => {
 
   // ** Hooks
   const auth = useAuth()
-  const { mutate, isLoading } = useMutation({
-    mutationFn: (newData: FormData) => axios.patch(`/api/auth/me`, newData),
+  // eslint-disable-next-line
+  const [files, selectFiles] = useFileUpload()
+  const { mutate: updateUser, isLoading: isUpdateUserLoading } = useMutation({
+    mutationFn: (newData: UpdateUserFormData) =>
+      axios({
+        method: 'PUT',
+        url: '/api/auth/me',
+        data: newData
+      }),
     onSuccess: response => {
       auth.setUser({ ...response.data.userData })
     },
@@ -86,6 +85,32 @@ const EditProfileItem = (props: Props) => {
         type: 'manual',
         message: 'Username is invalid'
       })
+    },
+    retry: 0
+  })
+  const { mutate: updateUserAvatar, isLoading: isUpdateUserAvatarLoading } = useMutation({
+    mutationFn: async (newUserAvatarData: FormData) => {
+      const { data: avatarData } = await axios({
+        method: 'post',
+        url: '/api/upload',
+        data: newUserAvatarData
+      })
+      const newAvatarId = avatarData?.[0].id
+
+      return axios({
+        method: 'PUT',
+        url: '/api/auth/me',
+        data: {
+          avatarId: newAvatarId
+        }
+      })
+    },
+    onSuccess: response => {
+      auth.setUser({ ...response.data.userData })
+      toast.success('Update avatar success')
+    },
+    onError: () => {
+      toast.error('Update avatar failed')
     },
     retry: 0
   })
@@ -129,8 +154,16 @@ const EditProfileItem = (props: Props) => {
     setShow(false)
     handleDropdownClose()
   }
-  const onSubmit = (newData: FormData) => {
-    mutate(newData)
+  const handleChangeUserAvatarPhoto = () => {
+    // @ts-ignore
+    selectFiles({ accept: 'image/*', multiple: false }, async ({ file }) => {
+      const updateUserAvatarFormData = new FormData()
+      updateUserAvatarFormData.append('files', file)
+      updateUserAvatar(updateUserAvatarFormData)
+    })
+  }
+  const onSubmit = (newData: UpdateUserFormData) => {
+    updateUser(newData)
   }
 
   return (
@@ -149,7 +182,6 @@ const EditProfileItem = (props: Props) => {
         scroll='body'
         onClose={handleCloseDialog}
         TransitionComponent={Transition}
-        onBackdropClick={handleCloseDialog}
       >
         <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
           <DialogContent sx={{ pb: 6, px: { xs: 8, sm: 15 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }}>
@@ -170,14 +202,44 @@ const EditProfileItem = (props: Props) => {
             <Grid container spacing={6}>
               <Grid item xs={12}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-                  <ProfilePicture
-                    src={
-                      auth.user.avatar
-                        ? `${apiConfig.publicFolderUrl}${auth.user.avatar as string}`
-                        : '/images/avatars/1.png'
+                  <Badge
+                    onClick={handleChangeUserAvatarPhoto}
+                    overlap='circular'
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right'
+                    }}
+                    badgeContent={
+                      <Box
+                        sx={{
+                          width: 20,
+                          height: 20,
+                          borderRadius: '50%',
+                          backgroundColor: theme => theme.palette.background.default,
+                          boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}`,
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <Icon
+                          icon={isUpdateUserAvatarLoading ? 'line-md:loading-twotone-loop' : 'material-symbols:edit'}
+                          fontSize={16}
+                        />
+                      </Box>
                     }
-                    alt='profile picture'
-                  />
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    <Avatar
+                      src={
+                        auth.user.avatar
+                          ? `${apiConfig.publicFolderUrl}${auth.user.avatar as string}`
+                          : '/images/avatars/1.png'
+                      }
+                      alt='profile picture'
+                      sx={{ width: 80, height: 80 }}
+                    />
+                  </Badge>
                 </Box>
                 {/* <NftImageList /> */}
               </Grid>
@@ -213,7 +275,7 @@ const EditProfileItem = (props: Props) => {
             <Button variant='outlined' color='secondary' onClick={() => setShow(false)} sx={{ mr: 2 }}>
               Discard
             </Button>
-            <LoadingButton loading={isLoading} variant='contained' type='submit'>
+            <LoadingButton loading={isUpdateUserLoading} variant='contained' type='submit'>
               Submit
             </LoadingButton>
           </DialogActions>

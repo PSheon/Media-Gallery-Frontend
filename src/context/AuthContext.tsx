@@ -56,8 +56,8 @@ const AuthProvider = ({ children }: Props) => {
 
         // .get(authConfig.meEndpoint, {
         await axios({
-          method: 'POST',
-          url: `/api/auth/me`,
+          method: 'GET',
+          url: '/api/auth/me',
           headers: {
             Authorization: `Bearer ${storedToken}`
           }
