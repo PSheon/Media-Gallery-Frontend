@@ -1,4 +1,4 @@
-import { IAsset } from 'src/types/scene/assetTypes'
+import { IAsset } from 'src/types/assetTypes'
 
 export interface IWorldMetadata {
   owner: string

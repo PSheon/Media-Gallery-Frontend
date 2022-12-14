@@ -5,7 +5,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import GifLoader from 'three-gif-loader'
 import { TrimeshCollider } from 'src/views/verse/book/physics/colliders/TrimeshCollider'
 import { World } from 'src/views/verse/book/world/World'
-import { IAsset } from 'src/types/scene/assetTypes'
+import { IAsset } from 'src/types/assetTypes'
 
 import apiConfig from 'src/configs/api'
 

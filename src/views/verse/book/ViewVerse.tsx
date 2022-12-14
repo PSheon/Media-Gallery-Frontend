@@ -22,7 +22,7 @@ import MoveControlBox from 'src/views/verse/components/view/MoveControlBox'
 import { setWorldInstance } from 'src/store/verse/view/sceneSlice'
 
 // ** Types
-import { IScene } from 'src/types/scene/sceneTypes'
+import { IScene } from 'src/types/sceneTypes'
 
 interface Props {
   sceneBase: IScene

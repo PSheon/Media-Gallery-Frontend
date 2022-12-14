@@ -18,7 +18,7 @@ import Icon from 'src/@core/components/icon'
 import apiConfig from 'src/configs/api'
 
 // ** Types
-import { IScene } from 'src/types/scene/sceneTypes'
+import { IScene } from 'src/types/sceneTypes'
 
 const ITEM_HEIGHT = 48
 
