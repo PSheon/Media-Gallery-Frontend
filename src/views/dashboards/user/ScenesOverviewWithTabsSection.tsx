@@ -97,7 +97,7 @@ const ScenesOverviewWithTabsSection = () => {
 
   const RenderTabContent = ({ assetList = [] }: { assetList: IAsset[] }) => {
     return (
-      <TableContainer sx={{ height: '20rem' }}>
+      <TableContainer sx={{ height: '15rem' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow sx={{ '& .MuiTableCell-root': { py: theme => `${theme.spacing(2.5)} !important` } }}>
@@ -108,65 +108,63 @@ const ScenesOverviewWithTabsSection = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {assetList.map(asset => {
-              return (
-                <TableRow
-                  key={`own-scene-asset-list-${asset.id}`}
-                  sx={{
-                    '& .MuiTableCell-root': {
-                      border: 0,
-                      py: theme => `${theme.spacing(1.5)} !important`
-                    },
-                    '&:first-child .MuiTableCell-body': {
-                      pt: theme => `${theme.spacing(3)} !important`
-                    },
-                    '&:last-child .MuiTableCell-body': {
-                      pb: theme => `${theme.spacing(3)} !important`
-                    }
-                  }}
-                >
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Box>
-                        <Avatar
-                          src={`${apiConfig.publicFolderUrl}${asset?.attributes?.cover?.data?.attributes.url}`}
-                          alt={asset?.attributes.displayName}
-                          sx={{
-                            width: '4.5rem',
-                            height: '2.4rem',
-                            borderRadius: '.2rem',
-                            boxShadow: theme => theme.shadows[9]
-                          }}
-                        />
-                      </Box>
-                      <Box sx={{ display: 'flex', ml: 4, mr: 2, flexDirection: 'column' }}>
-                        <Typography sx={{ fontWeight: 600 }} color='common.white' noWrap>
-                          {asset?.attributes.displayName || 'Untitled'}
-                        </Typography>
-                        <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }} noWrap>
-                          {asset?.attributes.description || 'no description'}
-                        </Typography>
-                      </Box>
+            {assetList.map(asset => (
+              <TableRow
+                key={`own-scene-asset-list-${asset.id}`}
+                sx={{
+                  '& .MuiTableCell-root': {
+                    border: 0,
+                    py: theme => `${theme.spacing(1.5)} !important`
+                  },
+                  '&:first-child .MuiTableCell-body': {
+                    pt: theme => `${theme.spacing(3)} !important`
+                  },
+                  '&:last-child .MuiTableCell-body': {
+                    pb: theme => `${theme.spacing(3)} !important`
+                  }
+                }}
+              >
+                <TableCell>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box>
+                      <Avatar
+                        src={`${apiConfig.publicFolderUrl}${asset?.attributes?.cover?.data?.attributes.url}`}
+                        alt={asset?.attributes.displayName}
+                        sx={{
+                          width: '4.5rem',
+                          height: '2.4rem',
+                          borderRadius: '.2rem',
+                          boxShadow: theme => theme.shadows[9]
+                        }}
+                      />
                     </Box>
-                  </TableCell>
-                  <TableCell align='center'>
-                    <Typography variant='body2' sx={{ fontWeight: 600, whiteSpace: 'nowrap', color: 'text.primary' }}>
-                      {asset?.attributes.type}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align='right'>{asset?.attributes.views}</TableCell>
-                  <TableCell align='right'>
-                    <CustomChip
-                      skin='light'
-                      size='small'
-                      label='active'
-                      color='primary'
-                      sx={{ height: 20, fontWeight: 500, '& .MuiChip-label': { px: 1.625, lineHeight: 1.539 } }}
-                    />
-                  </TableCell>
-                </TableRow>
-              )
-            })}
+                    <Box sx={{ display: 'flex', ml: 4, mr: 2, flexDirection: 'column' }}>
+                      <Typography sx={{ fontWeight: 600 }} color='common.white' noWrap>
+                        {asset?.attributes.displayName || 'Untitled'}
+                      </Typography>
+                      <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }} noWrap>
+                        {asset?.attributes.description || 'no description'}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </TableCell>
+                <TableCell align='center'>
+                  <Typography variant='body2' sx={{ fontWeight: 600, whiteSpace: 'nowrap', color: 'text.primary' }}>
+                    {asset?.attributes.type}
+                  </Typography>
+                </TableCell>
+                <TableCell align='right'>{asset?.attributes.views}</TableCell>
+                <TableCell align='right'>
+                  <CustomChip
+                    skin='light'
+                    size='small'
+                    label='active'
+                    color='primary'
+                    sx={{ height: 20, fontWeight: 500, '& .MuiChip-label': { px: 1.625, lineHeight: 1.539 } }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -198,16 +196,14 @@ const ScenesOverviewWithTabsSection = () => {
             '& .MuiTabs-indicator': { display: 'none' }
           }}
         >
-          {ownSceneList.map(ownScene => {
-            return (
-              <Tab
-                key={`own-scene-${ownScene.id}`}
-                value={`own-scene-${ownScene.id}`}
-                sx={{ p: 0 }}
-                label={<RenderTabCover sceneBase={ownScene} />}
-              />
-            )
-          })}
+          {ownSceneList.map(ownScene => (
+            <Tab
+              key={`own-scene-${ownScene.id}`}
+              value={`own-scene-${ownScene.id}`}
+              sx={{ p: 0 }}
+              label={<RenderTabCover sceneBase={ownScene} />}
+            />
+          ))}
           <Tab
             disabled={ownSceneList.length >= 3}
             value='default'
@@ -244,57 +240,35 @@ const ScenesOverviewWithTabsSection = () => {
           />
         </TabList>
 
-        {ownSceneList.map(ownScene => {
-          return (
-            <TabPanel
-              key={`own-scene-asset-${ownScene.id}`}
-              sx={{ p: 0, display: 'flex', flexDirection: 'column' }}
-              value={`own-scene-${ownScene.id}`}
+        {ownSceneList.map(ownScene => (
+          <TabPanel
+            key={`own-scene-asset-${ownScene.id}`}
+            sx={{ p: 0, display: 'flex', flexDirection: 'column' }}
+            value={`own-scene-${ownScene.id}`}
+          >
+            <RenderTabContent assetList={ownScene.attributes.assetList.data!} />
+            <Box
+              sx={{
+                p: 4,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
             >
-              <RenderTabContent assetList={ownScene.attributes.assetList.data!} />
-              <Box
-                sx={{
-                  p: 4,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}
-              >
-                <Box>
-                  <Button variant='outlined' disabled>
-                    View scene
-                  </Button>
-                </Box>
-                <Box>
-                  <Button variant='contained' onClick={() => handleRedirectToSceneEdit(ownScene.id)}>
-                    Edit scene
-                  </Button>
-                </Box>
+              <Box>
+                <Button variant='outlined' disabled>
+                  View scene
+                </Button>
               </Box>
-            </TabPanel>
-          )
-        })}
-        <TabPanel sx={{ p: 4 }} value='create'>
-          <CardContent sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
-            <CustomAvatar skin='light' sx={{ width: 56, height: 56, mb: 2 }}>
-              <Icon icon='mdi:help-circle-outline' fontSize='2rem' />
-            </CustomAvatar>
-            <Typography variant='h6' sx={{ mb: 2 }}>
-              Scene
-            </Typography>
-            <Typography variant='body2' sx={{ mb: 6.5 }}>
-              CCreate the scene you'll use to show your NFTs.
-            </Typography>
-            <Button
-              onClick={() => router.push('/verse/create')}
-              variant='contained'
-              sx={{ p: theme => theme.spacing(1.75, 5.5) }}
-            >
-              Create new
-            </Button>
-          </CardContent>
-        </TabPanel>
-        <TabPanel sx={{ p: 4 }} value='default'>
+              <Box>
+                <Button variant='contained' onClick={() => handleRedirectToSceneEdit(ownScene.id)}>
+                  Edit scene
+                </Button>
+              </Box>
+            </Box>
+          </TabPanel>
+        ))}
+        <TabPanel value='default'>
           <CardContent sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
             <CustomAvatar skin='light' sx={{ width: 56, height: 56, mb: 2 }}>
               <Icon icon='file-icons:3d-model' fontSize='2rem' />
@@ -305,6 +279,15 @@ const ScenesOverviewWithTabsSection = () => {
             <Typography variant='body2' sx={{ mb: 6.5 }}>
               Select scene to view your assets.
             </Typography>
+            {ownSceneList.length < 3 && (
+              <Button
+                onClick={() => router.push('/verse/create')}
+                variant='contained'
+                sx={{ p: theme => theme.spacing(1.75, 5.5) }}
+              >
+                Create new
+              </Button>
+            )}
           </CardContent>
         </TabPanel>
       </TabContext>
