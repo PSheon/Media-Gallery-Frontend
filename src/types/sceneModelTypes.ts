@@ -11,6 +11,11 @@ export type FetchSceneParamsType = {
   locale?: string[]
 }
 
+export interface GetMeSceneModelResponse {
+  data: ISceneModel[]
+  meta: {}
+}
+
 export type ISceneModel = {
   id: number
   attributes: {

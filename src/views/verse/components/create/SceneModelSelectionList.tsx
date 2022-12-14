@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
+import Alert from '@mui/material/Alert'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Tab from '@mui/material/Tab'
 import TabPanel from '@mui/lab/TabPanel'
@@ -18,10 +19,13 @@ import MuiTabList, { TabListProps } from '@mui/lab/TabList'
 import Skeleton from '@mui/material/Skeleton'
 
 // ** React Query Imports
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
+
+// ** Services Imports
+import { useSceneModelsQuery } from 'src/services/queries/sceneModel.query'
 
 // ** Utils Imports
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
 
 // ** Icon Imports
@@ -33,9 +37,6 @@ import SceneModelCard from 'src/views/verse/components/create/SceneModelCard'
 
 // ** Config
 import apiConfig from 'src/configs/api'
-
-// ** Types Imports
-import { ISceneModel } from 'src/types/scene/sceneModelTypes'
 
 interface FormData {
   selectedSceneModelId: number
@@ -84,33 +85,24 @@ const SceneModelSelectionList = () => {
   const router = useRouter()
   const {
     isLoading: isQueryLoading,
-
-    // isError: isQueryError,
-    data: sceneModels
-
-    // error: queryError
-  } = useQuery({
-    queryKey: ['scene-model-list'],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: '/api/scene-models',
-        params: {
-          populate: '*'
-        }
-      }).then(response => response.data.data as ISceneModel[]),
-    retry: 0
-  })
+    isError: isQueryError,
+    data: sceneModels = [],
+    error: queryError
+  } = useSceneModelsQuery()
   const { mutate: createScene, isLoading: isCreateSceneLoading } = useMutation({
-    mutationFn: (newData: FormData) => axios.post(`/api/scene`, newData),
+    mutationFn: (newData: FormData) =>
+      axios({
+        method: 'POST',
+        url: '/api/scenes',
+        data: newData
+      }),
     onSuccess: response => {
       const newSceneId = response.data.createdSceneId
       router.replace(`/verse/edit/${newSceneId}`)
     },
     onError: () => {
       toast.error('Create scene failed.')
-    },
-    retry: 0
+    }
   })
 
   // ** States
@@ -184,6 +176,12 @@ const SceneModelSelectionList = () => {
             </Box>
 
             <Grid container spacing={4} sx={{ mt: 4 }}>
+              {isQueryError && (
+                <Grid item xs={12}>
+                  <Alert severity='warning'>{(queryError as AxiosError).message}</Alert>
+                </Grid>
+              )}
+
               {isQueryLoading &&
                 [...Array(6).keys()].map(sIndex => (
                   <Grid key={`scene-models-skeleton-${sIndex}`} item xs={12} sm={6}>
@@ -191,28 +189,26 @@ const SceneModelSelectionList = () => {
                   </Grid>
                 ))}
 
-              {sceneModels?.map(sceneModel => {
-                return (
-                  <Grid item key={`scene-model-${sceneModel.id}`} xs={12} sm={6}>
-                    <SceneModelCard
-                      id={sceneModel.id}
-                      coverURL={
-                        sceneModel.attributes.cover?.data?.attributes.url
-                          ? `${apiConfig.publicFolderUrl}${sceneModel.attributes.cover.data.attributes.url}`
-                          : '/images/avatars/5.png'
-                      }
-                      displayName={sceneModel.attributes?.displayName}
-                      tagIcon={sceneModel.attributes?.tagIcon}
-                      tagTitle={sceneModel.attributes?.tagTitle}
-                      frameCount={sceneModel.attributes.frameCount}
-                      published={sceneModel.attributes.published}
-                      creatorName={sceneModel.attributes.creator?.data?.attributes.username}
-                      selectedSceneModelId={selectedSceneModelId}
-                      handleChange={handleSceneModelChange}
-                    />
-                  </Grid>
-                )
-              })}
+              {sceneModels.map(sceneModel => (
+                <Grid item key={`scene-model-${sceneModel.id}`} xs={12} sm={6}>
+                  <SceneModelCard
+                    id={sceneModel.id}
+                    coverURL={
+                      sceneModel.attributes.cover?.data?.attributes.url
+                        ? `${apiConfig.publicFolderUrl}${sceneModel.attributes.cover.data.attributes.url}`
+                        : '/images/avatars/5.png'
+                    }
+                    displayName={sceneModel.attributes?.displayName}
+                    tagIcon={sceneModel.attributes?.tagIcon}
+                    tagTitle={sceneModel.attributes?.tagTitle}
+                    frameCount={sceneModel.attributes.frameCount}
+                    published={sceneModel.attributes.published}
+                    creatorName={sceneModel.attributes.creator?.data?.attributes.username}
+                    selectedSceneModelId={selectedSceneModelId}
+                    handleChange={handleSceneModelChange}
+                  />
+                </Grid>
+              ))}
             </Grid>
           </Box>
         </TabPanel>
