@@ -2,9 +2,12 @@
 import { useQuery } from '@tanstack/react-query'
 
 // ** Services Imports
-import { getMeScenes } from 'src/services/api/scene.service'
+import { getMeScenes, getScene } from 'src/services/api/scene.service'
 
 // ** Types Imports
-import type { IScene } from 'src/types/sceneTypes'
+import type { GetSceneProps, IScene } from 'src/types/sceneTypes'
 
 export const useMeScenesQuery = () => useQuery<IScene[]>(['scenes', 'me'], () => getMeScenes())
+
+export const useSceneQuery = (params: GetSceneProps) =>
+  useQuery<IScene>(['scenes', params.sid], () => getScene(params), { enabled: !!params.sid })

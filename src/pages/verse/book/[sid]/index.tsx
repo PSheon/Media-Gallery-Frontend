@@ -9,50 +9,22 @@ import { useRouter } from 'next/router'
 import Spinner from 'src/layouts/components/spinner'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
+// ** Services Imports
+import { useSceneQuery } from 'src/services/queries/scene.query'
+
 // ** Utils Imports
-import axios from 'axios'
 import toast from 'react-hot-toast'
-import { useQuery } from '@tanstack/react-query'
 import { useHMSActions } from '@100mslive/react-sdk'
 
 // ** View Book Import
 const ViewSketchbook = dynamic(() => import('src/views/verse/book/ViewVerse'), { ssr: false })
-
-// ** Types
-import { IScene } from 'src/types/scene/sceneTypes'
 
 function ViewVersePage() {
   // ** Hooks
   const router = useRouter()
   const { sid } = router.query
   const hmsActions = useHMSActions()
-  const {
-    isLoading: isQueryLoading,
-    data: sceneBase,
-    isError: isQueryError
-  } = useQuery({
-    queryKey: ['scene_assetList'],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/scenes/${sid}`,
-        params: {
-          populate: {
-            cover: true,
-            owner: true,
-            collaborators: true,
-            assetList: {
-              populate: {
-                cover: true
-              }
-            },
-            sceneModel: true
-          }
-        }
-      }).then(response => response.data.data as IScene),
-    enabled: !!sid,
-    retry: 0
-  })
+  const { isLoading: isQueryLoading, data: sceneBase, isError: isQueryError } = useSceneQuery({ sid: sid as string })
 
   // ** Side Effect
   useEffect(() => {
