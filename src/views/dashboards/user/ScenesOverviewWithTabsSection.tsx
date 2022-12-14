@@ -25,9 +25,8 @@ import TableContainer from '@mui/material/TableContainer'
 import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 
-// ** Utils Imports
-import axios from 'axios'
-import { useQuery } from '@tanstack/react-query'
+// ** Services Imports
+import { useMeScenesQuery } from 'src/services/queries/dashboard/scene.query'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -43,9 +42,6 @@ import OptionsMenu from 'src/@core/components/option-menu'
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
-// ** Hooks
-import { useAuth } from 'src/hooks/useAuth'
-
 // ** Types
 // import { ThemeColor } from 'src/@core/layouts/types'
 import { IAsset } from 'src/types/scene/assetTypes'
@@ -53,30 +49,8 @@ import { IScene } from 'src/types/scene/sceneTypes'
 
 const ScenesOverviewWithTabsSection = () => {
   // ** Hooks
-  const auth = useAuth()
   const router = useRouter()
-  const { isLoading: isQueryLoading, data: ownSceneList = [] } = useQuery({
-    queryKey: ['own-scene-list'],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/scenes/`,
-        params: {
-          filter: {
-            owner: auth.user.id!
-          },
-          populate: {
-            cover: true,
-            assetList: {
-              populate: {
-                cover: true
-              }
-            }
-          }
-        }
-      }).then(response => response.data.data as IScene[]),
-    retry: 0
-  })
+  const { isLoading: isQueryLoading, data: ownSceneList = [] } = useMeScenesQuery()
 
   // ** State
   const [tabValue, setTabValue] = useState<string>('default')

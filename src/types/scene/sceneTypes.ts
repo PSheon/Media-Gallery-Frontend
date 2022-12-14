@@ -2,6 +2,11 @@ import { IUser } from 'src/types/scene/userTypes'
 import { IAsset } from 'src/types/scene/assetTypes'
 import { ISceneModel } from 'src/types/scene/sceneModelTypes'
 
+export interface GetMeAccessesResponse {
+  data: IScene[]
+  meta: {}
+}
+
 export type IScene = {
   id: number
   attributes: {
