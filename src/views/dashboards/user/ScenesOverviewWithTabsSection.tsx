@@ -44,7 +44,7 @@ import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
 // ** Types
 // import { ThemeColor } from 'src/@core/layouts/types'
-import { IAsset } from 'src/types/assetTypes'
+import { ISceneAsset } from 'src/types/sceneAssetTypes'
 import { IScene } from 'src/types/sceneTypes'
 
 const ScenesOverviewWithTabsSection = () => {
@@ -95,7 +95,7 @@ const ScenesOverviewWithTabsSection = () => {
       </Box>
     )
 
-  const RenderTabContent = ({ assetList = [] }: { assetList: IAsset[] }) => {
+  const RenderTabContent = ({ assetList = [] }: { assetList: ISceneAsset[] }) => {
     return (
       <TableContainer sx={{ height: '15rem' }}>
         <Table stickyHeader>

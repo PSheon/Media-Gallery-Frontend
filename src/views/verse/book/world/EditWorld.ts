@@ -21,7 +21,7 @@ import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { LoadingManager } from 'src/views/verse/book/core/edit/LoadingManager'
 import { UIManager } from 'src/views/verse/book/core/edit/UIManager'
 import { IWorldMetadata } from 'src/views/verse/book/interfaces/IWorldMetadata'
-import { IAsset } from 'src/types/assetTypes'
+import { ISceneAsset } from 'src/types/sceneAssetTypes'
 import { IWorldEntity } from 'src/views/verse/book/interfaces/edit/IWorldEntity'
 import { IUpdatable } from 'src/views/verse/book/interfaces/IUpdatable'
 import { IParams } from 'src/views/verse/book/interfaces/IParams'
@@ -532,7 +532,7 @@ export class World {
     this.renderer.domElement.id = 'canvas'
   }
 
-  public updateAssetFrame(framePosition: string, newAssetMetadata: IAsset) {
+  public updateAssetFrame(framePosition: string, newAssetMetadata: ISceneAsset) {
     const selectedNft = this.nfts.find(nft => nft.position === framePosition)
     if (selectedNft) {
       const isDelete = newAssetMetadata['attributes'].framePosition === null

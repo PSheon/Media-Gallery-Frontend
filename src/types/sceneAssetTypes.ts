@@ -1,6 +1,16 @@
+// ** Types Imports
 import { IScene } from 'src/types/sceneTypes'
 
-export type IAsset = {
+export interface GetMeSceneAssetsProps {
+  chain: string
+}
+
+export interface GetMeSceneAssetsResponse {
+  data: ISceneAsset[]
+  meta: {}
+}
+
+export type ISceneAsset = {
   id: number
   attributes: {
     type: string

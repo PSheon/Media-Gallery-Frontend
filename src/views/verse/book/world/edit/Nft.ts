@@ -5,7 +5,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import GifLoader from 'three-gif-loader'
 import { TrimeshCollider } from 'src/views/verse/book/physics/colliders/TrimeshCollider'
 import { World } from 'src/views/verse/book/world/EditWorld'
-import { IAsset } from 'src/types/assetTypes'
+import { ISceneAsset } from 'src/types/sceneAssetTypes'
 
 import apiConfig from 'src/configs/api'
 
@@ -15,7 +15,7 @@ export class Nft {
   public position = ''
 
   private world: World
-  private assetData: IAsset['attributes']
+  private assetData: ISceneAsset['attributes']
   private dracoLoader: DRACOLoader
   private gltfLoader: GLTFLoader
   private gifLoader: GifLoader
@@ -57,7 +57,7 @@ export class Nft {
       fetchStatus: 'fetching',
       fetchAttemptCount: 0,
       published: true
-    } as IAsset['attributes']
+    } as ISceneAsset['attributes']
 
     const currentPlacedAsset = world.metadata.assetList.find(
       assetData => assetData?.attributes.framePosition === this.position
@@ -151,7 +151,7 @@ export class Nft {
     }
   }
 
-  update(newAssetFrameMetadata: IAsset['attributes']) {
+  update(newAssetFrameMetadata: ISceneAsset['attributes']) {
     if (
       newAssetFrameMetadata.coverFileType === 'png' ||
       newAssetFrameMetadata.coverFileType === 'jpg' ||
@@ -246,7 +246,7 @@ export class Nft {
       fetchStatus: 'fetching',
       fetchAttemptCount: 0,
       published: true
-    } as IAsset['attributes']
+    } as ISceneAsset['attributes']
 
     this.assetData = Object.assign(BASE_ASSET_DATA, {})
     const texture = this.textureLoader.load('/images/verse/add-asset.jpg')

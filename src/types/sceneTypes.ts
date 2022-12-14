@@ -1,5 +1,6 @@
+// ** Types Imports
 import { IUser } from 'src/types/userTypes'
-import { IAsset } from 'src/types/assetTypes'
+import { ISceneAsset } from 'src/types/sceneAssetTypes'
 import { ISceneModel } from 'src/types/sceneModelTypes'
 
 export interface GetSceneProps {
@@ -37,7 +38,7 @@ export type IScene = {
       data?: IUser[]
     }
     assetList: {
-      data?: IAsset[]
+      data?: ISceneAsset[]
     }
     sceneModel: {
       data?: ISceneModel
