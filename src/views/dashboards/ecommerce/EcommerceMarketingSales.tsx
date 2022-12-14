@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 
-// ** Third Party Components
+// ** Utils Imports
 import clsx from 'clsx'
 import { useKeenSlider } from 'keen-slider/react'
 
