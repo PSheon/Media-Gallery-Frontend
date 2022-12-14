@@ -9,7 +9,7 @@ import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Fade from '@mui/material/Fade'
 import List from '@mui/material/List'
-import Paper from '@mui/material/Paper'
+import Paper, { PaperProps } from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import { styled, useTheme } from '@mui/material/styles'
@@ -56,7 +56,7 @@ const ListItem = styled(MuiListItem)<ListItemProps>(({ theme }) => ({
   }
 }))
 
-const NavigationMenu = styled(Paper)(({ theme }) => ({
+const NavigationMenu = styled(Paper)<PaperProps>(({ theme }) => ({
   overflowY: 'auto',
   padding: theme.spacing(2, 0),
   backgroundColor: theme.palette.background.paper,

@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 
 // ** Mui Imports
 import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
+import Box, { BoxProps } from '@mui/material/Box'
 
 // ** Book Imports
 import { World } from 'src/views/verse/book/world/World'
@@ -29,7 +29,7 @@ interface Props {
 }
 
 // ** Styled RootBox component
-const StyledRootBox = styled(Box)(() => ({
+const StyledRootBox = styled(Box)<BoxProps>(() => ({
   width: '100%',
   height: '100%'
 }))

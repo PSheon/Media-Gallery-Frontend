@@ -16,10 +16,10 @@ import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Badge from '@mui/material/Badge'
 import Grid from '@mui/material/Grid'
-import Dialog from '@mui/material/Dialog'
+import Dialog, { DialogProps } from '@mui/material/Dialog'
 import Typography from '@mui/material/Typography'
 import Fade, { FadeProps } from '@mui/material/Fade'
-import DialogContent from '@mui/material/DialogContent'
+import DialogContent, { DialogContentProps } from '@mui/material/DialogContent'
 
 // ** Services Imports
 import { useSceneQuery } from 'src/services/queries/scene.query'
@@ -54,12 +54,12 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
   backgroundColor: theme.palette.success.main,
   boxShadow: `0 0 0 2px ${theme.palette.background.paper}`
 }))
-const StyledDialog = styled(Dialog)(() => ({
+const StyledDialog = styled(Dialog)<DialogProps>(() => ({
   '& .MuiDialog-paper': {
     background: 'transparent'
   }
 }))
-const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
+const StyledDialogContent = styled(DialogContent)<DialogContentProps>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',

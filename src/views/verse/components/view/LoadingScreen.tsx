@@ -4,15 +4,15 @@ import { useSelector } from 'react-redux'
 // ** MUI Imports
 import { styled } from '@mui/material/styles'
 import Avatar from '@mui/material/Avatar'
-import Box from '@mui/material/Box'
+import Box, { BoxProps } from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress'
+import LinearProgress, { LinearProgressProps, linearProgressClasses } from '@mui/material/LinearProgress'
 
 // ** Types
 import { RootState } from 'src/store'
 
 // ** Styled RootBox Components
-const RootBox = styled(Box)(({ theme }) => ({
+const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
   position: 'absolute',
   display: 'flex',
   justifyContent: 'center',
@@ -24,7 +24,7 @@ const RootBox = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)'
 }))
 
-const BackgroundStarWarp = styled(Box)(({ theme }) => ({
+const BackgroundStarWarp = styled(Box)<BoxProps>(({ theme }) => ({
   top: '50%',
   left: '50%',
   height: '1px',
@@ -94,7 +94,7 @@ const BackgroundStarWarp = styled(Box)(({ theme }) => ({
   }
 }))
 
-const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+const BorderLinearProgress = styled(LinearProgress)<LinearProgressProps>(({ theme }) => ({
   height: 10,
   borderRadius: 5,
   boxShadow: theme.shadows[3],

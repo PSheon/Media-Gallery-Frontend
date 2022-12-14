@@ -6,9 +6,9 @@ import { useSelector } from 'react-redux'
 
 // ** MUI Imports
 import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
+import Box, { BoxProps } from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
+import TextField, { TextFieldProps } from '@mui/material/TextField'
 
 // ** Utils Imports
 import { useHMSActions, selectIsConnectedToRoom, selectPeers, useHMSStore } from '@100mslive/react-sdk'
@@ -17,7 +17,7 @@ import { useHMSActions, selectIsConnectedToRoom, selectPeers, useHMSStore } from
 import { RootState } from 'src/store'
 
 // ** Styled Components
-const ChatFormWrapper = styled(Box)(({ theme }) => ({
+const ChatFormWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   height: '100%',
   display: 'flex',
   alignItems: 'center',
@@ -34,7 +34,7 @@ const ChatFormWrapper = styled(Box)(({ theme }) => ({
 }))
 
 // ** StyledTextField Components
-const StyledTextField = styled(TextField)(() => ({
+const StyledTextField = styled(TextField)<TextFieldProps>(() => ({
   '& .MuiOutlinedInput-input': {
     paddingLeft: 0
   },

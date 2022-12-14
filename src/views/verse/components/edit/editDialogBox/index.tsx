@@ -15,7 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import Dialog from '@mui/material/Dialog'
+import Dialog, { DialogProps } from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Skeleton from '@mui/material/Skeleton'
 
@@ -53,7 +53,7 @@ interface FormData {
 }
 
 // ** Styled StyledRootDialog component
-const StyledRootDialog = styled(Dialog)(({ theme }) => ({
+const StyledRootDialog = styled(Dialog)<DialogProps>(({ theme }) => ({
   '& .MuiDialog-container': {
     display: 'flex',
     justifyContent: 'flex-start',

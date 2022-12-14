@@ -11,7 +11,7 @@ import Box from '@mui/material/Box'
 import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
-import Dialog from '@mui/material/Dialog'
+import Dialog, { DialogProps } from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
@@ -35,8 +35,8 @@ import apiConfig from 'src/configs/api'
 import { RootState } from 'src/store'
 import { ISceneAsset } from 'src/types/sceneAssetTypes'
 
-// Styled StyledRootDialog component
-const StyledRootDialog = styled(Dialog)(({ theme }) => ({
+// ** Styled StyledRootDialog component
+const StyledRootDialog = styled(Dialog)<DialogProps>(({ theme }) => ({
   '& .MuiDialog-container': {
     display: 'flex',
     flexDirection: 'column',

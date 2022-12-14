@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled } from '@mui/material/styles'
 import { Theme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
+import Box, { BoxProps } from '@mui/material/Box'
+import Card, { CardProps } from '@mui/material/Card'
 
 // ** Custom Components
 import MessageListBox from 'src/views/verse/components/view/settingPanel/leftSection/MessageListBox'
@@ -18,7 +18,7 @@ import RightSection from 'src/views/verse/components/view/settingPanel/rightSect
 import { RootState } from 'src/store'
 
 // ** Styled RootBox component
-const RootBox = styled(Box)(({ theme }) => ({
+const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
   position: 'fixed',
   left: 0,
   bottom: 0,
@@ -28,7 +28,7 @@ const RootBox = styled(Box)(({ theme }) => ({
 }))
 
 // ** Styled PanelCard component
-const PanelCard = styled(Card)(({ theme }) => ({
+const PanelCard = styled(Card)<CardProps>(({ theme }) => ({
   width: '100%',
   height: '100%',
   backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)',

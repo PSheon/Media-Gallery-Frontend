@@ -1,7 +1,7 @@
 // ** MUI Imports
 import { styled } from '@mui/material/styles'
 import Avatar from '@mui/material/Avatar'
-import Box from '@mui/material/Box'
+import Box, { BoxProps } from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 
@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import { useHMSStore, selectIsConnectedToRoom, selectHMSMessages } from '@100mslive/react-sdk'
 
 // ** Styled RootBox component
-const RootBox = styled(Box)(({ theme }) => ({
+const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
   width: '30ch',
   height: '100%',
   maxHeight: '30ch',

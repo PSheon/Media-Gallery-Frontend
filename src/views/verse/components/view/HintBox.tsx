@@ -10,8 +10,8 @@ import { Theme } from '@mui/material/styles'
 import { styled } from '@mui/material/styles'
 import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
+import Box, { BoxProps } from '@mui/material/Box'
+import Card, { CardProps } from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 
 // ** Services Imports
@@ -24,7 +24,7 @@ import { showViewDialogBox } from 'src/store/verse/view/viewDialogBoxSlice'
 import { RootState } from 'src/store'
 
 // ** Styled RootBox component
-const RootBox = styled(Box)(({ theme }) => ({
+const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
   position: 'fixed',
   margin: theme.spacing(2),
   backgroundColor: 'transparent',
@@ -32,7 +32,7 @@ const RootBox = styled(Box)(({ theme }) => ({
 }))
 
 // ** Styled PanelCard component
-const PanelCard = styled(Card)(({ theme }) => ({
+const PanelCard = styled(Card)<CardProps>(({ theme }) => ({
   width: 'fit-content',
   minWidth: '10rem',
   padding: theme.spacing(1, 3),

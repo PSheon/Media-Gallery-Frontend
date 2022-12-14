@@ -8,8 +8,8 @@ import Link from 'next/link'
 import Avatar from '@mui/material/Avatar'
 import Badge from '@mui/material/Badge'
 import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
+import Box, { BoxProps } from '@mui/material/Box'
+import Card, { CardProps } from '@mui/material/Card'
 import { styled } from '@mui/material/styles'
 
 // ** Hooks
@@ -25,7 +25,7 @@ import apiConfig from 'src/configs/api'
 import { RootState } from 'src/store'
 
 // ** Styled RootBox Components
-const RootBox = styled(Box)(({ theme }) => ({
+const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
   position: 'absolute',
   paddingTop: theme.spacing(4),
   paddingLeft: theme.spacing(4),
@@ -44,7 +44,7 @@ const StyledLink = styled(Link)({
 })
 
 // ** Styled PanelCard component
-const PanelCard = styled(Card)(({ theme }) => ({
+const PanelCard = styled(Card)<CardProps>(({ theme }) => ({
   width: 'fit-content',
   height: 'fit-content',
   padding: 4,

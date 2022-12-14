@@ -13,7 +13,7 @@ const CustomButton = styled(Button)<ButtonProps>(({ theme }) => ({
 }))
 
 // Styled component for a Bootstrap button
-const BootstrapButton = styled(Button)({
+const BootstrapButton = styled(Button)<ButtonProps>({
   fontSize: 16,
   lineHeight: 1.5,
   boxShadow: 'none',

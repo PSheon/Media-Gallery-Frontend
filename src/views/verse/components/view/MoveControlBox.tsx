@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 // ** MUI Imports
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, Theme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
+import Box, { BoxProps } from '@mui/material/Box'
 
 // ** Utils Imports
 // @ts-ignore
@@ -23,7 +23,7 @@ interface INippleData {
 }
 
 // ** Styled RootBox component
-const RootBox = styled(Box)(({ theme }) => ({
+const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
   position: 'fixed',
   margin: theme.spacing(2),
   left: '50%',
