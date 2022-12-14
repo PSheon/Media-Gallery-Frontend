@@ -21,9 +21,8 @@ import Typography from '@mui/material/Typography'
 import Fade, { FadeProps } from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 
-// ** Utils Imports
-import axios from 'axios'
-import { useQuery } from '@tanstack/react-query'
+// ** Services Imports
+import { useSceneQuery } from 'src/services/queries/scene.query'
 
 // ** Actions Imports
 import { hideStartPanel } from 'src/store/verse/view/startPanelSlice'
@@ -39,7 +38,6 @@ import apiConfig from 'src/configs/api'
 
 // ** Types
 import { RootState, AppDispatch } from 'src/store'
-import { IScene } from 'src/types/scene/sceneTypes'
 
 const Transition = forwardRef(function Transition(
   props: FadeProps & { children?: ReactElement<any, any> },
@@ -80,19 +78,7 @@ const StartPanel = () => {
   const dispatch = useDispatch<AppDispatch>()
   const START_PANEL = useSelector(({ verse }: RootState) => verse.view.startPanel)
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
-  const { isLoading: isQueryLoading, data: sceneBase } = useQuery({
-    queryKey: ['scene'],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/scenes/${sid}`,
-        params: {
-          populate: ['cover', 'owner', 'collaborators', 'assetList', 'sceneModel']
-        }
-      }).then(response => response.data.data as IScene),
-    enabled: !!sid,
-    retry: 0
-  })
+  const { isLoading: isQueryLoading, data: sceneBase } = useSceneQuery({ sid: sid as string })
 
   // ** Logics
   const handleConfirm = () => {

@@ -23,10 +23,13 @@ import CircularProgress from '@mui/material/CircularProgress'
 // ** Components Imports
 import StatisticsHorizontalCard from 'src/views/verse/components/edit/settingPanel/middleSection/StatisticsHorizontalCard'
 
+// ** Services Imports
+import { useSceneQuery } from 'src/services/queries/scene.query'
+
 // ** Utils Imports
 import axios from 'axios'
 import moment from 'moment'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
 // ** Icon Imports
@@ -37,8 +40,7 @@ import apiConfig from 'src/configs/api'
 
 // ** Types
 import { RootState } from 'src/store'
-import { IScene } from 'src/types/scene/sceneTypes'
-import { IAsset } from 'src/types/scene/assetTypes'
+import { ISceneAsset } from 'src/types/sceneAssetTypes'
 
 interface FormData {
   aid: number
@@ -49,7 +51,7 @@ interface FormData {
 }
 
 interface CellType {
-  row: IAsset
+  row: ISceneAsset
 }
 
 const MiddleSection = () => {
@@ -58,48 +60,25 @@ const MiddleSection = () => {
   const { sid } = router.query
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
   const EDIT_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.edit.editDialogBox)
-  const {
-    isLoading: isQuerySceneBaseLoading,
-    data: sceneBase,
-    refetch: refetchSceneBase
-  } = useQuery({
-    queryKey: ['scene_assetList'],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/scenes/${sid}`,
-        params: {
-          populate: {
-            cover: true,
-            owner: true,
-            collaborators: true,
-            assetList: {
-              populate: {
-                cover: true
-              }
-            },
-            sceneModel: true
-          }
-        }
-      }).then(response => response.data.data as IScene),
-    enabled: !!sid,
-    retry: 0
-  })
+  const queryClient = useQueryClient()
+  const { isLoading: isQuerySceneBaseLoading, data: sceneBase } = useSceneQuery({ sid: sid as string })
   const { mutate: updateAssetFrame, isLoading: isUpdateAssetFrameLoading } = useMutation({
     mutationFn: ({ aid, attributes }: FormData) =>
       axios({
         method: 'PUT',
         url: `/api/scene-assets/${aid}`,
         params: {
-          populate: ['cover']
+          populate: {
+            cover: true
+          }
         },
         data: {
           data: attributes
         }
       }),
     onSuccess: response => {
-      refetchSceneBase()
-      worldInstance?.updateAssetFrame(EDIT_DIALOG_BOX.hoverObjectMetadata!.position!, response.data.data as IAsset)
+      queryClient.invalidateQueries(['scenes', sid])
+      worldInstance?.updateAssetFrame(EDIT_DIALOG_BOX.hoverObjectMetadata!.position!, response.data.data as ISceneAsset)
       toast.success('Update asset success')
     },
     onError: () => {
@@ -114,7 +93,7 @@ const MiddleSection = () => {
   // ** Logics
   const handleStatisticsDialogOpen = () => setStatisticsDialogOpen(true)
   const handleStatisticsDialogClose = () => setStatisticsDialogOpen(false)
-  const handleDeleteAssetFrameClick = (nftData: IAsset) => {
+  const handleDeleteAssetFrameClick = (nftData: ISceneAsset) => {
     updateAssetFrame({
       aid: nftData.id,
       attributes: {
@@ -134,7 +113,7 @@ const MiddleSection = () => {
   }
 
   // ** Render
-  const renderNftBox = (row: IAsset) => {
+  const renderNftBox = (row: ISceneAsset) => {
     if (
       row?.attributes?.coverFileType === 'png' ||
       row?.attributes?.coverFileType === 'jpg' ||

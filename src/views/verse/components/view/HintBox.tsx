@@ -14,16 +14,14 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 
-// ** Utils Imports
-import axios from 'axios'
-import { useQuery } from '@tanstack/react-query'
+// ** Services Imports
+import { useSceneQuery } from 'src/services/queries/scene.query'
 
 // ** Actions Imports
 import { showViewDialogBox } from 'src/store/verse/view/viewDialogBoxSlice'
 
 // ** Types
 import { RootState } from 'src/store'
-import { IScene } from 'src/types/scene/sceneTypes'
 
 // ** Styled RootBox component
 const RootBox = styled(Box)(({ theme }) => ({
@@ -54,23 +52,7 @@ const HintBox = () => {
   const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
   const LOADING_SCREEN_SHOW = useSelector(({ verse }: RootState) => verse.view.uiLayout.loadingScreenShow)
   const VIEW_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.viewDialogBox)
-  const { isLoading: isQueryLoading, data: sceneBase } = useQuery({
-    queryKey: [
-      'scene',
-      sid,
-      { populate: { cover: true, owner: true, collaborators: true, assetList: true, sceneModel: true } }
-    ],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/scenes/${sid}`,
-        params: {
-          populate: ['cover', 'owner', 'collaborators', 'assetList', 'sceneModel']
-        }
-      }).then(response => response.data.data as IScene),
-    enabled: !!sid,
-    retry: 0
-  })
+  const { isLoading: isQueryLoading, data: sceneBase } = useSceneQuery({ sid: sid as string })
   const currentPlacedAsset = sceneBase?.attributes?.assetList?.data?.find(
     assetData => assetData?.attributes.framePosition === VIEW_DIALOG_BOX.hoverObjectMetadata?.position
   )

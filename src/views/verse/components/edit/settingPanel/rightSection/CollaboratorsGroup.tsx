@@ -21,9 +21,10 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
+// ** Services Imports
+import { useSceneQuery } from 'src/services/queries/scene.query'
+
 // ** Utils Imports
-import axios from 'axios'
-import { useQuery } from '@tanstack/react-query'
 import { getInitials } from 'src/@core/utils/get-initials'
 
 // ** Icon Imports
@@ -40,7 +41,6 @@ import apiConfig from 'src/configs/api'
 
 // ** Types
 import { RootState } from 'src/store'
-import { IScene } from 'src/types/scene/sceneTypes'
 
 interface TableBodyRowType {
   id: number
@@ -205,27 +205,7 @@ const CollaboratorsGroup = () => {
   const {
     // isLoading: isQueryLoading,
     data: sceneBase
-  } = useQuery({
-    queryKey: [
-      'scene',
-      sid,
-      {
-        collaborators: true
-      }
-    ],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/scenes/${sid}`,
-        params: {
-          populate: {
-            collaborators: true
-          }
-        }
-      }).then(response => response.data.data as IScene),
-    enabled: !!sid,
-    retry: 0
-  })
+  } = useSceneQuery({ sid: sid as string })
 
   // ** States
   const [collaboratorsGroupDialogOpen, setCollaboratorsGroupDialogOpen] = useState(false)

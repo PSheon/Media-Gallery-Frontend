@@ -17,59 +17,26 @@ import Skeleton from '@mui/material/Skeleton'
 import SceneCard from 'src/views/verse/components/edit/settingPanel/leftSection/SceneCard'
 import CreateSceneCard from 'src/views/verse/components/edit/settingPanel/leftSection/CreateSceneCard'
 
-// ** Utils Imports
-import axios from 'axios'
-import { useQuery } from '@tanstack/react-query'
+// ** Services Imports
+import { useMeScenesQuery } from 'src/services/queries/scene.query'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Hooks
-import { useAuth } from 'src/hooks/useAuth'
-
 // ** Types
 import { RootState } from 'src/store'
-import { IScene } from 'src/types/scene/sceneTypes'
 
 const SceneListMenu = () => {
   // ** Hooks
-  const auth = useAuth()
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
-  const {
-    isLoading: isQueryLoading,
-    data: ownSceneList = [],
-    refetch
-  } = useQuery({
-    queryKey: ['own-scene-list'],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/scenes/`,
-        params: {
-          filter: {
-            owner: auth.user.id!
-          },
-          populate: {
-            cover: true,
-            assetList: {
-              populate: {
-                cover: true
-              }
-            }
-          }
-        }
-      }).then(response => response.data.data as IScene[]),
-    retry: 0
-  })
+
+  const { isLoading: isQueryLoading, data: ownSceneList = [] } = useMeScenesQuery()
 
   // ** States
   const [sceneListOpen, setSceneListOpen] = useState(false)
 
   // ** Logics
-  const handleSceneListOpen = () => {
-    refetch()
-    setSceneListOpen(true)
-  }
+  const handleSceneListOpen = () => setSceneListOpen(true)
   const handleSceneListClose = () => setSceneListOpen(false)
   const handleRedirectToSceneEdit = (sid: number) => {
     window.location.href = `/verse/edit/${sid}`

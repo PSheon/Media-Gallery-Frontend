@@ -19,9 +19,8 @@ import Typography from '@mui/material/Typography'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 
-// ** Utils Imports
-import axios from 'axios'
-import { useQuery } from '@tanstack/react-query'
+// ** Services Imports
+import { useSceneQuery } from 'src/services/queries/scene.query'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -34,7 +33,6 @@ import apiConfig from 'src/configs/api'
 
 // ** Types
 import { RootState } from 'src/store'
-import { IScene } from 'src/types/scene/sceneTypes'
 
 const CollaboratorsGroup = () => {
   // ** Hooks
@@ -45,27 +43,7 @@ const CollaboratorsGroup = () => {
   const {
     // isLoading: isQueryLoading,
     data: sceneBase
-  } = useQuery({
-    queryKey: [
-      'scene',
-      sid,
-      {
-        collaborators: true
-      }
-    ],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/scenes/${sid}`,
-        params: {
-          populate: {
-            collaborators: true
-          }
-        }
-      }).then(response => response.data.data as IScene),
-    enabled: !!sid,
-    retry: 0
-  })
+  } = useSceneQuery({ sid: sid as string })
 
   // ** States
   const [collaboratorsGroupDialogOpen, setCollaboratorsGroupDialogOpen] = useState(false)

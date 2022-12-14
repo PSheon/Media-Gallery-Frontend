@@ -25,9 +25,13 @@ import Skeleton from '@mui/material/Skeleton'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
+// ** Services Imports
+import { useSceneQuery } from 'src/services/queries/scene.query'
+import { useMeSceneAssetsQuery } from 'src/services/queries/sceneAsset.query'
+
 // ** Utils Imports
 import axios from 'axios'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
 // ** Action Imports
@@ -38,8 +42,7 @@ import apiConfig from 'src/configs/api'
 
 // ** Types
 import { AppDispatch, RootState } from 'src/store'
-import { IScene } from 'src/types/scene/sceneTypes'
-import { IAsset } from 'src/types/scene/assetTypes'
+import { ISceneAsset } from 'src/types/sceneAssetTypes'
 
 interface FormData {
   aid: number
@@ -65,65 +68,27 @@ const EditDialogBox = () => {
   const dispatch = useDispatch<AppDispatch>()
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
   const EDIT_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.edit.editDialogBox)
-  const {
-    isLoading: isQueryOwnNftListLoading,
-    data: ownNftList = [],
-    refetch: refetchOwnNftList
-  } = useQuery({
-    queryKey: ['own-nft-list'],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/own-nft-list`,
-        params: {
-          populate: ['cover']
-        }
-      }).then(response => response.data.data as IAsset[]),
-    retry: 0
-  })
-  const {
-    isLoading: isQuerySceneBaseLoading,
-    data: sceneBase,
-    refetch: refetchSceneBase
-  } = useQuery({
-    queryKey: ['scene_assetList'],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/scenes/${sid}`,
-        params: {
-          populate: {
-            cover: true,
-            owner: true,
-            collaborators: true,
-            assetList: {
-              populate: {
-                cover: true
-              }
-            },
-            sceneModel: true
-          }
-        }
-      }).then(response => response.data.data as IScene),
-    enabled: !!sid,
-    retry: 0
-  })
+  const queryClient = useQueryClient()
+  const { isLoading: isQueryOwnNftListLoading, data: ownNftList = [] } = useMeSceneAssetsQuery({ chain: 'eth' })
+  const { isLoading: isQuerySceneBaseLoading, data: sceneBase } = useSceneQuery({ sid: sid as string })
   const { mutate: updateAssetFrame, isLoading: isUpdateAssetFrameLoading } = useMutation({
     mutationFn: ({ aid, attributes }: FormData) =>
       axios({
         method: 'PUT',
         url: `/api/scene-assets/${aid}`,
         params: {
-          populate: ['cover']
+          populate: {
+            cover: true
+          }
         },
         data: {
           data: attributes
         }
       }),
     onSuccess: response => {
-      refetchOwnNftList()
-      refetchSceneBase()
-      worldInstance?.updateAssetFrame(EDIT_DIALOG_BOX.hoverObjectMetadata!.position!, response.data.data as IAsset)
+      queryClient.invalidateQueries(['nfts'])
+      queryClient.invalidateQueries(['scenes'])
+      worldInstance?.updateAssetFrame(EDIT_DIALOG_BOX.hoverObjectMetadata!.position!, response.data.data as ISceneAsset)
       toast.success('Update asset success')
     },
     onError: () => {
@@ -148,7 +113,7 @@ const EditDialogBox = () => {
     }
     dispatch(hideEditDialogBox())
   }
-  const handleUpdateAssetFrameClick = (nftData: IAsset) => {
+  const handleUpdateAssetFrameClick = (nftData: ISceneAsset) => {
     if (nftData?.attributes?.framePosition) return
 
     updateAssetFrame({
@@ -159,7 +124,7 @@ const EditDialogBox = () => {
       }
     })
   }
-  const handleDeleteAssetFrameClick = (nftData: IAsset) => {
+  const handleDeleteAssetFrameClick = (nftData: ISceneAsset) => {
     updateAssetFrame({
       aid: nftData.id,
       attributes: {
@@ -169,7 +134,7 @@ const EditDialogBox = () => {
     })
   }
 
-  const renderNftBox = (ownNft: IAsset) => {
+  const renderNftBox = (ownNft: ISceneAsset) => {
     if (
       ownNft?.attributes?.coverFileType === 'png' ||
       ownNft?.attributes?.coverFileType === 'jpg' ||
@@ -227,7 +192,7 @@ const EditDialogBox = () => {
     }
   }
 
-  const renderNftSelectBox = (ownNft: IAsset) => {
+  const renderNftSelectBox = (ownNft: ISceneAsset) => {
     if (
       ownNft?.attributes?.coverFileType === 'png' ||
       ownNft?.attributes?.coverFileType === 'jpg' ||

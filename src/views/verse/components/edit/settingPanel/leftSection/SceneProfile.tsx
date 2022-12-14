@@ -26,9 +26,12 @@ import TextField from '@mui/material/TextField'
 
 // ** Utils Imports
 import axios from 'axios'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { useFileUpload } from 'use-file-upload'
+
+// ** Services Imports
+import { useSceneQuery } from 'src/services/queries/scene.query'
 
 // ** React Hook Form Imports
 import * as yup from 'yup'
@@ -46,7 +49,6 @@ import Icon from 'src/@core/components/icon'
 
 // ** Types
 import { RootState } from 'src/store'
-import { IScene } from 'src/types/scene/sceneTypes'
 
 // ** Styled Preview Picture
 const PreviewPicture = styled('img')(({ theme }) => ({
@@ -79,34 +81,20 @@ const SceneProfile = () => {
   // eslint-disable-next-line
   const [files, selectFiles] = useFileUpload()
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
-  const {
-    isLoading: isQueryLoading,
-    data: sceneBase,
-    refetch
-  } = useQuery({
-    queryKey: ['scene'],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/scenes/${sid}`,
-        params: {
-          populate: ['cover', 'owner', 'collaborators', 'assetList', 'sceneModel']
-        }
-      }).then(response => response.data.data as IScene),
-    enabled: !!sid,
-    retry: 0
-  })
+  const queryClient = useQueryClient()
+  const { isLoading: isQueryLoading, data: sceneBase } = useSceneQuery({ sid: sid as string })
   const { mutate: updateScene, isLoading: isUpdateSceneLoading } = useMutation({
-    mutationFn: (newData: UpdateSceneFormData) =>
+    mutationFn: (newSceneData: UpdateSceneFormData) =>
       axios({
         method: 'PUT',
         url: `/api/scenes/${sid}`,
         data: {
-          data: newData
+          data: newSceneData
         }
       }),
-    onSuccess: (/* response */) => {
-      refetch()
+    onSuccess: () => {
+      queryClient.invalidateQueries(['scenes'])
+
       toast.success('Update scene success')
     },
     onError: () => {
@@ -115,14 +103,13 @@ const SceneProfile = () => {
       //   message: 'Username is invalid'
       // })
       toast.error('Update scene failed')
-    },
-    retry: 0
+    }
   })
   const { mutate: updateSceneCover, isLoading: isUpdateSceneCoverLoading } = useMutation({
     mutationFn: async (newCoverFormData: FormData) => {
       const { data: coverData } = await axios({
         method: 'post',
-        url: `/api/upload`,
+        url: '/api/upload',
         data: newCoverFormData
       })
       const newCoverId = coverData?.[0].id
@@ -137,8 +124,9 @@ const SceneProfile = () => {
         }
       })
     },
-    onSuccess: (/* response */) => {
-      refetch()
+    onSuccess: () => {
+      queryClient.invalidateQueries(['scenes'])
+
       toast.success('Update scene cover success')
     },
     onError: () => {
@@ -147,8 +135,7 @@ const SceneProfile = () => {
       //   message: 'Username is invalid'
       // })
       toast.error('Update scene cover failed')
-    },
-    retry: 0
+    }
   })
   const {
     control,

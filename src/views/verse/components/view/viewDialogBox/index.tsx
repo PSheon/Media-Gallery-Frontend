@@ -1,6 +1,5 @@
 /* TODO */
 // ** React Imports
-import { Ref, forwardRef, ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Next Import
@@ -17,9 +16,8 @@ import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
-// ** Utils Imports
-import axios from 'axios'
-import { useQuery } from '@tanstack/react-query'
+// ** Services Imports
+import { useSceneQuery } from 'src/services/queries/scene.query'
 
 // ** Actions Imports
 import { hideViewDialogBox } from 'src/store/verse/view/viewDialogBoxSlice'
@@ -35,8 +33,7 @@ import apiConfig from 'src/configs/api'
 
 // ** Types
 import { RootState } from 'src/store'
-import { IScene } from 'src/types/scene/sceneTypes'
-import { IAsset } from 'src/types/scene/assetTypes'
+import { ISceneAsset } from 'src/types/sceneAssetTypes'
 
 // Styled StyledRootDialog component
 const StyledRootDialog = styled(Dialog)(({ theme }) => ({
@@ -54,37 +51,7 @@ const ViewDialogBox = () => {
   const dispatch = useDispatch()
   const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
   const VIEW_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.viewDialogBox)
-  const { isLoading: isQuerySceneBaseLoading, data: sceneBase } = useQuery({
-    queryKey: [
-      'scene',
-      sid,
-      {
-        populate: {
-          cover: true
-        }
-      }
-    ],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: `/api/scenes/${sid}`,
-        params: {
-          populate: {
-            cover: true,
-            owner: true,
-            collaborators: true,
-            assetList: {
-              populate: {
-                cover: true
-              }
-            },
-            sceneModel: true
-          }
-        }
-      }).then(response => response.data.data as IScene),
-    enabled: !!sid,
-    retry: 0
-  })
+  const { isLoading: isQuerySceneBaseLoading, data: sceneBase } = useSceneQuery({ sid: sid as string })
   const currentPlacedAsset = sceneBase?.attributes?.assetList?.data?.find(
     assetData => assetData?.attributes.framePosition === VIEW_DIALOG_BOX.hoverObjectMetadata?.position
   )
@@ -106,7 +73,7 @@ const ViewDialogBox = () => {
   }
 
   // ** Renders
-  const renderNftBox = (ownNft: IAsset) => {
+  const renderNftBox = (ownNft: ISceneAsset) => {
     if (
       ownNft?.attributes?.coverFileType === 'png' ||
       ownNft?.attributes?.coverFileType === 'jpg' ||
