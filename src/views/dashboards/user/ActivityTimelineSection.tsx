@@ -22,13 +22,13 @@ import { AxiosError } from 'axios'
 import moment from 'moment'
 
 // ** Services Imports
-import { useMeAccessesQuery } from 'src/services/queries/dashboard/access.query'
+import { useMeAccessesQuery } from 'src/services/queries/access.query'
 
 // ** Components Imports
 import OptionsMenu from 'src/@core/components/option-menu'
 
 // ** Types Imports
-import { IAccessType } from 'src/types/dashboard/accessTypes'
+import { IAccessType } from 'src/types/accessTypes'
 
 // ** Styled Timeline component
 const Timeline = styled(MuiTimeline)<TimelineProps>({

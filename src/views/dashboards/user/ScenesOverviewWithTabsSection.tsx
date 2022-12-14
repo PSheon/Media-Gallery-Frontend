@@ -26,7 +26,7 @@ import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 
 // ** Services Imports
-import { useMeScenesQuery } from 'src/services/queries/dashboard/scene.query'
+import { useMeScenesQuery } from 'src/services/queries/scene.query'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -44,8 +44,8 @@ import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
 // ** Types
 // import { ThemeColor } from 'src/@core/layouts/types'
-import { IAsset } from 'src/types/scene/assetTypes'
-import { IScene } from 'src/types/scene/sceneTypes'
+import { IAsset } from 'src/types/assetTypes'
+import { IScene } from 'src/types/sceneTypes'
 
 const ScenesOverviewWithTabsSection = () => {
   // ** Hooks
