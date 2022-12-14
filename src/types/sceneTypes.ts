@@ -1,6 +1,6 @@
-import { IUser } from 'src/types/scene/userTypes'
-import { IAsset } from 'src/types/scene/assetTypes'
-import { ISceneModel } from 'src/types/scene/sceneModelTypes'
+import { IUser } from 'src/types/userTypes'
+import { IAsset } from 'src/types/assetTypes'
+import { ISceneModel } from 'src/types/sceneModelTypes'
 
 export interface GetMeAccessesResponse {
   data: IScene[]

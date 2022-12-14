@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 // ** Types Imports
-import type { GetMeAccessesResponse, GetMeAccessesProps, IAccess } from 'src/types/dashboard/accessTypes'
+import type { GetMeAccessesResponse, GetMeAccessesProps, IAccess } from 'src/types/accessTypes'
 
 export const getMeAccesses = async (params: GetMeAccessesProps): Promise<IAccess[]> => {
   const { data } = await axios<GetMeAccessesResponse>({

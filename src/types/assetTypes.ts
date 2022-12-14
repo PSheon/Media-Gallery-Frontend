@@ -1,4 +1,4 @@
-import { IScene } from 'src/types/scene/sceneTypes'
+import { IScene } from 'src/types/sceneTypes'
 
 export type IAsset = {
   id: number

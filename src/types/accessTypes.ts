@@ -1,5 +1,5 @@
 // ** Types Imports
-import { IUser } from 'src/types/scene/userTypes'
+import { IUser } from 'src/types/userTypes'
 
 export interface GetMeAccessesProps {
   limit: number
