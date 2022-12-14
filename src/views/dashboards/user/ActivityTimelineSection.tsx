@@ -16,23 +16,19 @@ import TimelineSeparator from '@mui/lab/TimelineSeparator'
 import TimelineConnector from '@mui/lab/TimelineConnector'
 import MuiTimeline, { TimelineProps } from '@mui/lab/Timeline'
 
-// ** React Query Imports
-import { useQuery } from '@tanstack/react-query'
-
-// ** Axios
-import axios, { AxiosError } from 'axios'
-
-// ** Third Party Imports
+// ** Utils Imports
 import UAParser from 'ua-parser-js'
-
-// ** Moment Imports
+import { AxiosError } from 'axios'
 import moment from 'moment'
 
-// ** Custom Components Imports
+// ** Services Imports
+import { useMeAccessesQuery } from 'src/services/queries/dashboard/access.query'
+
+// ** Components Imports
 import OptionsMenu from 'src/@core/components/option-menu'
 
 // ** Types Imports
-import { IAccess } from 'src/types/dashboard/accessTypes'
+import { IAccessType } from 'src/types/dashboard/accessTypes'
 
 // ** Styled Timeline component
 const Timeline = styled(MuiTimeline)<TimelineProps>({
@@ -51,20 +47,12 @@ const ActivityTimelineSection = () => {
   const {
     isLoading: isQueryLoading,
     isError: isQueryError,
-    data: accesses,
+    data: accesses = [],
     error: queryError
-  } = useQuery({
-    queryKey: ['accesses-me'],
-    queryFn: () =>
-      axios({
-        method: 'GET',
-        url: '/api/accesses/me'
-      }).then(response => response.data.accesses as IAccess[]),
-    retry: 0
-  })
+  } = useMeAccessesQuery({ limit: 3 })
 
   // ** Logics
-  const getTypeColor = (accessType: IAccess['type']) => {
+  const getTypeColor = (accessType: IAccessType) => {
     switch (accessType) {
       case 'connect':
         return 'warning'
@@ -75,7 +63,7 @@ const ActivityTimelineSection = () => {
         return 'info'
     }
   }
-  const getTypeDisplayName = (accessType: IAccess['type']) => {
+  const getTypeDisplayName = (accessType: IAccessType) => {
     switch (accessType) {
       case 'connect':
         return 'Connect Wallet'
@@ -145,124 +133,42 @@ const ActivityTimelineSection = () => {
         }
       />
       <CardContent sx={{ pt: theme => `${theme.spacing(2.5)} !important` }}>
-        {isQueryError && <Alert severity='warning'>{(queryError as AxiosError).message}</Alert>}
-        <Timeline sx={{ my: 0, py: 0 }}>
-          {accesses?.slice(0, 3).map(access => (
-            <TimelineItem key={`me-accesses-${access.id}`}>
-              <TimelineSeparator>
-                <TimelineDot color={getTypeColor(access.type)} />
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent sx={{ mt: 0, mb: theme => `${theme.spacing(3)} !important` }}>
-                <Box
-                  sx={{
-                    mb: 3,
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <Typography sx={{ mr: 2, fontWeight: 600 }}>{getTypeDisplayName(access.type)}</Typography>
-                  <Typography variant='caption' sx={{ color: 'text.disabled' }}>
-                    {moment(access.createdAt).fromNow()}
+        {isQueryError ? (
+          <Alert severity='warning'>{(queryError as AxiosError).message}</Alert>
+        ) : (
+          <Timeline sx={{ my: 0, py: 0 }}>
+            {accesses.map(access => (
+              <TimelineItem key={`accesses-me-${access.id}`}>
+                <TimelineSeparator>
+                  <TimelineDot color={getTypeColor(access.attributes.type)} />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent sx={{ mt: 0, mb: theme => `${theme.spacing(3)} !important` }}>
+                  <Box
+                    sx={{
+                      mb: 3,
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <Typography sx={{ mr: 2, fontWeight: 600 }}>
+                      {getTypeDisplayName(access.attributes.type)}
+                    </Typography>
+                    <Typography variant='caption' sx={{ color: 'text.disabled' }}>
+                      {moment(access.attributes.createdAt).fromNow()}
+                    </Typography>
+                  </Box>
+                  <Typography variant='body2' sx={{ mb: 2 }}>
+                    {access.attributes.country} - {access.attributes.ip}
                   </Typography>
-                </Box>
-                <Typography variant='body2' sx={{ mb: 2 }}>
-                  {access?.country} - {access.ip}
-                </Typography>
-                {renderBrowserBox(access.browser)}
-              </TimelineContent>
-            </TimelineItem>
-          ))}
-          {/* <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot color='error' />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent sx={{ mt: 0, mb: theme => `${theme.spacing(3)} !important` }}>
-              <Box
-                sx={{
-                  mb: 3,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <Typography sx={{ mr: 2, fontWeight: 600 }}>8 Invoices have been paid</Typography>
-                <Typography variant='caption' sx={{ color: 'text.disabled' }}>
-                  Wednesday
-                </Typography>
-              </Box>
-              <Typography variant='body2' sx={{ mb: 2 }}>
-                Invoices have been paid to the company.
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <img width={24} height={24} alt='invoice.pdf' src='/images/icons/file-icons/pdf.png' />
-                <Typography variant='subtitle2' sx={{ ml: 2, fontWeight: 600 }}>
-                  bookingCard.pdf
-                </Typography>
-              </Box>
-            </TimelineContent>
-          </TimelineItem>
-
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot color='primary' />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent sx={{ mt: 0, mb: theme => `${theme.spacing(3)} !important` }}>
-              <Box
-                sx={{
-                  mb: 3,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <Typography sx={{ mr: 2, fontWeight: 600 }}>Create a new project for client 😎</Typography>
-                <Typography variant='caption' sx={{ color: 'text.disabled' }}>
-                  April, 18
-                </Typography>
-              </Box>
-              <Typography variant='body2' sx={{ mb: 2 }}>
-                Invoices have been paid to the company.
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Avatar src='/images/avatars/1.png' sx={{ mr: 2.5, width: 24, height: 24 }} />
-                <Typography variant='body2' sx={{ fontWeight: 600, fontSize: '0.875rem' }}>
-                  John Doe (Client)
-                </Typography>
-              </Box>
-            </TimelineContent>
-          </TimelineItem>
-
-          <TimelineItem sx={{ minHeight: 0 }}>
-            <TimelineSeparator>
-              <TimelineDot color='info' />
-              <TimelineConnector sx={{ mb: 3 }} />
-            </TimelineSeparator>
-            <TimelineContent sx={{ mt: 0, mb: theme => `${theme.spacing(0.5)} !important` }}>
-              <Box
-                sx={{
-                  mb: 3,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <Typography sx={{ mr: 2, fontWeight: 600 }}>Order #37745 from September</Typography>
-                <Typography variant='caption' sx={{ color: 'text.disabled' }}>
-                  January, 10
-                </Typography>
-              </Box>
-              <Typography variant='body2'>Invoices have been paid to the company.</Typography>
-            </TimelineContent>
-          </TimelineItem> */}
-        </Timeline>
+                  {renderBrowserBox(access.attributes.browser)}
+                </TimelineContent>
+              </TimelineItem>
+            ))}
+          </Timeline>
+        )}
       </CardContent>
 
       <Backdrop
