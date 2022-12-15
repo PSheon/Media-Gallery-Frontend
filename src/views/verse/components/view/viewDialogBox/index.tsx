@@ -92,7 +92,12 @@ const ViewDialogBox = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            borderRadius: '.2rem'
+            borderRadius: '.2rem',
+            '& img': {
+              width: '100%',
+              height: '100%',
+              borderRadius: theme => theme.shape.borderRadius
+            }
           }}
         >
           <img
@@ -110,7 +115,7 @@ const ViewDialogBox = () => {
             width: '100%',
             height: '100%',
             maxWidth: theme => theme.spacing(80),
-            maxHeight: theme => theme.spacing(80),
+            maxHeight: theme => theme.spacing(30),
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
