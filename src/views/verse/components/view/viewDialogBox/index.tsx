@@ -96,7 +96,7 @@ const ViewDialogBox = () => {
             '& img': {
               width: '100%',
               height: '100%',
-              borderRadius: theme => theme.shape.borderRadius
+              borderRadius: '.2rem'
             }
           }}
         >
