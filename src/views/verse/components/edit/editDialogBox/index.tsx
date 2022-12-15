@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Next Import
@@ -18,9 +18,11 @@ import Typography from '@mui/material/Typography'
 import Dialog, { DialogProps } from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Skeleton from '@mui/material/Skeleton'
-
-// import TextField from '@mui/material/TextField'
-// import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -33,6 +35,9 @@ import { useMeSceneAssetsQuery } from 'src/services/queries/sceneAsset.query'
 import axios from 'axios'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
+
+// ** Components Imports
+import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Action Imports
 import { hideEditDialogBox } from 'src/store/verse/edit/editDialogBoxSlice'
@@ -57,11 +62,50 @@ const StyledRootDialog = styled(Dialog)<DialogProps>(({ theme }) => ({
   '& .MuiDialog-container': {
     display: 'flex',
     justifyContent: 'flex-start',
-    paddingLeft: theme.spacing(6)
+    paddingLeft: theme.spacing(6),
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 0
+    }
   }
 }))
 
+const CHAIN_LIST = [
+  {
+    id: 'eth',
+    value: 'eth',
+    icon: 'cryptocurrency-color:eth',
+    displayName: 'Ethereum',
+    supported: true
+  },
+  {
+    id: 'polygon',
+    value: 'polygon',
+    icon: 'cryptocurrency-color:matic',
+    displayName: 'Polygon',
+    supported: false
+  },
+  {
+    id: 'bsc',
+    value: 'bsc',
+    icon: 'cryptocurrency-color:bnb',
+    displayName: 'BSC',
+    supported: false
+  },
+  {
+    id: 'avalanche',
+    value: 'avalanche',
+    icon: 'cryptocurrency-color:avax',
+    displayName: 'Avalanche',
+    supported: false
+  }
+]
+
 const EditDialogBox = () => {
+  // ** State
+  const [addAssetsType, setAddAssetsType] = useState<string>('nft')
+  const [chain, setChain] = useState<string>('eth')
+  const [sceneAssetFilter, setSceneAssetFilter] = useState<string>('')
+
   // ** Hooks
   const router = useRouter()
   const { sid } = router.query
@@ -69,9 +113,12 @@ const EditDialogBox = () => {
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
   const EDIT_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.edit.editDialogBox)
   const queryClient = useQueryClient()
-  const { isLoading: isQueryOwnNftListLoading, data: queryOwnNftListData } = useMeSceneAssetsQuery({ chain: 'eth' })
+  const { isLoading: isQueryOwnNftListLoading, data: queryOwnNftListData } = useMeSceneAssetsQuery({ chain })
   const { isLoading: isQuerySceneBaseLoading, data: querySceneBaseData } = useSceneQuery({ sid: sid as string })
-  const ownNftList = queryOwnNftListData?.data || []
+  const ownNftList =
+    queryOwnNftListData?.data?.filter(ownNft =>
+      ownNft?.attributes.displayName ? ownNft.attributes.displayName.includes(sceneAssetFilter) : true
+    ) || []
   const sceneBase = querySceneBaseData?.data
   const { mutate: updateAssetFrame, isLoading: isUpdateAssetFrameLoading } = useMutation({
     mutationFn: ({ aid, attributes }: FormData) =>
@@ -102,9 +149,6 @@ const EditDialogBox = () => {
     assetData => assetData?.attributes.framePosition === EDIT_DIALOG_BOX.hoverObjectMetadata?.position
   )
 
-  // ** State
-  const [addAssetsType, setAddAssetsType] = useState<string>('nft')
-
   // ** Logics
   const handleAddAssetsType = (newAddAssetsType: string) => {
     setAddAssetsType(newAddAssetsType)
@@ -115,6 +159,9 @@ const EditDialogBox = () => {
     }
     dispatch(hideEditDialogBox())
   }
+  const handleChangeChain = useCallback((e: SelectChangeEvent) => {
+    setChain(e.target.value)
+  }, [])
   const handleUpdateAssetFrameClick = (nftData: ISceneAsset) => {
     if (nftData?.attributes?.framePosition) return
 
@@ -205,6 +252,7 @@ const EditDialogBox = () => {
         <Box
           onClick={() => handleUpdateAssetFrameClick(ownNft)}
           sx={{
+            width: '100%',
             height: theme => theme.spacing(40),
             position: 'relative',
             display: 'flex',
@@ -258,7 +306,9 @@ const EditDialogBox = () => {
               background: `linear-gradient(to top, rgba(0, 0, 0, 0.89), rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1), transparent)`
             }}
           >
-            <Typography variant='caption'>{ownNft?.attributes.displayName}</Typography>
+            <Typography variant='body2' color='common.white'>
+              {ownNft?.attributes.displayName}
+            </Typography>
           </Box>
         </Box>
       )
@@ -346,9 +396,7 @@ const EditDialogBox = () => {
             <Icon icon='mdi:close-circle' fontSize={20} />
           </IconButton>
           <Box sx={{ mb: 8, textAlign: 'center' }}>
-            <Typography variant='h5' sx={{ mb: 3 }}>
-              Edit Asset
-            </Typography>
+            <Typography variant='h5'>Edit Asset</Typography>
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -377,7 +425,7 @@ const EditDialogBox = () => {
                         borderRadius: '.2rem'
                       }}
                     >
-                      <Typography sx={{ fontWeight: 600 }} color='common.white' noWrap>
+                      <Typography sx={{ fontWeight: 600 }} noWrap>
                         {currentPlacedAsset?.attributes.displayName}
                       </Typography>
                       <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }} noWrap>
@@ -419,9 +467,7 @@ const EditDialogBox = () => {
             <Icon icon='mdi:close-circle' fontSize={20} />
           </IconButton>
           <Box sx={{ mb: 8, textAlign: 'center' }}>
-            <Typography variant='h5' sx={{ mb: 3 }}>
-              Add Asset
-            </Typography>
+            <Typography variant='h5'>Add Asset</Typography>
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -429,6 +475,7 @@ const EditDialogBox = () => {
                 <Grid item xs={4}>
                   <Button
                     fullWidth
+                    size='small'
                     variant='contained'
                     onClick={() => handleAddAssetsType('nft')}
                     color={addAssetsType === 'nft' ? 'primary' : 'secondary'}
@@ -445,6 +492,7 @@ const EditDialogBox = () => {
                 <Grid item xs={4}>
                   <Button
                     disabled
+                    size='small'
                     fullWidth
                     variant='contained'
                     onClick={() => handleAddAssetsType('youtube')}
@@ -462,6 +510,7 @@ const EditDialogBox = () => {
                 <Grid item xs={4}>
                   <Button
                     disabled
+                    size='small'
                     fullWidth
                     variant='contained'
                     onClick={() => handleAddAssetsType('text')}
@@ -483,23 +532,58 @@ const EditDialogBox = () => {
               <Divider />
             </Grid>
 
-            {/* <Grid item xs={12}>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-              <TextField
-                size='small'
-                value=''
-                placeholder='Search assets'
-                sx={{ mr: 4, mb: 2, maxWidth: '180px' }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position='start'>
-                      <Icon icon='material-symbols:search' fontSize={20} />
-                    </InputAdornment>
-                  )
-                }}
-              />
-            </Box>
-          </Grid> */}
+            <Grid item xs={12} sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <TextField
+                  size='small'
+                  value={sceneAssetFilter}
+                  onChange={e => setSceneAssetFilter(e.target.value)}
+                  placeholder='Search assets'
+                  sx={{ maxWidth: '180px' }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position='start'>
+                        <Icon icon='material-symbols:search' fontSize={20} />
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <FormControl fullWidth size='small'>
+                  <Select
+                    fullWidth
+                    value={chain}
+                    id='select-chain'
+                    onChange={handleChangeChain}
+                    inputProps={{ placeholder: 'Select Chain' }}
+                  >
+                    {CHAIN_LIST.map(chainData => (
+                      <MenuItem key={chainData.id} value={chainData.value} disabled={!chainData.supported}>
+                        <Box
+                          sx={{
+                            pr: 4,
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: 'text.primary',
+                            textDecoration: 'none',
+                            '& svg': {
+                              mr: 2,
+                              fontSize: '1.375rem',
+                              color: 'text.primary'
+                            }
+                          }}
+                        >
+                          <Icon icon={chainData.icon} />
+                          {chainData.displayName}
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
 
             <Grid item xs={12}>
               <Grid container spacing={2} sx={{ maxHeight: '30rem', overflowY: 'scroll' }}>
@@ -510,8 +594,8 @@ const EditDialogBox = () => {
                     </Grid>
                   ))}
 
-                {ownNftList.map(ownNft => {
-                  return (
+                {ownNftList.length ? (
+                  ownNftList.map(ownNft => (
                     <Grid key={ownNft.id} item xs={6}>
                       <Box
                         sx={{
@@ -577,8 +661,21 @@ const EditDialogBox = () => {
                         {ownNft?.attributes.fetchStatus === 'fetched' && renderNftSelectBox(ownNft)}
                       </Box>
                     </Grid>
-                  )
-                })}
+                  ))
+                ) : (
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}
+                  >
+                    <CustomAvatar skin='light' sx={{ width: 56, height: 56, mb: 2 }}>
+                      <Icon icon='mdi:help-circle-outline' fontSize='2rem' />
+                    </CustomAvatar>
+                    <Typography variant='h6' sx={{ mb: 2 }}>
+                      No Result
+                    </Typography>
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           </Grid>
