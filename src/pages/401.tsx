@@ -1,8 +1,9 @@
 // ** React Imports
-import { useState, ReactNode } from 'react'
+import { useState, useEffect, ReactNode } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 // ** MUI Components
 import { styled } from '@mui/material/styles'
@@ -44,6 +45,7 @@ const Error401 = () => {
 
   // ** Hooks
   const auth = useAuth()
+  const router = useRouter()
   const bgColors = useBgColor()
   const { connectAsync, connectors, error: connectError, isLoading, pendingConnector } = useConnect()
   const { disconnect } = useDisconnect()
@@ -72,6 +74,11 @@ const Error401 = () => {
       setConnecting(false)
     }
   }
+
+  useEffect(() => {
+    router.push({ query: { ...router.query, returnUrl: router.pathname } }, undefined, { shallow: true })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Box className='content-center'>
