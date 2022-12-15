@@ -52,7 +52,8 @@ const HintBox = () => {
   const worldInstance = useSelector(({ verse }: RootState) => verse.view.scene.worldInstance)
   const LOADING_SCREEN_SHOW = useSelector(({ verse }: RootState) => verse.view.uiLayout.loadingScreenShow)
   const VIEW_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.view.viewDialogBox)
-  const { isLoading: isQueryLoading, data: sceneBase } = useSceneQuery({ sid: sid as string })
+  const { isLoading: isQueryLoading, data: queryData } = useSceneQuery({ sid: sid as string })
+  const sceneBase = queryData?.data
   const currentPlacedAsset = sceneBase?.attributes?.assetList?.data?.find(
     assetData => assetData?.attributes.framePosition === VIEW_DIALOG_BOX.hoverObjectMetadata?.position
   )

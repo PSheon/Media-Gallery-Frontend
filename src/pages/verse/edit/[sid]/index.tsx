@@ -22,7 +22,8 @@ function EditVersePage() {
   // ** Hooks
   const router = useRouter()
   const { sid } = router.query
-  const { isLoading: isQueryLoading, data: sceneBase, isError: isQueryError } = useSceneQuery({ sid: sid as string })
+  const { isLoading: isQueryLoading, data: queryData, isError: isQueryError } = useSceneQuery({ sid: sid as string })
+  const sceneBase = queryData?.data
 
   if (isQueryError) {
     toast.error('Fetch scene failed')

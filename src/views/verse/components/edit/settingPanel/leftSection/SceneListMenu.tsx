@@ -30,7 +30,8 @@ const SceneListMenu = () => {
   // ** Hooks
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
 
-  const { isLoading: isQueryLoading, data: ownSceneList = [] } = useMeScenesQuery()
+  const { isLoading: isQueryLoading, data: queryData } = useMeScenesQuery()
+  const meScenes = queryData?.data || []
 
   // ** States
   const [sceneListOpen, setSceneListOpen] = useState(false)
@@ -89,16 +90,16 @@ const SceneListMenu = () => {
           <Grid container spacing={4} sx={{ flexGrow: 1 }}>
             {isQueryLoading &&
               [...Array(3).keys()].map(sIndex => (
-                <Grid key={`own-scene-skeleton-${sIndex}`} item xs={12}>
+                <Grid key={`me-scene-skeleton-${sIndex}`} item xs={12}>
                   <Skeleton variant='rounded' height={80} />
                 </Grid>
               ))}
-            {ownSceneList.map((scene, index) => (
-              <Grid key={`own-scene-${index}`} item xs={12} onClick={() => handleRedirectToSceneEdit(scene.id)}>
+            {meScenes.map((scene, index) => (
+              <Grid key={`me-scene-${index}`} item xs={12} onClick={() => handleRedirectToSceneEdit(scene.id)}>
                 <SceneCard sceneBase={scene} withControl />
               </Grid>
             ))}
-            {ownSceneList.length < 3 && (
+            {meScenes.length < 3 && (
               <Grid item xs={12}>
                 <CreateSceneCard />
               </Grid>

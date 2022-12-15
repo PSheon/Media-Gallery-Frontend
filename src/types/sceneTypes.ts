@@ -13,11 +13,6 @@ export interface GetScenesProps {
   pageSize: number
 }
 
-export interface GetMeScenesResponse {
-  data: IScene[]
-  meta: {}
-}
-
 export interface GetSceneResponse {
   data: IScene
   meta: {}

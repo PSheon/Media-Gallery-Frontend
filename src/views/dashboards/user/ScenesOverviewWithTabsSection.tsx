@@ -50,7 +50,8 @@ import { IScene } from 'src/types/sceneTypes'
 const ScenesOverviewWithTabsSection = () => {
   // ** Hooks
   const router = useRouter()
-  const { isLoading: isQueryLoading, data: ownSceneList = [] } = useMeScenesQuery()
+  const { isLoading: isQueryLoading, data: queryData } = useMeScenesQuery()
+  const meScenes = queryData?.data || []
 
   // ** State
   const [tabValue, setTabValue] = useState<string>('default')
@@ -58,6 +59,9 @@ const ScenesOverviewWithTabsSection = () => {
   // ** Logics
   const handleTabChange = (event: SyntheticEvent, newValue: string) => {
     setTabValue(newValue)
+  }
+  const handleRedirectToSceneView = (sid: number) => {
+    window.location.href = `/verse/book/${sid}`
   }
   const handleRedirectToSceneEdit = (sid: number) => {
     window.location.href = `/verse/edit/${sid}`
@@ -67,14 +71,14 @@ const ScenesOverviewWithTabsSection = () => {
     sceneBase?.attributes?.cover?.data?.attributes?.url ? (
       <Avatar
         variant='rounded'
-        alt={`own-scene-tabs-${sceneBase?.attributes.displayName}`}
+        alt={`me-scene-tabs-${sceneBase?.attributes.displayName}`}
         src={`${apiConfig.publicFolderUrl}${sceneBase.attributes.cover.data.attributes.url}`}
         sx={{
           width: theme => theme.spacing(40),
           height: theme => theme.spacing(25),
           backgroundColor: 'transparent',
           border: theme =>
-            tabValue === `own-scene-${sceneBase.id}`
+            tabValue === `me-scene-${sceneBase.id}`
               ? `2px solid ${theme.palette.primary.main}`
               : `2px dashed ${theme.palette.divider}`
         }}
@@ -110,7 +114,7 @@ const ScenesOverviewWithTabsSection = () => {
           <TableBody>
             {assetList.map(asset => (
               <TableRow
-                key={`own-scene-asset-list-${asset.id}`}
+                key={`me-scene-asset-list-${asset.id}`}
                 sx={{
                   '& .MuiTableCell-root': {
                     border: 0,
@@ -196,16 +200,16 @@ const ScenesOverviewWithTabsSection = () => {
             '& .MuiTabs-indicator': { display: 'none' }
           }}
         >
-          {ownSceneList.map(ownScene => (
+          {meScenes.map(meScene => (
             <Tab
-              key={`own-scene-${ownScene.id}`}
-              value={`own-scene-${ownScene.id}`}
+              key={`me-scene-${meScene.id}`}
+              value={`me-scene-${meScene.id}`}
               sx={{ p: 0 }}
-              label={<RenderTabCover sceneBase={ownScene} />}
+              label={<RenderTabCover sceneBase={meScene} />}
             />
           ))}
           <Tab
-            disabled={ownSceneList.length >= 3}
+            disabled={meScenes.length >= 3}
             value='default'
             sx={{ p: 0 }}
             label={
@@ -240,13 +244,13 @@ const ScenesOverviewWithTabsSection = () => {
           />
         </TabList>
 
-        {ownSceneList.map(ownScene => (
+        {meScenes.map(meScene => (
           <TabPanel
-            key={`own-scene-asset-${ownScene.id}`}
+            key={`me-scene-asset-${meScene.id}`}
             sx={{ p: 0, display: 'flex', flexDirection: 'column' }}
-            value={`own-scene-${ownScene.id}`}
+            value={`me-scene-${meScene.id}`}
           >
-            <RenderTabContent assetList={ownScene.attributes.assetList.data!} />
+            <RenderTabContent assetList={meScene.attributes.assetList.data!} />
             <Box
               sx={{
                 p: 4,
@@ -256,12 +260,12 @@ const ScenesOverviewWithTabsSection = () => {
               }}
             >
               <Box>
-                <Button variant='outlined' disabled>
+                <Button variant='outlined' onClick={() => handleRedirectToSceneView(meScene.id)}>
                   View scene
                 </Button>
               </Box>
               <Box>
-                <Button variant='contained' onClick={() => handleRedirectToSceneEdit(ownScene.id)}>
+                <Button variant='contained' onClick={() => handleRedirectToSceneEdit(meScene.id)}>
                   Edit scene
                 </Button>
               </Box>
@@ -279,7 +283,7 @@ const ScenesOverviewWithTabsSection = () => {
             <Typography variant='body2' sx={{ mb: 6.5 }}>
               Select scene to view your assets.
             </Typography>
-            {ownSceneList.length < 3 && (
+            {meScenes.length < 3 && (
               <Button
                 onClick={() => router.push('/verse/create')}
                 variant='contained'

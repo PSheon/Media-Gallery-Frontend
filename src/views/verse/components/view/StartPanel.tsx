@@ -78,7 +78,8 @@ const StartPanel = () => {
   const dispatch = useDispatch<AppDispatch>()
   const START_PANEL = useSelector(({ verse }: RootState) => verse.view.startPanel)
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
-  const { isLoading: isQueryLoading, data: sceneBase } = useSceneQuery({ sid: sid as string })
+  const { isLoading: isQueryLoading, data: queryData } = useSceneQuery({ sid: sid as string })
+  const sceneBase = queryData?.data
 
   // ** Logics
   const handleConfirm = () => {

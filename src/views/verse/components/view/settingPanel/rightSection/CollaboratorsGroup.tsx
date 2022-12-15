@@ -42,8 +42,9 @@ const CollaboratorsGroup = () => {
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
   const {
     // isLoading: isQueryLoading,
-    data: sceneBase
+    data: queryData
   } = useSceneQuery({ sid: sid as string })
+  const sceneBase = queryData?.data
 
   // ** States
   const [collaboratorsGroupDialogOpen, setCollaboratorsGroupDialogOpen] = useState(false)

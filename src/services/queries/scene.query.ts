@@ -5,12 +5,12 @@ import { useQuery } from '@tanstack/react-query'
 import { getMeScenes, getScenes, getScene } from 'src/services/api/scene.service'
 
 // ** Types Imports
-import type { GetSceneProps, GetScenesProps, GetScenesResponse, IScene } from 'src/types/sceneTypes'
+import type { GetSceneProps, GetScenesProps, GetScenesResponse, GetSceneResponse } from 'src/types/sceneTypes'
 
-export const useMeScenesQuery = () => useQuery<IScene[]>(['scenes', 'me'], () => getMeScenes())
+export const useMeScenesQuery = () => useQuery<GetScenesResponse>(['scenes', 'me'], () => getMeScenes())
 
 export const useScenesQuery = (params: GetScenesProps) =>
   useQuery<GetScenesResponse>(['scenes', { params }], () => getScenes(params), { keepPreviousData: true })
 
 export const useSceneQuery = (params: GetSceneProps) =>
-  useQuery<IScene>(['scenes', params.sid], () => getScene(params), { enabled: !!params.sid })
+  useQuery<GetSceneResponse>(['scenes', params.sid], () => getScene(params), { enabled: !!params.sid })

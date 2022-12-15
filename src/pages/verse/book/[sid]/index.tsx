@@ -24,7 +24,8 @@ function ViewVersePage() {
   const router = useRouter()
   const { sid } = router.query
   const hmsActions = useHMSActions()
-  const { isLoading: isQueryLoading, data: sceneBase, isError: isQueryError } = useSceneQuery({ sid: sid as string })
+  const { isLoading: isQueryLoading, data: queryData, isError: isQueryError } = useSceneQuery({ sid: sid as string })
+  const sceneBase = queryData?.data
 
   // ** Side Effect
   useEffect(() => {

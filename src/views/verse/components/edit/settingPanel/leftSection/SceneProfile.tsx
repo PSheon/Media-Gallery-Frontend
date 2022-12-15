@@ -82,7 +82,8 @@ const SceneProfile = () => {
   const [files, selectFiles] = useFileUpload()
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
   const queryClient = useQueryClient()
-  const { isLoading: isQueryLoading, data: sceneBase } = useSceneQuery({ sid: sid as string })
+  const { isLoading: isQueryLoading, data: queryData } = useSceneQuery({ sid: sid as string })
+  const sceneBase = queryData?.data
   const { mutate: updateScene, isLoading: isUpdateSceneLoading } = useMutation({
     mutationFn: (newSceneData: UpdateSceneFormData) =>
       axios({

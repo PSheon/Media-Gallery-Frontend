@@ -70,7 +70,8 @@ const EditDialogBox = () => {
   const EDIT_DIALOG_BOX = useSelector(({ verse }: RootState) => verse.edit.editDialogBox)
   const queryClient = useQueryClient()
   const { isLoading: isQueryOwnNftListLoading, data: ownNftList = [] } = useMeSceneAssetsQuery({ chain: 'eth' })
-  const { isLoading: isQuerySceneBaseLoading, data: sceneBase } = useSceneQuery({ sid: sid as string })
+  const { isLoading: isQuerySceneBaseLoading, data: queryData } = useSceneQuery({ sid: sid as string })
+  const sceneBase = queryData?.data
   const { mutate: updateAssetFrame, isLoading: isUpdateAssetFrameLoading } = useMutation({
     mutationFn: ({ aid, attributes }: FormData) =>
       axios({
