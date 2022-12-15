@@ -47,9 +47,10 @@ const ActivityTimelineSection = () => {
   const {
     isLoading: isQueryLoading,
     isError: isQueryError,
-    data: accesses = [],
+    data: queryData,
     error: queryError
   } = useMeAccessesQuery({ limit: 3 })
+  const accesses = queryData?.data || []
 
   // ** Logics
   const getTypeColor = (accessType: IAccessType) => {

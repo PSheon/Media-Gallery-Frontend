@@ -5,7 +5,7 @@ export interface GetMeAccessesProps {
   limit: number
 }
 
-export interface GetMeAccessesResponse {
+export interface GetAccessesResponse {
   data: IAccess[]
   meta: {}
 }

@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getMeAccesses } from 'src/services/api/access.service'
 
 // ** Types Imports
-import type { IAccess, GetMeAccessesProps } from 'src/types/accessTypes'
+import type { GetMeAccessesProps, GetAccessesResponse } from 'src/types/accessTypes'
 
 export const useMeAccessesQuery = (params: GetMeAccessesProps) =>
-  useQuery<IAccess[]>(['accesses', 'me', { params }], () => getMeAccesses(params))
+  useQuery<GetAccessesResponse>(['accesses', 'me', { params }], () => getMeAccesses(params))
