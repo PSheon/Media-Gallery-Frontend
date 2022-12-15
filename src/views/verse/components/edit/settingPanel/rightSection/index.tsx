@@ -1,3 +1,6 @@
+// ** Next Import
+import { useRouter } from 'next/router'
+
 // ** MUI Imports
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Theme } from '@mui/material/styles'
@@ -16,7 +19,14 @@ import Icon from 'src/@core/components/icon'
 
 const RightSection = () => {
   // ** Hooks
+  const router = useRouter()
+  const { sid } = router.query
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
+
+  // ** Logics
+  const handleRedirectToSceneView = () => {
+    window.location.href = `/verse/book/${sid}`
+  }
 
   return (
     <Grid container spacing={4} justifyContent='flex-end' alignItems='center' sx={{ pr: 4, py: 2, flex: 2 }}>
@@ -44,6 +54,7 @@ const RightSection = () => {
       {isDesktop && (
         <Grid item>
           <Box
+            onClick={() => handleRedirectToSceneView()}
             sx={{
               p: 4,
               height: '100%',
