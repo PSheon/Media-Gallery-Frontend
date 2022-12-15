@@ -83,12 +83,7 @@ const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
 const SceneModelSelectionList = () => {
   // ** Hooks
   const router = useRouter()
-  const {
-    isLoading: isQueryLoading,
-    isError: isQueryError,
-    data: sceneModels = [],
-    error: queryError
-  } = useSceneModelsQuery()
+  const { isLoading: isQueryLoading, isError: isQueryError, data: queryData, error: queryError } = useSceneModelsQuery()
   const { mutate: createScene, isLoading: isCreateSceneLoading } = useMutation({
     mutationFn: (newData: FormData) =>
       axios({
@@ -104,6 +99,7 @@ const SceneModelSelectionList = () => {
       toast.error('Create scene failed.')
     }
   })
+  const sceneModels = queryData?.data || []
 
   // ** States
   const [activeTab, setActiveTab] = useState<string>('free')

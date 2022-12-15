@@ -5,6 +5,6 @@ import { useQuery } from '@tanstack/react-query'
 import { getSceneModels } from 'src/services/api/sceneModel.service'
 
 // ** Types Imports
-import type { ISceneModel } from 'src/types/sceneModelTypes'
+import type { GetSceneModelResponse } from 'src/types/sceneModelTypes'
 
-export const useSceneModelsQuery = () => useQuery<ISceneModel[]>(['scene-models'], () => getSceneModels())
+export const useSceneModelsQuery = () => useQuery<GetSceneModelResponse>(['scene-models'], () => getSceneModels())

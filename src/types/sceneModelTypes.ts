@@ -11,7 +11,7 @@ export type FetchSceneParamsType = {
   locale?: string[]
 }
 
-export interface GetMeSceneModelResponse {
+export interface GetSceneModelResponse {
   data: ISceneModel[]
   meta: {}
 }

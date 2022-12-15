@@ -2,10 +2,10 @@
 import axios from 'axios'
 
 // ** Types Imports
-import type { GetMeSceneModelResponse, ISceneModel } from 'src/types/sceneModelTypes'
+import type { GetSceneModelResponse } from 'src/types/sceneModelTypes'
 
-export const getSceneModels = async (): Promise<ISceneModel[]> => {
-  const { data } = await axios<GetMeSceneModelResponse>({
+export const getSceneModels = async (): Promise<GetSceneModelResponse> => {
+  const { data } = await axios<GetSceneModelResponse>({
     method: 'GET',
     url: '/api/scene-models',
     params: {
@@ -13,5 +13,5 @@ export const getSceneModels = async (): Promise<ISceneModel[]> => {
     }
   })
 
-  return data.data
+  return data
 }
