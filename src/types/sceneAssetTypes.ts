@@ -5,7 +5,7 @@ export interface GetMeSceneAssetsProps {
   chain: string
 }
 
-export interface GetMeSceneAssetsResponse {
+export interface GeSceneAssetsResponse {
   data: ISceneAsset[]
   meta: {}
 }

@@ -2,14 +2,14 @@
 import axios from 'axios'
 
 // ** Types Imports
-import type { GetMeSceneAssetsProps, GetMeSceneAssetsResponse, ISceneAsset } from 'src/types/sceneAssetTypes'
+import type { GetMeSceneAssetsProps, GeSceneAssetsResponse } from 'src/types/sceneAssetTypes'
 
-export const getMeSceneAssets = async (params: GetMeSceneAssetsProps): Promise<ISceneAsset[]> => {
-  const { data } = await axios<GetMeSceneAssetsResponse>({
+export const getMeSceneAssets = async (params: GetMeSceneAssetsProps): Promise<GeSceneAssetsResponse> => {
+  const { data } = await axios<GeSceneAssetsResponse>({
     method: 'GET',
     url: '/api/scene-assets/me',
     params
   })
 
-  return data.data
+  return data
 }
