@@ -1,5 +1,6 @@
 // ** Utils Imports
 import axios from 'axios'
+import _ from 'lodash'
 
 // ** Types Imports
 import type {
@@ -20,7 +21,21 @@ export const getMeScenes = async (): Promise<IScene[]> => {
   return data.data
 }
 
-export const getScenes = async (params: GetScenesProps): Promise<IScene[]> => {
+export const getScenes = async (params: GetScenesProps): Promise<GetScenesResponse> => {
+  const enhancedParams = {
+    filters: {
+      ...(params.displayName && {
+        displayName: {
+          $contains: params.displayName
+        }
+      })
+    },
+    pagination: {
+      page: params.page,
+      pageSize: params.pageSize
+    }
+  }
+
   const { data } = await axios<GetScenesResponse>({
     method: 'GET',
     url: '/api/scenes',
@@ -40,11 +55,11 @@ export const getScenes = async (params: GetScenesProps): Promise<IScene[]> => {
         },
         sceneModel: true
       },
-      pagination: params
+      ...enhancedParams
     }
   })
 
-  return data.data
+  return data
 }
 
 export const getScene = async (params: GetSceneProps): Promise<IScene> => {

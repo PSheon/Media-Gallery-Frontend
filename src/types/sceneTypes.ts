@@ -8,6 +8,7 @@ export interface GetSceneProps {
 }
 
 export interface GetScenesProps {
+  displayName: string
   page: number
   pageSize: number
 }
@@ -24,7 +25,14 @@ export interface GetSceneResponse {
 
 export interface GetScenesResponse {
   data: IScene[]
-  meta: {}
+  meta: {
+    pagination: {
+      page: number
+      pageCount: number
+      pageSize: number
+      total: number
+    }
+  }
 }
 
 export type IScene = {

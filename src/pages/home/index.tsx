@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useCallback } from 'react'
+import { useState, ChangeEvent /* useCallback */ } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -14,13 +14,20 @@ import Skeleton from '@mui/material/Skeleton'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import CardMedia from '@mui/material/CardMedia'
-import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
+import Pagination from '@mui/material/Pagination'
+import InputAdornment from '@mui/material/InputAdornment'
+
+// import MenuItem from '@mui/material/MenuItem'
+// import InputLabel from '@mui/material/InputLabel'
+// import FormControl from '@mui/material/FormControl'
+// import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 // ** Services Imports
 import { useScenesQuery } from 'src/services/queries/scene.query'
+
+// ** Hooks Imports
+import useDebounce from 'src/hooks/useDebounce'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -32,33 +39,39 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 import apiConfig from 'src/configs/api'
 
 const HomePage = () => {
-  // ** Hooks
+  // ** States
+  // const [role, setRole] = useState<string>('')
+  // const [plan, setPlan] = useState<string>('')
+  // const [status, setStatus] = useState<string>('')
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [page, setPage] = useState<number>(1)
+  const debouncedSearchTerm = useDebounce<string>(searchTerm, 500)
   const {
     isLoading: isQueryLoading,
-    data: scenes = []
+    data: queryData
 
     // isError: isQueryError
   } = useScenesQuery({
-    page: 1,
-    pageSize: 25
+    displayName: debouncedSearchTerm,
+    page,
+    pageSize: 24
   })
+  const scenes = queryData?.data || []
+  const meta = queryData?.meta || { pagination: { page: 1, pageCount: 1, pageSize: 24, total: 0 } }
 
-  // ** States
-  const [role, setRole] = useState<string>('')
-  const [plan, setPlan] = useState<string>('')
-  const [status, setStatus] = useState<string>('')
-
-  const handleRoleChange = useCallback((e: SelectChangeEvent) => {
-    setRole(e.target.value)
-  }, [])
-
-  const handlePlanChange = useCallback((e: SelectChangeEvent) => {
-    setPlan(e.target.value)
-  }, [])
-
-  const handleStatusChange = useCallback((e: SelectChangeEvent) => {
-    setStatus(e.target.value)
-  }, [])
+  // ** Logics
+  // const handleRoleChange = useCallback((e: SelectChangeEvent) => {
+  //   setRole(e.target.value)
+  // }, [])
+  // const handlePlanChange = useCallback((e: SelectChangeEvent) => {
+  //   setPlan(e.target.value)
+  // }, [])
+  // const handleStatusChange = useCallback((e: SelectChangeEvent) => {
+  //   setStatus(e.target.value)
+  // }, [])
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value)
+  }
 
   return (
     <Grid container spacing={4}>
@@ -66,7 +79,7 @@ const HomePage = () => {
         <Card>
           <CardContent>
             <Grid container spacing={6}>
-              <Grid item xs={12} sm={4}>
+              {/* <Grid item xs={12} sm={3}>
                 <FormControl fullWidth>
                   <InputLabel id='role-select'>Select Role</InputLabel>
                   <Select
@@ -87,7 +100,7 @@ const HomePage = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={3}>
                 <FormControl fullWidth>
                   <InputLabel id='plan-select'>Select Plan</InputLabel>
                   <Select
@@ -107,7 +120,7 @@ const HomePage = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={3}>
                 <FormControl fullWidth>
                   <InputLabel id='status-select'>Select Status</InputLabel>
                   <Select
@@ -125,6 +138,21 @@ const HomePage = () => {
                     <MenuItem value='inactive'>Inactive</MenuItem>
                   </Select>
                 </FormControl>
+              </Grid> */}
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  placeholder='Search...'
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <Icon icon={isQueryLoading ? 'line-md:loading-twotone-loop' : 'material-symbols:search'} />
+                      </InputAdornment>
+                    )
+                  }}
+                />
               </Grid>
             </Grid>
           </CardContent>
@@ -140,7 +168,12 @@ const HomePage = () => {
             <Typography variant='body1' sx={{ mb: 4 }}>
               EXPERIENCE WITH OTHERS
             </Typography>
-            <Button variant='contained' sx={{ p: theme => theme.spacing(1.75, 5.5) }}>
+            <Button
+              component={Link}
+              href='/verse/create'
+              variant='contained'
+              sx={{ p: theme => theme.spacing(1.75, 5.5) }}
+            >
               Create New
             </Button>
           </CardContent>
@@ -155,69 +188,85 @@ const HomePage = () => {
               </Grid>
             ))}
 
-          {scenes.map(scene => (
-            <Grid item key={`scene-model-${scene.id}`} xs={12} sm={6}>
-              <Card sx={{ position: 'relative' }}>
-                <CardMedia
-                  sx={{ height: 220 }}
-                  image={`${apiConfig.publicFolderUrl}${scene?.attributes?.cover?.data?.attributes.url}`}
-                />
-                <Avatar
-                  alt={scene?.attributes?.owner?.data?.attributes.username}
-                  src={`${apiConfig.publicFolderUrl}${scene?.attributes?.owner?.data?.attributes.avatar?.data?.attributes.url}`}
-                  sx={{
-                    top: 180,
-                    left: 20,
-                    width: 78,
-                    height: 78,
-                    position: 'absolute',
-                    border: theme => `5px solid ${theme.palette.common.white}`
-                  }}
-                />
-                <CardContent>
-                  <Box
-                    sx={{
-                      mt: 5.75,
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
-                  >
-                    <Box sx={{ mr: 2, mb: 1, display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant='h6'>{scene?.attributes?.displayName || 'Untitled'}</Typography>
-                      <Typography variant='caption'>{scene?.attributes?.description || 'no description'}</Typography>
-                    </Box>
-                    <Button variant='contained' component={Link} href={`/verse/book/${scene.id}`}>
-                      Visit
-                    </Button>
-                  </Box>
-                  {/* <Box
-                    sx={{
-                      gap: 2,
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <Typography variant='caption' sx={{ whiteSpace: 'nowrap' }}>
-                      {`${0} assets`}
-                    </Typography>
-                    <AvatarGroup max={4}>
-                      <Avatar src='/images/avatars/6.png' alt='Alice Cobb' />
-                      <Avatar src='/images/avatars/5.png' alt='Jeffery Warner' />
-                      <Avatar src='/images/avatars/4.png' alt='Howard Lloyd' />
-                      <Avatar src='/images/avatars/2.png' alt='Bettie Dunn' />
-                      <Avatar src='/images/avatars/4.png' alt='Olivia Sparks' />
-                      <Avatar src='/images/avatars/5.png' alt='Jimmy Hanson' />
-                      <Avatar src='/images/avatars/6.png' alt='Hallie Richards' />
-                    </AvatarGroup>
-                  </Box> */}
+          {scenes.length ? (
+            scenes
+              .map(scene => (
+                <Grid item key={`scene-model-${scene.id}`} xs={12} sm={6}>
+                  <Card sx={{ position: 'relative' }}>
+                    <CardMedia
+                      sx={{ height: 220 }}
+                      image={
+                        scene?.attributes?.cover?.data?.attributes.url
+                          ? `${apiConfig.publicFolderUrl}${scene?.attributes?.cover?.data?.attributes.url}`
+                          : '/images/logos/media-app.png'
+                      }
+                    />
+                    <Avatar
+                      alt={scene?.attributes?.owner?.data?.attributes.username}
+                      src={
+                        scene?.attributes?.owner?.data?.attributes.avatar?.data?.attributes.url
+                          ? `${apiConfig.publicFolderUrl}${scene?.attributes?.owner?.data?.attributes.avatar?.data?.attributes.url}`
+                          : '/images/avatars/1.png'
+                      }
+                      sx={{
+                        top: 180,
+                        left: 20,
+                        width: 78,
+                        height: 78,
+                        position: 'absolute',
+                        border: theme => `5px solid ${theme.palette.common.white}`
+                      }}
+                    />
+                    <CardContent>
+                      <Box
+                        sx={{
+                          mt: 5.75,
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Box sx={{ mr: 2, mb: 1, display: 'flex', flexDirection: 'column' }}>
+                          <Typography variant='h6'>{scene?.attributes?.displayName || 'Untitled'}</Typography>
+                          <Typography variant='caption'>
+                            {scene?.attributes?.description || 'no description'}
+                          </Typography>
+                        </Box>
+                        <Button variant='contained' component={Link} href={`/verse/book/${scene.id}`}>
+                          Visit
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))
+              .concat(
+                <Grid key='scene-model-pagination' item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Pagination
+                    count={meta.pagination.pageCount}
+                    onChange={(e, newPage) => setPage(newPage)}
+                    shape='rounded'
+                    color='primary'
+                  />
+                </Grid>
+              )
+          ) : (
+            <Grid item xs={12}>
+              <Card>
+                <CardContent
+                  sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}
+                >
+                  <CustomAvatar skin='light' sx={{ width: 56, height: 56, mb: 2 }}>
+                    <Icon icon='mdi:help-circle-outline' fontSize='2rem' />
+                  </CustomAvatar>
+                  <Typography variant='h6' sx={{ mb: 2 }}>
+                    No results found.
+                  </Typography>
                 </CardContent>
               </Card>
             </Grid>
-          ))}
+          )}
         </Grid>
       </Grid>
     </Grid>
