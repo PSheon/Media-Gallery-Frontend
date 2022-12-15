@@ -558,7 +558,7 @@ export class World {
         // @ts-ignore
         room.state.players.onAdd = (player, sessionId) => {
           if (room.sessionId !== sessionId) {
-            gltfLoader.load(`/assets/glb/character/${player.metadata.avatarModel}.glb`, model => {
+            gltfLoader.load(`/assets/book/character/draco-${player.metadata.avatarModel}.glb`, model => {
               toast.success(`${player.metadata.displayName} joined!`)
               const visitor = new Character(model)
 

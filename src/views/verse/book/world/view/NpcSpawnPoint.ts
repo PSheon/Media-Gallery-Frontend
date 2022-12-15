@@ -16,7 +16,7 @@ export class NpcSpawnPoint implements ISpawnPoint {
 
   public spawn(loadingManager: LoadingManager, world: World): void {
     const npcModel = this.object.userData?.model ?? 'shark_boy'
-    loadingManager.loadGLTF(`/assets/glb/npc/${npcModel}.glb`, model => {
+    loadingManager.loadGLTF(`/assets/book/character/draco-${npcModel}.glb`, model => {
       const npc = new Character(model)
       npc.setMetadata({ displayName: this.object.userData?.displayName ?? 'Bob', objectType: 'npc' })
       npc.setLabelVisible(world.params.Label_Visible)

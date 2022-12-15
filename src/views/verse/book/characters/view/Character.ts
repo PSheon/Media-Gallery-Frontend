@@ -373,7 +373,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
 
   // NOTE: performance optimization needed
   public changeAvatar(newAvatarModel: string, isTriggerRoomEvent = false) {
-    this.gltfLoader.load(`/assets/glb/character/${newAvatarModel}.glb`, gltf => {
+    this.gltfLoader.load(`/assets/book/character/draco-${newAvatarModel}.glb`, gltf => {
       this.materials = []
       this.tiltContainer.remove(this.modelContainer)
 
