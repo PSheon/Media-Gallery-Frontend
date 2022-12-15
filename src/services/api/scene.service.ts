@@ -1,9 +1,8 @@
 // ** Utils Imports
 import axios from 'axios'
-import _ from 'lodash'
 
 // ** Types Imports
-import type { GetScenesProps, GetSceneResponse, GetScenesResponse, GetSceneProps, IScene } from 'src/types/sceneTypes'
+import type { GetScenesProps, GetSceneResponse, GetScenesResponse, GetSceneProps } from 'src/types/sceneTypes'
 
 export const getMeScenes = async (): Promise<GetScenesResponse> => {
   const { data } = await axios<GetScenesResponse>({
