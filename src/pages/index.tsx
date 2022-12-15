@@ -17,7 +17,7 @@ export const getHomeRoute = (role: string) => {
   if (role === 'client') return '/acl'
   if (role === 'admin') return '/dashboards/admin'
   if (role === 'staff') return '/dashboards/staff'
-  if (role === 'user') return '/dashboards/user'
+  if (role === 'user') return '/home'
   else return '/home'
 }
 
