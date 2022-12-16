@@ -97,13 +97,19 @@ const SceneModelCard = (props: Props) => {
         }}
       >
         <Box sx={{ px: 2, display: 'flex', flexDirection: 'column' }}>
-          <Typography variant='h6'>{displayName}</Typography>
-          <Typography variant='body2'>{`Create by ${creatorName}`}</Typography>
+          <Typography variant='h6' color='common.white'>
+            {displayName}
+          </Typography>
+          <Typography variant='body2' color='common.white'>{`Create by ${creatorName}`}</Typography>
         </Box>
 
         <Box sx={{ px: 2, display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-          <Typography variant='h6'>{frameCount}</Typography>
-          <Typography variant='body2'>Frames</Typography>
+          <Typography variant='h6' color='common.white'>
+            {frameCount}
+          </Typography>
+          <Typography variant='body2' color='common.white'>
+            Frames
+          </Typography>
         </Box>
       </Box>
     </Box>
