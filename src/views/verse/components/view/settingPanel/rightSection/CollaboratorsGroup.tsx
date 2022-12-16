@@ -50,14 +50,15 @@ const CollaboratorsGroup = () => {
   const [collaboratorsGroupDialogOpen, setCollaboratorsGroupDialogOpen] = useState(false)
 
   // ** Logics
-  const handleCollaboratorsGroupDialogOpen = () => setCollaboratorsGroupDialogOpen(true)
-  const handleCollaboratorsGroupDialogClose = () => setCollaboratorsGroupDialogOpen(false)
-
-  // ** Side Effect
-  if (worldInstance) {
-    if (collaboratorsGroupDialogOpen) {
+  const handleCollaboratorsGroupDialogOpen = () => {
+    setCollaboratorsGroupDialogOpen(true)
+    if (worldInstance) {
       worldInstance.setDialogMode(true)
-    } else {
+    }
+  }
+  const handleCollaboratorsGroupDialogClose = () => {
+    setCollaboratorsGroupDialogOpen(false)
+    if (worldInstance) {
       worldInstance.setDialogMode(false)
     }
   }

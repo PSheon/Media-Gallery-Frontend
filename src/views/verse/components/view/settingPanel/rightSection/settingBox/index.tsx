@@ -34,17 +34,18 @@ const SettingBox = () => {
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
 
   // ** States
-  const [open, setOpen] = useState<boolean>(false)
+  const [settingBoxDialogOpen, setSettingBoxDialogOpen] = useState<boolean>(false)
 
   // ** Logics
-  const handleSettingBoxOpen = () => setOpen(() => true)
-  const handleSettingBoxClose = () => setOpen(() => false)
-
-  // ** Side Effect
-  if (worldInstance) {
-    if (open) {
+  const handleSettingBoxOpen = () => {
+    setSettingBoxDialogOpen(true)
+    if (worldInstance) {
       worldInstance.setDialogMode(true)
-    } else {
+    }
+  }
+  const handleSettingBoxClose = () => {
+    setSettingBoxDialogOpen(false)
+    if (worldInstance) {
       worldInstance.setDialogMode(false)
     }
   }
@@ -73,7 +74,7 @@ const SettingBox = () => {
 
       <Dialog
         fullWidth
-        open={open}
+        open={settingBoxDialogOpen}
         scroll='body'
         maxWidth='sm'
         onClose={handleSettingBoxClose}
