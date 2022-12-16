@@ -36,11 +36,10 @@ import { RootState } from 'src/store'
 import { ISceneAsset } from 'src/types/sceneAssetTypes'
 
 // ** Styled StyledRootDialog component
-const StyledRootDialog = styled(Dialog)<DialogProps>(({ theme }) => ({
+const StyledRootDialog = styled(Dialog)<DialogProps>(() => ({
   '& .MuiDialog-container': {
     display: 'flex',
-    flexDirection: 'column',
-    paddingLeft: theme.spacing(6)
+    flexDirection: 'column'
   }
 }))
 
@@ -74,6 +73,23 @@ const ViewDialogBox = () => {
   }
 
   // ** Renders
+  const renderTokeChainIcon = (chainName: ISceneAsset['attributes']['tokenChain']) => {
+    let iconURI = ''
+    if (chainName === 'eth') {
+      iconURI = 'cryptocurrency-color:eth'
+    }
+    if (chainName === 'polygon') {
+      iconURI = 'cryptocurrency-color:polygon'
+    }
+    if (chainName === 'bsc') {
+      iconURI = 'cryptocurrency-color:bsc'
+    }
+    if (chainName === 'avalanche') {
+      iconURI = 'cryptocurrency-color:avax'
+    }
+
+    return <Icon icon={iconURI} />
+  }
   const renderNftBox = (ownNft: ISceneAsset) => {
     if (
       ownNft?.attributes?.coverFileType === 'png' ||
@@ -169,34 +185,37 @@ const ViewDialogBox = () => {
               {renderNftBox(currentPlacedAsset)}
             </Grid>
             <Grid item xs={12} sm={7}>
-              <Grid container spacing={6}>
-                <Grid item xs={12} sm={6}>
+              <Grid container spacing={4}>
+                <Grid item xs={12} sm={2}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <CustomAvatar skin='light' variant='rounded' color='secondary'>
+                      {renderTokeChainIcon(currentPlacedAsset?.attributes.tokenChain)}
+                    </CustomAvatar>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={10}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <CustomAvatar skin='light' variant='rounded' color='primary' sx={{ mr: 4 }}>
                       <Icon icon='mdi:account-outline' />
                     </CustomAvatar>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
-                        Owner
-                      </Typography>
-                      <Typography variant='caption'>
+                      <Typography variant='subtitle1' sx={{ fontWeight: 600 }} noWrap>
                         {currentPlacedAsset?.attributes?.owner?.data?.attributes.username}
                       </Typography>
+                      <Typography variant='caption'>Owner</Typography>
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CustomAvatar skin='light' variant='rounded' color='primary' sx={{ mr: 4 }}>
-                      <Icon icon='mdi:account-outline' />
+                    <CustomAvatar skin='light' variant='rounded' color='secondary' sx={{ mr: 4 }}>
+                      <Icon icon='uil:file-contract' />
                     </CustomAvatar>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
-                        Owner
+                      <Typography variant='subtitle1' sx={{ fontWeight: 600 }} noWrap>
+                        {currentPlacedAsset?.attributes?.tokenContract}
                       </Typography>
-                      <Typography variant='caption'>
-                        {currentPlacedAsset?.attributes?.owner?.data?.attributes.username}
-                      </Typography>
+                      <Typography variant='caption'>Contract</Typography>
                     </Box>
                   </Box>
                 </Grid>
