@@ -185,7 +185,7 @@ const SceneProfile = () => {
   return (
     <Fragment>
       <Box onClick={handleSceneEditPanelOpen} sx={{ position: 'relative' }}>
-        <SceneCard sceneBase={sceneBase} />
+        <SceneCard sceneBase={sceneBase!} />
 
         <Backdrop
           open={isQueryLoading}
