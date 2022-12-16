@@ -49,9 +49,6 @@ const SceneListMenu = () => {
       worldInstance.setDialogMode(false)
     }
   }
-  const handleRedirectToSceneEdit = (sid: number) => {
-    window.location.href = `/verse/edit/${sid}`
-  }
 
   return (
     <Fragment>
@@ -96,7 +93,7 @@ const SceneListMenu = () => {
                 </Grid>
               ))}
             {meScenes.map((scene, index) => (
-              <Grid key={`me-scene-${index}`} item xs={12} onClick={() => handleRedirectToSceneEdit(scene.id)}>
+              <Grid key={`me-scene-${index}`} item xs={12}>
                 <SceneCard sceneBase={scene} withControl />
               </Grid>
             ))}

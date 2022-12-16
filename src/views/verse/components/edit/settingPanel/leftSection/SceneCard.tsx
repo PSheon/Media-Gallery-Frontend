@@ -23,7 +23,7 @@ import { IScene } from 'src/types/sceneTypes'
 const ITEM_HEIGHT = 48
 
 interface Props {
-  sceneBase?: IScene
+  sceneBase: IScene
   isCurrentScene?: boolean
   withControl?: boolean
 }
@@ -40,15 +40,20 @@ const SceneCard = (props: Props) => {
 
   // ** Logics
   const handleClick = (event: MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
-
-  const handleClose = () => {
+  const handleClose = (event: MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
     setAnchorEl(null)
+  }
+  const handleRedirectToSceneEdit = (sid: number) => {
+    window.location.href = `/verse/edit/${sid}`
   }
 
   return (
     <Box
+      onClick={() => handleRedirectToSceneEdit(sceneBase.id)}
       sx={{
         px: 4,
         py: 2,

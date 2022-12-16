@@ -45,9 +45,7 @@ const CreateSceneCard = () => {
         <Icon icon='material-symbols:add' fontSize={24} />
       </Box>
       <Box sx={{ display: 'flex', ml: 4, mr: 2, flexDirection: 'column' }}>
-        <Typography sx={{ fontWeight: 600 }} color='common.white'>
-          Create New Scene
-        </Typography>
+        <Typography sx={{ fontWeight: 600 }}>Create New Scene</Typography>
       </Box>
     </Box>
   )
