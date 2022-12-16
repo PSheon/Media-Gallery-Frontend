@@ -47,7 +47,7 @@ const StyledLink = styled(Link)({
 const PanelCard = styled(Card)<CardProps>(({ theme }) => ({
   width: 'fit-content',
   height: 'fit-content',
-  padding: 4,
+  padding: theme.spacing(1, 2),
   alignItems: 'center',
   borderRadius: '1.8rem',
   backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)',

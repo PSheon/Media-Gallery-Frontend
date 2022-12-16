@@ -47,13 +47,9 @@ const SceneCard = (props: Props) => {
     event.stopPropagation()
     setAnchorEl(null)
   }
-  const handleRedirectToSceneEdit = (sid: number) => {
-    window.location.href = `/verse/edit/${sid}`
-  }
 
   return (
     <Box
-      onClick={() => handleRedirectToSceneEdit(sceneBase.id)}
       sx={{
         px: 4,
         py: 2,

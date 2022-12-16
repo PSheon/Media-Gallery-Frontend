@@ -40,7 +40,6 @@ const PanelCard = styled(Card)<CardProps>(({ theme }) => ({
   padding: theme.spacing(1, 3),
   backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.8)',
   transition: theme.transitions.create('background-color'),
-
   '&:hover': {
     backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.95)'
   }
