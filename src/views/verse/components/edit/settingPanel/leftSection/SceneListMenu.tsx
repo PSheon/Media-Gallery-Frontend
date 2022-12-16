@@ -37,19 +37,20 @@ const SceneListMenu = () => {
   const [sceneListOpen, setSceneListOpen] = useState(false)
 
   // ** Logics
-  const handleSceneListOpen = () => setSceneListOpen(true)
-  const handleSceneListClose = () => setSceneListOpen(false)
-  const handleRedirectToSceneEdit = (sid: number) => {
-    window.location.href = `/verse/edit/${sid}`
-  }
-
-  // ** Side Effect
-  if (worldInstance) {
-    if (sceneListOpen) {
+  const handleSceneListOpen = () => {
+    setSceneListOpen(true)
+    if (worldInstance) {
       worldInstance.setDialogMode(true)
-    } else {
+    }
+  }
+  const handleSceneListClose = () => {
+    setSceneListOpen(false)
+    if (worldInstance) {
       worldInstance.setDialogMode(false)
     }
+  }
+  const handleRedirectToSceneEdit = (sid: number) => {
+    window.location.href = `/verse/edit/${sid}`
   }
 
   return (

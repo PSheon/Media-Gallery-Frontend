@@ -92,8 +92,18 @@ const MiddleSection = () => {
   const [statisticsDialogOpen, setStatisticsDialogOpen] = useState<boolean>(false)
 
   // ** Logics
-  const handleStatisticsDialogOpen = () => setStatisticsDialogOpen(true)
-  const handleStatisticsDialogClose = () => setStatisticsDialogOpen(false)
+  const handleStatisticsDialogOpen = () => {
+    setStatisticsDialogOpen(true)
+    if (worldInstance) {
+      worldInstance.setDialogMode(true)
+    }
+  }
+  const handleStatisticsDialogClose = () => {
+    setStatisticsDialogOpen(false)
+    if (worldInstance) {
+      worldInstance.setDialogMode(false)
+    }
+  }
   const handleDeleteAssetFrameClick = (nftData: ISceneAsset) => {
     updateAssetFrame({
       aid: nftData.id,
@@ -102,15 +112,6 @@ const MiddleSection = () => {
         scene: null
       }
     })
-  }
-
-  // ** Side Effect
-  if (worldInstance) {
-    if (statisticsDialogOpen) {
-      worldInstance.setDialogMode(true)
-    } else {
-      worldInstance.setDialogMode(false)
-    }
   }
 
   // ** Render

@@ -26,14 +26,16 @@ const ControlHintBox = () => {
   // ** States
   const [controlHintDialogOpen, setControlHintDialogOpen] = useState(false)
 
-  const handleControlHintDialogOpen = () => setControlHintDialogOpen(true)
-  const handleControlHintDialogClose = () => setControlHintDialogOpen(false)
-
-  // ** Side Effect
-  if (worldInstance) {
-    if (controlHintDialogOpen) {
+  // ** Logics
+  const handleControlHintDialogOpen = () => {
+    setControlHintDialogOpen(true)
+    if (worldInstance) {
       worldInstance.setDialogMode(true)
-    } else {
+    }
+  }
+  const handleControlHintDialogClose = () => {
+    setControlHintDialogOpen(false)
+    if (worldInstance) {
       worldInstance.setDialogMode(false)
     }
   }

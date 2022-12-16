@@ -158,8 +158,18 @@ const SceneProfile = () => {
   const [SceneEditPanelOpen, setSceneEditPanelOpen] = useState(false)
 
   // ** Logics
-  const handleSceneEditPanelOpen = () => setSceneEditPanelOpen(true)
-  const handleSceneEditPanelClose = () => setSceneEditPanelOpen(false)
+  const handleSceneEditPanelOpen = () => {
+    setSceneEditPanelOpen(true)
+    if (worldInstance) {
+      worldInstance.setDialogMode(true)
+    }
+  }
+  const handleSceneEditPanelClose = () => {
+    setSceneEditPanelOpen(false)
+    if (worldInstance) {
+      worldInstance.setDialogMode(false)
+    }
+  }
   const handleChangeCoverPhoto = () => {
     // @ts-ignore
     selectFiles({ accept: 'image/*', multiple: false }, async ({ file }) => {
@@ -170,15 +180,6 @@ const SceneProfile = () => {
   }
   const onSubmit = (newData: UpdateSceneFormData) => {
     updateScene(newData)
-  }
-
-  // ** Side Effect
-  if (worldInstance) {
-    if (SceneEditPanelOpen) {
-      worldInstance.setDialogMode(true)
-    } else {
-      worldInstance.setDialogMode(false)
-    }
   }
 
   return (
