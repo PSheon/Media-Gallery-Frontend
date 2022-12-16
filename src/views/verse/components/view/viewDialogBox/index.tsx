@@ -240,7 +240,7 @@ const ViewDialogBox = () => {
           </IconButton>
           <Box sx={{ mb: 8, textAlign: 'center' }}>
             <Typography variant='h5' sx={{ mb: 3 }}>
-              No Asset
+              No Asset Placed
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
@@ -251,8 +251,7 @@ const ViewDialogBox = () => {
               Support
             </Typography>
             <Typography variant='body2' sx={{ mb: 6.5 }}>
-              According to us blisters are a very common thing and we come across them very often in our daily lives. It
-              is a very common occurrence like cold or fever depending upon your lifestyle.
+              {'Go Dashboard > scene > edit'}
             </Typography>
           </Box>
         </DialogContent>
