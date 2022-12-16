@@ -96,7 +96,7 @@ const SceneListMenu = () => {
                 </Grid>
               ))}
             {meScenes.map((scene, index) => (
-              <Grid key={`me-scene-${index}`} item xs={12} onClick={() => handleRedirectToSceneEdit(sceneBase.id)}>
+              <Grid key={`me-scene-${index}`} item xs={12} onClick={() => handleRedirectToSceneEdit(scene.id)}>
                 <SceneCard sceneBase={scene} withControl />
               </Grid>
             ))}
