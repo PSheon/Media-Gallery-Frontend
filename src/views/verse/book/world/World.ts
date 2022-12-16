@@ -85,11 +85,14 @@ export class World {
   public localPlayer: Character | undefined = undefined
   public dialogMode = false
   public metadata: IWorldMetadata = {
+    sceneId: 0,
     owner: '',
     displayName: '',
     description: '',
     worldScenePaths: [],
-    assetList: []
+    assetList: [],
+    playerDisplayName: '',
+    playerAvatarURL: ''
   }
   public params: IParams = {
     Label_Visible:
@@ -540,15 +543,9 @@ export class World {
   public joinMultiPlayerRoom(loadingManager: LoadingManager): void {
     // NOTE
     ColyseusClient.joinOrCreate('game', {
-      // sceneId: getState().verse.scene.sceneId,
-      // moralisId: getState().verse.identity.moralisId,
-      // displayName: getState().verse.identity.displayName,
-      // photoURL: getState().verse.identity.photoURL,
-      // avatarModel: getState().verse.identity.avatarModel
-      sceneId: 'test',
-      moralisId: 'test',
-      displayName: 'test',
-      photoURL: 'test',
+      sceneId: this.metadata.sceneId,
+      displayName: this.metadata.playerDisplayName,
+      avatarURL: this.metadata.playerAvatarURL,
       avatarModel: 'ship_bear'
     })
       .then(room => {

@@ -70,11 +70,14 @@ export class World {
   public mixer: Record<string, THREE.AnimationMixer> = {}
   public dialogMode = false
   public metadata: IWorldMetadata = {
+    sceneId: 0,
     owner: '',
     displayName: '',
     description: '',
     worldScenePaths: [],
-    assetList: []
+    assetList: [],
+    playerDisplayName: '',
+    playerAvatarURL: ''
   }
   public params: IParams = {
     Label_Visible: false,

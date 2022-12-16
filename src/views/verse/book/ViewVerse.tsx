@@ -26,6 +26,8 @@ import { IScene } from 'src/types/sceneTypes'
 
 interface Props {
   sceneBase: IScene
+  playerDisplayName: string
+  playerAvatarURL: string
 }
 
 // ** Styled RootBox component
@@ -36,18 +38,21 @@ const StyledRootBox = styled(Box)<BoxProps>(() => ({
 
 const Book = (props: Props) => {
   // ** Props
-  const { sceneBase } = props
+  const { sceneBase, playerDisplayName, playerAvatarURL } = props
 
   // ** Hooks
   const dispatch = useDispatch()
 
   useEffect(() => {
     const world = new World({
+      sceneId: sceneBase.id,
       owner: sceneBase?.attributes?.owner?.data?.attributes?.username || 'Anonymous',
       displayName: sceneBase?.attributes?.displayName || 'Untitled',
-      description: sceneBase?.attributes?.description || 'Nope',
+      description: sceneBase?.attributes?.description || 'no description...',
       worldScenePaths: sceneBase?.attributes.sceneModel.data?.attributes.worldScenePaths || [],
-      assetList: sceneBase?.attributes.assetList?.data || []
+      assetList: sceneBase?.attributes.assetList?.data || [],
+      playerDisplayName,
+      playerAvatarURL
     })
 
     dispatch(setWorldInstance(world))
