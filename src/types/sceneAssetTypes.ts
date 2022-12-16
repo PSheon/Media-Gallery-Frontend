@@ -26,6 +26,7 @@ export type ISceneAsset = {
     description?: string
     framePosition?: string
     coverFileType?: 'png' | 'svg' | 'jpg' | 'gif' | 'mp4' | 'mp3'
+    tokenChain: 'eth' | 'polygon' | 'bsc' | 'avalanche'
     tokenContract?: string
     tokenURI?: string
     tokenImageURI?: string
