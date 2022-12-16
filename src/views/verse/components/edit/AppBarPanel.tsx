@@ -50,9 +50,8 @@ const PanelCard = styled(Card)<CardProps>(({ theme }) => ({
   padding: 4,
   alignItems: 'center',
   borderRadius: '1.8rem',
-  backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+  backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)',
   transition: theme.transitions.create('background-color'),
-
   '&:hover': {
     backgroundColor: theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.95)'
   }
@@ -81,9 +80,7 @@ const AppBarPanel = () => {
       <PanelCard>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', ml: 2, mr: 4, alignItems: 'flex-end', flexDirection: 'column' }}>
-            <Typography sx={{ fontWeight: 600 }} color='common.white'>
-              {auth.user.username}
-            </Typography>
+            <Typography sx={{ fontWeight: 600 }}>{auth.user.username}</Typography>
             <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
               {auth.user?.address ? `${etherAddressFormatter(auth.user.address)}` : 'guest'}
             </Typography>
