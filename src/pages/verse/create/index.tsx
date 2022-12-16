@@ -17,7 +17,7 @@ const VerseCreatePage = () => {
         <Typography variant='h5' sx={{ mt: 1.5, mb: 2 }}>
           Choose a Scene
         </Typography>
-        <Typography sx={{ mb: 10, color: 'text.secondary' }}>
+        <Typography color='text.secondary' sx={{ mb: 10 }}>
           Select the scene you'll use to show your NFTs. Some are designed by select architects and minted in limited
           editions as NFTs.
         </Typography>

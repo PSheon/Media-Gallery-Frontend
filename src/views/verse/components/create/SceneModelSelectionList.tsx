@@ -156,7 +156,7 @@ const SceneModelSelectionList = () => {
                 </CustomAvatar>
                 <Box sx={{ ml: 4 }}>
                   <Typography variant='h5'>Free</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>All Free</Typography>
+                  <Typography color='text.secondary'>All Free</Typography>
                 </Box>
               </Box>
 
