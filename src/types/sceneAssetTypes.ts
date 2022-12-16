@@ -30,7 +30,7 @@ export type ISceneAsset = {
     tokenContract?: string
     tokenURI?: string
     tokenImageURI?: string
-    tokenId?: number
+    tokenId?: string
     views: number
     fetchStatus: 'fetching' | 'fetched' | 'failed'
     fetchAttemptCount: number
