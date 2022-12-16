@@ -20,6 +20,9 @@ export const getScenes = async (params: GetScenesProps): Promise<GetScenesRespon
         displayName: {
           $contains: params.displayName
         }
+      }),
+      ...(params.type && {
+        type: params.type
       })
     },
     pagination: {

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ChangeEvent /* useCallback */ } from 'react'
+import { useState, ChangeEvent, useCallback } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -17,11 +17,10 @@ import CardMedia from '@mui/material/CardMedia'
 import TextField from '@mui/material/TextField'
 import Pagination from '@mui/material/Pagination'
 import InputAdornment from '@mui/material/InputAdornment'
-
-// import MenuItem from '@mui/material/MenuItem'
-// import InputLabel from '@mui/material/InputLabel'
-// import FormControl from '@mui/material/FormControl'
-// import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import InputLabel from '@mui/material/InputLabel'
+import FormControl from '@mui/material/FormControl'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 // ** Services Imports
 import { useScenesQuery } from 'src/services/queries/scene.query'
@@ -42,7 +41,7 @@ const HomePage = () => {
   // ** States
   // const [role, setRole] = useState<string>('')
   // const [plan, setPlan] = useState<string>('')
-  // const [status, setStatus] = useState<string>('')
+  const [verseType, setVerseType] = useState<string>('classic')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [page, setPage] = useState<number>(1)
   const debouncedSearchTerm = useDebounce<string>(searchTerm, 500)
@@ -53,6 +52,7 @@ const HomePage = () => {
     // isError: isQueryError
   } = useScenesQuery({
     displayName: debouncedSearchTerm,
+    type: verseType,
     page,
     pageSize: 24
   })
@@ -66,9 +66,9 @@ const HomePage = () => {
   // const handlePlanChange = useCallback((e: SelectChangeEvent) => {
   //   setPlan(e.target.value)
   // }, [])
-  // const handleStatusChange = useCallback((e: SelectChangeEvent) => {
-  //   setStatus(e.target.value)
-  // }, [])
+  const handleStatusChange = useCallback((e: SelectChangeEvent) => {
+    setVerseType(e.target.value)
+  }, [])
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
   }
@@ -78,7 +78,7 @@ const HomePage = () => {
       <Grid item xs={12}>
         <Card>
           <CardContent>
-            <Grid container spacing={6}>
+            <Grid container spacing={4}>
               {/* <Grid item xs={12} sm={3}>
                 <FormControl fullWidth>
                   <InputLabel id='role-select'>Select Role</InputLabel>
@@ -119,27 +119,24 @@ const HomePage = () => {
                     <MenuItem value='team'>Team</MenuItem>
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} sm={3}>
                 <FormControl fullWidth>
-                  <InputLabel id='status-select'>Select Status</InputLabel>
+                  <InputLabel id='verse-type-select'>Select Type</InputLabel>
                   <Select
                     fullWidth
-                    value={status}
-                    id='select-status'
-                    label='Select Status'
-                    labelId='status-select'
+                    value={verseType}
+                    label='Select Type'
+                    labelId='verse-type-select'
                     onChange={handleStatusChange}
-                    inputProps={{ placeholder: 'Select Role' }}
+                    inputProps={{ placeholder: 'Select Type' }}
                   >
-                    <MenuItem value=''>Select Role</MenuItem>
-                    <MenuItem value='pending'>Pending</MenuItem>
-                    <MenuItem value='active'>Active</MenuItem>
-                    <MenuItem value='inactive'>Inactive</MenuItem>
+                    <MenuItem value='classic'>Classic</MenuItem>
+                    <MenuItem value='playground'>Playground</MenuItem>
                   </Select>
                 </FormControl>
-              </Grid> */}
-              <Grid item xs={12}>
+              </Grid>
+              <Grid item xs={12} sm={9}>
                 <TextField
                   fullWidth
                   placeholder='Search...'

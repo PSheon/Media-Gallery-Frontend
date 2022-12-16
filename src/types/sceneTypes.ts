@@ -9,6 +9,7 @@ export interface GetSceneProps {
 
 export interface GetScenesProps {
   displayName: string
+  type: string
   page: number
   pageSize: number
 }
