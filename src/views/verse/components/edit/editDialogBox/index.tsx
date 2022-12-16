@@ -97,6 +97,34 @@ const CHAIN_LIST = [
     icon: 'cryptocurrency-color:avax',
     displayName: 'Avalanche',
     supported: true
+  },
+  {
+    id: 'fantom',
+    value: 'fantom',
+    icon: 'material-symbols:pending',
+    displayName: 'Fantom',
+    supported: true
+  },
+  {
+    id: 'palm',
+    value: 'palm',
+    icon: 'material-symbols:pending',
+    displayName: 'Palm',
+    supported: true
+  },
+  {
+    id: 'cronos',
+    value: 'cronos',
+    icon: 'material-symbols:pending',
+    displayName: 'Cronos',
+    supported: true
+  },
+  {
+    id: 'arbitrum',
+    value: 'arbitrum',
+    icon: 'material-symbols:pending',
+    displayName: 'Arbitrum',
+    supported: true
   }
 ]
 
@@ -562,7 +590,7 @@ const EditDialogBox = () => {
                     inputProps={{ placeholder: 'Select Chain' }}
                   >
                     {CHAIN_LIST.map(chainData => (
-                      <MenuItem key={chainData.id} value={chainData.value}>
+                      <MenuItem key={chainData.id} value={chainData.value} disabled={!chainData.supported}>
                         <Box
                           sx={{
                             pr: 4,
