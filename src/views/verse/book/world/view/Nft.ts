@@ -76,7 +76,7 @@ export class Nft {
     ) {
       const imageURL = this.assetData.cover?.data?.attributes.url
         ? `${apiConfig.publicFolderUrl}${this.assetData.cover.data.attributes.url}`
-        : '/images/verse/add-asset.jpg'
+        : '/images/verse/empty-asset.jpg'
       const texture = this.textureLoader.load(imageURL)
       texture.flipY = false
       texture.encoding = THREE.sRGBEncoding
