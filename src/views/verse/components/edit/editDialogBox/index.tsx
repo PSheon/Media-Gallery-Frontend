@@ -82,21 +82,21 @@ const CHAIN_LIST = [
     value: 'polygon',
     icon: 'cryptocurrency-color:matic',
     displayName: 'Polygon',
-    supported: false
+    supported: true
   },
   {
     id: 'bsc',
     value: 'bsc',
     icon: 'cryptocurrency-color:bnb',
     displayName: 'BSC',
-    supported: false
+    supported: true
   },
   {
     id: 'avalanche',
     value: 'avalanche',
     icon: 'cryptocurrency-color:avax',
     displayName: 'Avalanche',
-    supported: false
+    supported: true
   }
 ]
 
@@ -135,7 +135,7 @@ const EditDialogBox = () => {
         }
       }),
     onSuccess: response => {
-      queryClient.invalidateQueries(['nfts'])
+      queryClient.invalidateQueries(['scene-assets'])
       queryClient.invalidateQueries(['scenes'])
       worldInstance?.updateAssetFrame(EDIT_DIALOG_BOX.hoverObjectMetadata!.position!, response.data.data as ISceneAsset)
       toast.success('Update asset success')
@@ -306,7 +306,7 @@ const EditDialogBox = () => {
               background: `linear-gradient(to top, rgba(0, 0, 0, 0.89), rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1), transparent)`
             }}
           >
-            <Typography variant='body2' color='common.white'>
+            <Typography variant='body2' color='common.white' noWrap>
               {ownNft?.attributes.displayName}
             </Typography>
           </Box>
@@ -319,6 +319,7 @@ const EditDialogBox = () => {
         <Box
           onClick={() => handleUpdateAssetFrameClick(ownNft)}
           sx={{
+            width: '100%',
             height: theme => theme.spacing(40),
             position: 'relative',
             display: 'flex',
@@ -377,7 +378,9 @@ const EditDialogBox = () => {
               background: `linear-gradient(to top, rgba(0, 0, 0, 0.89), rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1), transparent)`
             }}
           >
-            <Typography variant='caption'>{ownNft?.attributes.displayName}</Typography>
+            <Typography variant='body2' color='common.white' noWrap>
+              {ownNft?.attributes.displayName}
+            </Typography>
           </Box>
         </Box>
       )
@@ -559,7 +562,7 @@ const EditDialogBox = () => {
                     inputProps={{ placeholder: 'Select Chain' }}
                   >
                     {CHAIN_LIST.map(chainData => (
-                      <MenuItem key={chainData.id} value={chainData.value} disabled={!chainData.supported}>
+                      <MenuItem key={chainData.id} value={chainData.value}>
                         <Box
                           sx={{
                             pr: 4,
