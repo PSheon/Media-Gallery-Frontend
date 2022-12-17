@@ -79,7 +79,10 @@ const MiddleSection = () => {
       }),
     onSuccess: response => {
       queryClient.invalidateQueries(['scenes', sid])
-      worldInstance?.updateAssetFrame(EDIT_DIALOG_BOX.hoverObjectMetadata!.position!, response.data.data as ISceneAsset)
+      worldInstance?.updateAssetFrame(
+        EDIT_DIALOG_BOX.hoverObjectMetadata!.framePosition,
+        response.data.data as ISceneAsset
+      )
       toast.success('Update asset success')
     },
     onError: () => {

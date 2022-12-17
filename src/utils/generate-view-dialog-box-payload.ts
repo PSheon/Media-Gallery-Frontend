@@ -2,7 +2,7 @@ import { DEFAULT_DIALOG_BOX_PAYLOAD } from 'src/configs/verse/dialogBox'
 
 import { IHoverObject } from 'src/views/verse/book/actions/view'
 
-export const generateViewDialogBoxPayload = ({ hoverObjectType = 'asset', hoverObjectMetadata = {} }: IHoverObject) => {
+export const generateViewDialogBoxPayload = ({ hoverObjectType = 'asset', hoverObjectMetadata }: IHoverObject) => {
   /* TODO */
   // if (objectType === 'player') {
   //   return {

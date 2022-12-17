@@ -8,7 +8,7 @@ const initialState: IInitialState = {
   show: false,
   hover: false,
   hoverObjectType: undefined,
-  hoverObjectMetadata: {}
+  hoverObjectMetadata: undefined
 }
 
 const dialogBoxSlice = createSlice({
@@ -24,7 +24,14 @@ const dialogBoxSlice = createSlice({
       state.hoverObjectMetadata = action.payload.hoverObjectMetadata
     },
     setEditDialogBoxHover: (state, action) => {
-      state.hover = action.payload
+      const newHoverStatus = action.payload
+      if (newHoverStatus) {
+        state.hover = true
+      } else {
+        state.hover = false
+        state.hoverObjectType = undefined
+        state.hoverObjectMetadata = undefined
+      }
     },
     hideEditDialogBox: state => {
       state.show = false

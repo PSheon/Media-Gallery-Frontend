@@ -199,7 +199,7 @@ const EditDialogBox = () => {
     updateAssetFrame({
       aid: nftData.id,
       attributes: {
-        framePosition: EDIT_DIALOG_BOX.hoverObjectMetadata.framePosition!,
+        framePosition: EDIT_DIALOG_BOX.hoverObjectMetadata!.framePosition,
         scene: String(sid)
       }
     })
@@ -502,7 +502,7 @@ const EditDialogBox = () => {
                     fullWidth
                     type='number'
                     size='small'
-                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.position.x || 0}
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata!.position.x || 0}
                     inputProps={{ readOnly: true }}
                   />
                 </Grid>
@@ -514,7 +514,7 @@ const EditDialogBox = () => {
                     fullWidth
                     type='number'
                     size='small'
-                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.position.y || 0}
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata!.position.y || 0}
                   />
                 </Grid>
                 <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
@@ -525,7 +525,7 @@ const EditDialogBox = () => {
                     fullWidth
                     type='number'
                     size='small'
-                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.position.z || 0}
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata!.position.z || 0}
                   />
                 </Grid>
               </Grid>
@@ -543,7 +543,7 @@ const EditDialogBox = () => {
                     fullWidth
                     type='number'
                     size='small'
-                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.rotation.x || 0}
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata!.rotation.x || 0}
                     inputProps={{ readOnly: true }}
                   />
                 </Grid>
@@ -555,7 +555,7 @@ const EditDialogBox = () => {
                     fullWidth
                     type='number'
                     size='small'
-                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.rotation.y || 0}
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata!.rotation.y || 0}
                   />
                 </Grid>
                 <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
@@ -566,7 +566,7 @@ const EditDialogBox = () => {
                     fullWidth
                     type='number'
                     size='small'
-                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.rotation.z || 0}
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata!.rotation.z || 0}
                   />
                 </Grid>
               </Grid>

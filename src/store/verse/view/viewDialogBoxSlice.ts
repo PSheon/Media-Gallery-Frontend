@@ -8,7 +8,7 @@ const initialState: IInitialState = {
   show: false,
   hover: false,
   hoverObjectType: undefined,
-  hoverObjectMetadata: {}
+  hoverObjectMetadata: undefined
 }
 
 const viewDialogBoxSlice = createSlice({
@@ -24,7 +24,14 @@ const viewDialogBoxSlice = createSlice({
       state.hoverObjectMetadata = action.payload.hoverObjectMetadata
     },
     setViewDialogBoxHover: (state, action) => {
-      state.hover = action.payload
+      const newHoverStatus = action.payload
+      if (newHoverStatus) {
+        state.hover = true
+      } else {
+        state.hover = false
+        state.hoverObjectType = undefined
+        state.hoverObjectMetadata = undefined
+      }
     },
     hideViewDialogBox: state => {
       state.show = false

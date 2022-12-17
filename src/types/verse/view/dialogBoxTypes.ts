@@ -2,7 +2,7 @@ export interface IInitialState {
   show: boolean
   hover: boolean
   hoverObjectType?: string
-  hoverObjectMetadata: {
+  hoverObjectMetadata?: {
     framePosition: string
     displayName: string
     position: {
