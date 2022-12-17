@@ -13,6 +13,9 @@ export class JumpIdle extends CharacterStateBase implements ICharacterState {
     this.character.setArcadeVelocityTarget(0)
     this.playAnimation('jump_idle', 0.1)
     this.alreadyJumped = false
+
+    this.character.audioManager.stop('all')
+    this.character.audioManager.play('jump')
   }
 
   public update(timeStep: number): void {
