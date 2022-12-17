@@ -21,6 +21,7 @@ import { Room } from 'colyseus.js'
 import * as _ from 'lodash'
 
 import { InputManager } from 'src/views/verse/book/core/view/InputManager'
+import { AudioManager } from 'src/views/verse/book/core/AudioManager'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 import { LoadingManager } from 'src/views/verse/book/core/view/LoadingManager'
 import { UIManager } from 'src/views/verse/book/core/view/UIManager'
@@ -68,6 +69,7 @@ export class World {
   public sinceLastFrame: number
   public justRendered: boolean
   public inputManager: InputManager
+  public audioManager: AudioManager
   public cameraOperator: CameraOperator
   public timeScaleTarget = 1
   public cursorBox: THREE.Mesh
@@ -95,6 +97,10 @@ export class World {
     playerAvatarURL: ''
   }
   public params: IParams = {
+    Background_Music_Volume:
+      localStorage.getItem('media_verse_settings-background-music-volume') !== null
+        ? parseInt(localStorage.getItem('media_verse_settings-background-music-volume')!, 10) / 100
+        : 0.1,
     Label_Visible:
       localStorage.getItem('media_verse_settings-label-visible') !== null
         ? JSON.parse(localStorage.getItem('media_verse_settings-label-visible')!)
@@ -212,6 +218,7 @@ export class World {
 
     // Initialization
     this.inputManager = new InputManager(this, this.renderer.domElement)
+    this.audioManager = new AudioManager(this)
     this.cameraOperator = new CameraOperator(this, this.camera, this.params.Mouse_Sensitivity)
     this.sky = new Sky(this)
 
@@ -255,6 +262,7 @@ export class World {
             confirmButtonText: "Let's GO!",
             closeCallback: () => {
               UIManager.setUserInterfaceVisible(true)
+              this.audioManager.play(this.params.Background_Music_Volume)
             }
           })
         }
@@ -684,6 +692,10 @@ export class World {
     this.labelRenderer.domElement.id = 'label-canvas'
   }
 
+  adjustBackgroundMusicVolume(BackgroundMusicVolume: number): void {
+    this.audioManager.adjustVolume(BackgroundMusicVolume)
+  }
+
   adjustLabelVisible(newLabelVisible: boolean): void {
     if (newLabelVisible) {
       this.characters.forEach(char => {
@@ -746,6 +758,8 @@ export class World {
   }
 
   public dispose() {
+    this.audioManager.dispose()
+
     if (this.room !== undefined) {
       this.room?.leave()
     }

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { useSelector } from 'react-redux'
 
 // ** MUI Imports
@@ -9,6 +9,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Switch from '@mui/material/Switch'
 import Grid from '@mui/material/Grid'
+import Slider from '@mui/material/Slider'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -27,11 +28,11 @@ const SiteSettingDialog = () => {
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
   // ** State
-  // const [streamingPlayerVolume, setStreamingPlayerVolume] = useState(
-  //   localStorage.getItem('media_verse_settings-streaming-player-volume') !== null
-  //     ? parseInt(JSON.parse(localStorage.getItem('media_verse_settings-streaming-player-volume') as string), 10)
-  //     : 10
-  // )
+  const [backgroundMusicVolume, setBackgroundMusicVolume] = useState(
+    localStorage.getItem('media_verse_settings-background-music-volume') !== null
+      ? parseInt(JSON.parse(localStorage.getItem('media_verse_settings-background-music-volume') as string), 10)
+      : 10
+  )
 
   const [labelVisible, setLabelVisible] = useState(
     localStorage.getItem('media_verse_settings-label-visible') !== null
@@ -60,68 +61,66 @@ const SiteSettingDialog = () => {
   const [physicDebug, setPhysicDebug] = useState(worldInstance!.params.Debug_Physics ?? false)
   const [fpsDebug, setFpsDebug] = useState(worldInstance!.params.Debug_FPS ?? false)
 
-  // const handleAdjustStreamingPlayerVolume = (event: any, newVolume: number): void => {
-  //   if (worldInstance?.streamingPlayer?.volume) {
-  //     localStorage.setItem('media_verse_settings-streaming-player-volume', JSON.stringify(newVolume))
-  //     worldInstance.streamingPlayer.volume(newVolume / 100)
-  //     setStreamingPlayerVolume(newVolume)
-  //   }
-  // }
+  const handleAdjustBackgroundMusicVolume = (event: Event, newBackgroundMusicVolume: number | number[]): void => {
+    localStorage.setItem('media_verse_settings-background-music-volume', JSON.stringify(newBackgroundMusicVolume))
+    worldInstance!.adjustBackgroundMusicVolume((newBackgroundMusicVolume as number) / 100)
+    setBackgroundMusicVolume(newBackgroundMusicVolume as number)
+  }
 
-  const handleAdjustLabelVisible = (event: any, newLabelVisibleStatus: boolean): void => {
+  const handleAdjustLabelVisible = (event: ChangeEvent<HTMLInputElement>, newLabelVisibleStatus: boolean): void => {
     localStorage.setItem('media_verse_settings-label-visible', JSON.stringify(newLabelVisibleStatus))
     worldInstance!.adjustLabelVisible(newLabelVisibleStatus)
     setLabelVisible(newLabelVisibleStatus)
   }
 
-  const handleAdjustAntiAliasing = (event: any, newAntiAliasingStatus: boolean): void => {
+  const handleAdjustAntiAliasing = (event: ChangeEvent<HTMLInputElement>, newAntiAliasingStatus: boolean): void => {
     localStorage.setItem('media_verse_settings-anti-aliasing', JSON.stringify(newAntiAliasingStatus))
     worldInstance!.adjustAntiAliasing(newAntiAliasingStatus)
     setAntiAliasing(newAntiAliasingStatus)
   }
 
-  const handleAdjustShadows = (event: any, newShadowsStatus: boolean): void => {
+  const handleAdjustShadows = (event: ChangeEvent<HTMLInputElement>, newShadowsStatus: boolean): void => {
     localStorage.setItem('media_verse_settings-shadows', JSON.stringify(newShadowsStatus))
     worldInstance!.adjustShadows(newShadowsStatus)
     setShadows(newShadowsStatus)
   }
 
-  const handleAdjustPointerLock = (event: any, newPointerLockStatus: boolean) => {
+  const handleAdjustPointerLock = (event: ChangeEvent<HTMLInputElement>, newPointerLockStatus: boolean) => {
     localStorage.setItem('media_verse_settings-pointer-lock', JSON.stringify(newPointerLockStatus))
     worldInstance!.adjustPointerLock(newPointerLockStatus)
     setPointerLock(newPointerLockStatus)
   }
 
-  const handleAdjustPhysicDebug = (event: any, newPhysicDebugStatus: boolean) => {
+  const handleAdjustPhysicDebug = (event: ChangeEvent<HTMLInputElement>, newPhysicDebugStatus: boolean) => {
     worldInstance!.adjustPhysicDebug(newPhysicDebugStatus)
     setPhysicDebug(newPhysicDebugStatus)
   }
 
-  const handleAdjustFpsDebug = (event: any, newFpsDebugStatus: boolean) => {
+  const handleAdjustFpsDebug = (event: ChangeEvent<HTMLInputElement>, newFpsDebugStatus: boolean) => {
     worldInstance!.adjustFpsDebug(newFpsDebugStatus)
     setFpsDebug(newFpsDebugStatus)
   }
 
   return (
     <Grid container spacing={4} sx={{ flexGrow: 1 }}>
-      {/* <Grid item xs={12} sx={{ mb: 4 }}>
+      <Grid item xs={12} sx={{ mb: 4 }}>
         <Box sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <CustomAvatar skin='light' color='primary' variant='rounded' sx={{ mr: 3, width: 48, height: 48 }}>
               <Icon icon='material-symbols:volume-down' fontSize={20} />
             </CustomAvatar>
             <Box>
-              <Typography>Streaming Volume</Typography>
-              <Typography variant='caption'>adjust streaming video volume</Typography>
+              <Typography>Background Music Volume</Typography>
+              <Typography variant='caption'>adjust background music volume</Typography>
             </Box>
           </Box>
           <Box sx={{ flexBasis: '10rem' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Slider value={streamingPlayerVolume} onChange={handleAdjustStreamingPlayerVolume} />
+              <Slider value={backgroundMusicVolume} onChange={handleAdjustBackgroundMusicVolume} />
             </Box>
           </Box>
         </Box>
-      </Grid> */}
+      </Grid>
 
       {isDesktop && (
         <Grid item xs={12} sx={{ mb: 4 }}>

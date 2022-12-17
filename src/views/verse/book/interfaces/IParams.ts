@@ -1,4 +1,5 @@
 export interface IParams {
+  Background_Music_Volume: number
   Label_Visible: boolean
   Pointer_Lock: boolean
   Mouse_Sensitivity: number

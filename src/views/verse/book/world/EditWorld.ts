@@ -80,6 +80,7 @@ export class World {
     playerAvatarURL: ''
   }
   public params: IParams = {
+    Background_Music_Volume: 0,
     Label_Visible: false,
     Pointer_Lock:
       localStorage.getItem('media_verse_settings-pointer-lock') !== null
