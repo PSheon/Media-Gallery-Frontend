@@ -33,6 +33,7 @@ import { GroundImpactData } from 'src/views/verse/book/characters/view/GroundImp
 import { ClosestObjectFinder } from 'src/views/verse/book/core/ClosestObjectFinder'
 import { EntityType } from 'src/views/verse/book/enums/EntityType'
 import { getAnimationDetails } from 'src/utils/get-character-animation-details'
+import { Howl } from 'howler'
 
 import {
   SHOW_VIEW_DIALOG_BOX_ACTION,
@@ -83,6 +84,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
   public actions: { [action: string]: KeyBinding }
   public characterCapsule: CapsuleCollider
   public characterLabel: CSS2DObject | undefined
+  public clickSoundAudioManager: Howl
 
   // Ray casting
   public rayResult: CANNON.RaycastResult = new CANNON.RaycastResult()
@@ -233,6 +235,12 @@ export class Character extends THREE.Object3D implements IWorldEntity {
     this.characterCapsule.body.postStep = (body: CANNON.Body) => {
       this.physicsPostStep(body, this)
     }
+
+    // Audios
+    this.clickSoundAudioManager = new Howl({
+      src: ['/audios/click.mp3'],
+      volume: 0.3
+    })
 
     // States
     this.setState(new Idle(this))
@@ -427,6 +435,7 @@ export class Character extends THREE.Object3D implements IWorldEntity {
         this.world?.inputManager.setInputReceiver(this.world!.cameraOperator)
       } else if (code === 'KeyE' && pressed === true) {
         if (this.hoverObjectType) {
+          this.clickSoundAudioManager.play()
           this.world?.setDialogMode(true)
           SHOW_VIEW_DIALOG_BOX_ACTION()
         } else {

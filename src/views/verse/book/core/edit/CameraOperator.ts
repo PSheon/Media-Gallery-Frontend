@@ -7,6 +7,7 @@ import { World } from 'src/views/verse/book/world/EditWorld'
 import { IInputReceiver } from 'src/views/verse/book/interfaces/IInputReceiver'
 import { KeyBinding } from 'src/views/verse/book/core/KeyBinding'
 import { IUpdatable } from 'src/views/verse/book/interfaces/IUpdatable'
+import { Howl } from 'howler'
 import _ from 'lodash'
 
 import {
@@ -30,6 +31,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
   public onMouseDownTheta: any
   public onMouseDownPhi: any
   public targetRadius = 1
+  public clickSoundAudioManager: Howl
 
   public rayHasHit = false
   public rayResult = new CANNON.RaycastResult()
@@ -83,6 +85,12 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
       down: new KeyBinding('KeyZ'),
       fast: new KeyBinding('ShiftLeft')
     }
+
+    // Audios
+    this.clickSoundAudioManager = new Howl({
+      src: ['/audios/click.mp3'],
+      volume: 0.3
+    })
 
     world.registerUpdatable(this)
   }
@@ -189,6 +197,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
     if (this.world.dialogMode) return
     if (code === 'KeyE' && pressed === true) {
       if (this.hoverObjectType) {
+        this.clickSoundAudioManager.play()
         this.world?.setDialogMode(true)
         SHOW_EDIT_DIALOG_BOX_ACTION()
       } else {
