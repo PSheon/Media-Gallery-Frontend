@@ -11,6 +11,9 @@ export class Idle extends CharacterStateBase implements ICharacterState {
 
     this.character.setArcadeVelocityTarget(0)
     this.playAnimation('idle', 0.1)
+
+    this.character.audioManager.adjustRate('walk', 3)
+    this.character.audioManager.stop('walk')
   }
 
   public update(timeStep: number): void {

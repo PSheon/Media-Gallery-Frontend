@@ -11,6 +11,9 @@ export class JumpRunning extends CharacterStateBase implements ICharacterState {
     this.character.velocitySimulator.mass = 100
     this.playAnimation('jump_running', 0.03)
     this.alreadyJumped = false
+
+    this.character.audioManager.stop('all')
+    this.character.audioManager.play('jump')
   }
 
   public update(timeStep: number): void {
