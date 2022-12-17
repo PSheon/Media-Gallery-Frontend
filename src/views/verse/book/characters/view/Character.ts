@@ -98,8 +98,18 @@ export class Character extends THREE.Object3D implements IWorldEntity {
   public raycastHoverBox: THREE.Mesh
   public hoverObjectMetadata:
     | {
+        framePosition: string
         displayName: string | undefined
-        position?: string
+        position: {
+          x: number
+          y: number
+          z: number
+        }
+        rotation: {
+          x: number
+          y: number
+          z: number
+        }
       }
     | undefined
   public hoverObjectType: string | undefined

@@ -53,7 +53,7 @@ const ViewDialogBox = () => {
   const { isLoading: isQuerySceneBaseLoading, data: queryData } = useSceneQuery({ sid: sid as string })
   const sceneBase = queryData?.data
   const currentPlacedAsset = sceneBase?.attributes?.assetList?.data?.find(
-    assetData => assetData?.attributes.framePosition === VIEW_DIALOG_BOX.hoverObjectMetadata?.position
+    assetData => assetData?.attributes.framePosition === VIEW_DIALOG_BOX.hoverObjectMetadata?.framePosition
   )
 
   if (worldInstance) {

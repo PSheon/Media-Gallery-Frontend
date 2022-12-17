@@ -35,8 +35,18 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
   public rayResult = new CANNON.RaycastResult()
   public hoverObjectMetadata:
     | {
+        framePosition: string
         displayName: string | undefined
-        position?: string
+        position: {
+          x: number
+          y: number
+          z: number
+        }
+        rotation: {
+          x: number
+          y: number
+          z: number
+        }
       }
     | undefined
   public hoverObjectType: string | undefined

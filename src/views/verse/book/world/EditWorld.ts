@@ -536,7 +536,7 @@ export class World {
   }
 
   public updateAssetFrame(framePosition: string, newAssetMetadata: ISceneAsset) {
-    const selectedNft = this.nfts.find(nft => nft.position === framePosition)
+    const selectedNft = this.nfts.find(nft => nft.framePosition === framePosition)
     if (selectedNft) {
       const isDelete = newAssetMetadata['attributes'].framePosition === null
 
@@ -547,7 +547,7 @@ export class World {
         )
         this.metadata.assetList = newSceneAssetListMetadata
       } else {
-        selectedNft.update(newAssetMetadata['attributes'])
+        selectedNft.updateFrame(newAssetMetadata['attributes'])
         const newSceneAssetListMetadata = this.metadata.assetList.map(nft => {
           if (nft?.attributes?.framePosition === framePosition) {
             return newAssetMetadata

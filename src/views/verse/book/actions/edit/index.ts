@@ -23,8 +23,18 @@ const { dispatch, getState } = STORE
 export type IHoverObject = {
   hoverObjectType?: string
   hoverObjectMetadata: {
+    framePosition: string
     displayName?: string
-    position?: string
+    position: {
+      x: number
+      y: number
+      z: number
+    }
+    rotation: {
+      x: number
+      y: number
+      z: number
+    }
   }
 }
 

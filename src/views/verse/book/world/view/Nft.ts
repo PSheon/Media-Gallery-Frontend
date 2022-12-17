@@ -12,7 +12,7 @@ import apiConfig from 'src/configs/api'
 export class Nft {
   // public frameId: string
   public object: THREE.Object3D
-  public position = ''
+  public framePosition = ''
 
   private world: World
   private assetData: ISceneAsset['attributes']
@@ -24,7 +24,7 @@ export class Nft {
 
   constructor(root: THREE.Object3D, world: World) {
     this.object = root
-    this.position = this.object.name
+    this.framePosition = this.object.name
     this.world = world
     this.dracoLoader = new DRACOLoader()
     this.dracoLoader.setDecoderPath('/lib/draco/')
@@ -34,14 +34,24 @@ export class Nft {
     this.textureLoader = new THREE.TextureLoader()
 
     if (root.userData.hasOwnProperty('position')) {
-      this.position = root.userData.position
+      this.framePosition = root.userData.position
     }
 
     const phys = new TrimeshCollider(this.object, {})
     phys.body.objectType = 'asset'
     phys.body.objectMetadata = {
+      framePosition: this.framePosition || this.object.name,
       displayName: this.object.name,
-      position: this.position || this.object.name
+      position: {
+        x: this.object.position.x,
+        y: this.object.position.y,
+        z: this.object.position.z
+      },
+      rotation: {
+        x: this.object.rotation.x,
+        y: this.object.rotation.y,
+        z: this.object.rotation.z
+      }
     }
     world.physicsBodyList.push(phys.body)
     world.physicsWorld.addBody(phys.body)
@@ -50,8 +60,8 @@ export class Nft {
       type: 'nft',
       cover: {},
       displayName: 'Empty',
-      description: 'no description here',
-      framePosition: this.position,
+      description: 'no description...',
+      framePosition: this.framePosition,
       coverFileType: 'png',
       views: 0,
       fetchStatus: 'fetching',
@@ -60,7 +70,7 @@ export class Nft {
     } as ISceneAsset['attributes']
 
     const currentPlacedAsset = world.metadata.assetList.find(
-      assetData => assetData?.attributes.framePosition === this.position
+      assetData => assetData?.attributes.framePosition === this.framePosition
     )
 
     if (currentPlacedAsset) {

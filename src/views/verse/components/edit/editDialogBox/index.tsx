@@ -165,7 +165,10 @@ const EditDialogBox = () => {
     onSuccess: response => {
       queryClient.invalidateQueries(['scene-assets'])
       queryClient.invalidateQueries(['scenes'])
-      worldInstance?.updateAssetFrame(EDIT_DIALOG_BOX.hoverObjectMetadata!.position!, response.data.data as ISceneAsset)
+      worldInstance?.updateAssetFrame(
+        EDIT_DIALOG_BOX.hoverObjectMetadata!.framePosition!,
+        response.data.data as ISceneAsset
+      )
       toast.success('Update asset success')
     },
     onError: () => {
@@ -174,7 +177,7 @@ const EditDialogBox = () => {
     retry: 0
   })
   const currentPlacedAsset = sceneBase?.attributes?.assetList?.data?.find(
-    assetData => assetData?.attributes.framePosition === EDIT_DIALOG_BOX.hoverObjectMetadata?.position
+    assetData => assetData?.attributes.framePosition === EDIT_DIALOG_BOX.hoverObjectMetadata?.framePosition
   )
 
   // ** Logics
@@ -196,7 +199,7 @@ const EditDialogBox = () => {
     updateAssetFrame({
       aid: nftData.id,
       attributes: {
-        framePosition: EDIT_DIALOG_BOX.hoverObjectMetadata.position!,
+        framePosition: EDIT_DIALOG_BOX.hoverObjectMetadata.framePosition!,
         scene: String(sid)
       }
     })
@@ -485,6 +488,88 @@ const EditDialogBox = () => {
             </Grid>
             <Grid item xs={12}>
               <Divider />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant='body2' color='text.disabled' sx={{ fontSize: '0.8rem', mb: 2 }}>
+                Move
+              </Typography>
+              <Grid container spacing={4} wrap='nowrap'>
+                <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant='body2' sx={{ mr: 2 }}>
+                    X
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    size='small'
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.position.x || 0}
+                    inputProps={{ readOnly: true }}
+                  />
+                </Grid>
+                <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant='body2' sx={{ mr: 2 }}>
+                    Y
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    size='small'
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.position.y || 0}
+                  />
+                </Grid>
+                <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant='body2' sx={{ mr: 2 }}>
+                    Z
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    size='small'
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.position.z || 0}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant='body2' color='text.disabled' sx={{ fontSize: '0.8rem', mb: 2 }}>
+                Rotate
+              </Typography>
+              <Grid container spacing={4} wrap='nowrap'>
+                <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant='body2' sx={{ mr: 2 }}>
+                    X
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    size='small'
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.rotation.x || 0}
+                    inputProps={{ readOnly: true }}
+                  />
+                </Grid>
+                <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant='body2' sx={{ mr: 2 }}>
+                    Y
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    size='small'
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.rotation.y || 0}
+                  />
+                </Grid>
+                <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant='body2' sx={{ mr: 2 }}>
+                    Z
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    size='small'
+                    value={EDIT_DIALOG_BOX.hoverObjectMetadata.rotation.z || 0}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </DialogContent>

@@ -56,7 +56,7 @@ const HintBox = () => {
   const { isLoading: isQueryLoading, data: queryData } = useSceneQuery({ sid: sid as string })
   const sceneBase = queryData?.data
   const currentPlacedAsset = sceneBase?.attributes?.assetList?.data?.find(
-    assetData => assetData?.attributes.framePosition === EDIT_DIALOG_BOX.hoverObjectMetadata?.position
+    assetData => assetData?.attributes.framePosition === EDIT_DIALOG_BOX.hoverObjectMetadata?.framePosition
   )
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
