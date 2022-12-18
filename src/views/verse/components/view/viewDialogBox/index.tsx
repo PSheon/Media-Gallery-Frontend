@@ -28,6 +28,9 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
+// ** Utils
+import { etherAddressFormatter } from 'src/utils/ether-address'
+
 // ** Config
 import apiConfig from 'src/configs/api'
 
@@ -104,6 +107,7 @@ const ViewDialogBox = () => {
             height: '100%',
             maxWidth: theme => theme.spacing(80),
             maxHeight: theme => theme.spacing(80),
+            position: 'relative',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -120,6 +124,23 @@ const ViewDialogBox = () => {
             src={`${apiConfig.publicFolderUrl}${currentPlacedAsset?.attributes?.cover?.data?.attributes.url}`}
             alt={currentPlacedAsset?.attributes.displayName}
           />
+          <Box sx={{ position: 'absolute', top: 0, p: 2, width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+            <Box
+              sx={{
+                p: theme => theme.spacing(1, 2),
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: theme => theme.palette.background.paper,
+                borderRadius: theme => theme.shape.borderRadius
+              }}
+            >
+              {renderTokeChainIcon(ownNft?.attributes.tokenChain)}
+              <Typography variant='subtitle2' sx={{ ml: 1 }}>
+                {ownNft?.attributes.tokenChain}
+              </Typography>
+            </Box>
+          </Box>
         </Box>
       )
     }
@@ -130,8 +151,9 @@ const ViewDialogBox = () => {
           sx={{
             width: '100%',
             height: '100%',
-            maxWidth: theme => theme.spacing(80),
-            maxHeight: theme => theme.spacing(30),
+            maxWidth: theme => theme.spacing(220),
+            maxHeight: theme => theme.spacing(140),
+            position: 'relative',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -151,8 +173,26 @@ const ViewDialogBox = () => {
             loop
             muted
             playsInline
+            controls
             crossOrigin='anonymous'
           />
+          <Box sx={{ position: 'absolute', top: 0, p: 2, width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+            <Box
+              sx={{
+                p: theme => theme.spacing(1, 2),
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: theme => theme.palette.background.paper,
+                borderRadius: theme => theme.shape.borderRadius
+              }}
+            >
+              {renderTokeChainIcon(ownNft?.attributes.tokenChain)}
+              <Typography variant='subtitle2' sx={{ ml: 1 }}>
+                {ownNft?.attributes.tokenChain}
+              </Typography>
+            </Box>
+          </Box>
         </Box>
       )
     }
@@ -180,20 +220,13 @@ const ViewDialogBox = () => {
               {currentPlacedAsset?.attributes.displayName}
             </Typography>
           </Box>
-          <Grid container spacing={2}>
+          <Grid container spacing={4}>
             <Grid item xs={12} sm={5}>
               {renderNftBox(currentPlacedAsset)}
             </Grid>
             <Grid item xs={12} sm={7}>
               <Grid container spacing={4}>
-                <Grid item xs={12} sm={2}>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CustomAvatar skin='light' variant='rounded' color='secondary'>
-                      {renderTokeChainIcon(currentPlacedAsset?.attributes.tokenChain)}
-                    </CustomAvatar>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={10}>
+                <Grid item xs={12} sm={6}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <CustomAvatar skin='light' variant='rounded' color='primary' sx={{ mr: 4 }}>
                       <Icon icon='mdi:account-outline' />
@@ -206,14 +239,14 @@ const ViewDialogBox = () => {
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <CustomAvatar skin='light' variant='rounded' color='secondary' sx={{ mr: 4 }}>
                       <Icon icon='uil:file-contract' />
                     </CustomAvatar>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography variant='subtitle1' sx={{ fontWeight: 600 }} noWrap>
-                        {currentPlacedAsset?.attributes?.tokenContract}
+                        {etherAddressFormatter(currentPlacedAsset?.attributes?.tokenContract || '')}
                       </Typography>
                       <Typography variant='caption'>Contract</Typography>
                     </Box>
