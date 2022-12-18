@@ -15,9 +15,9 @@ import Typography from '@mui/material/Typography'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
-import Card from '@mui/material/Card'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import Backdrop from '@mui/material/Backdrop'
+import Divider from '@mui/material/Divider'
 import CircularProgress from '@mui/material/CircularProgress'
 
 // ** Components Imports
@@ -307,8 +307,6 @@ const MiddleSection = () => {
                 <Grid item xs={12} sm={4}>
                   <StatisticsHorizontalCard
                     stats={(5_000).toLocaleString('en-US')}
-                    trend='negative'
-                    trendNumber='8.1%'
                     title='Total scene views'
                     icon={<Icon icon={'material-symbols:thumb-up'} />}
                   />
@@ -316,8 +314,6 @@ const MiddleSection = () => {
                 <Grid item xs={12} sm={4}>
                   <StatisticsHorizontalCard
                     stats={moment().diff(moment(sceneBase?.attributes.createdAt), 'days').toLocaleString('en-US')}
-                    trend='negative'
-                    trendNumber='8.1%'
                     title='Create days'
                     icon={<Icon icon={'tabler:brand-days-counter'} />}
                   />
@@ -325,34 +321,33 @@ const MiddleSection = () => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant='h5' sx={{ mb: 3 }}>
-                Assets stats
-              </Typography>
+              <Divider />
             </Grid>
             <Grid item xs={12}>
-              <Card>
-                <DataGrid
-                  hideFooter
-                  rows={sceneBase?.attributes?.assetList?.data || []}
-                  columns={columns}
-                  disableSelectionOnClick
-                  pagination={undefined}
-                  sx={{ height: '20rem' }}
-                />
+              <Typography variant='h5'>Assets stats</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <DataGrid
+                hideFooter
+                rows={sceneBase?.attributes?.assetList?.data || []}
+                columns={columns}
+                disableSelectionOnClick
+                pagination={undefined}
+                sx={{ height: '20rem' }}
+              />
 
-                <Backdrop
-                  open={isQuerySceneBaseLoading || isUpdateAssetFrameLoading}
-                  sx={{
-                    position: 'absolute',
-                    color: 'common.white',
-                    backgroundColor: theme =>
-                      theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)',
-                    zIndex: theme => theme.zIndex.mobileStepper - 1
-                  }}
-                >
-                  <CircularProgress color='inherit' />
-                </Backdrop>
-              </Card>
+              <Backdrop
+                open={isQuerySceneBaseLoading || isUpdateAssetFrameLoading}
+                sx={{
+                  position: 'absolute',
+                  color: 'common.white',
+                  backgroundColor: theme =>
+                    theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)',
+                  zIndex: theme => theme.zIndex.mobileStepper - 1
+                }}
+              >
+                <CircularProgress color='inherit' />
+              </Backdrop>
             </Grid>
           </Grid>
         </DialogContent>

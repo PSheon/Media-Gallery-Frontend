@@ -3,17 +3,12 @@ import { ReactNode } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { AvatarProps } from '@mui/material/Avatar'
-import CardContent from '@mui/material/CardContent'
 
 // ** Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
 
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
@@ -23,8 +18,6 @@ interface Props {
   stats: string
   icon: ReactNode
   color?: ThemeColor
-  trendNumber: string
-  trend?: 'positive' | 'negative'
 }
 
 // ** Styled Avatar component
@@ -36,32 +29,20 @@ const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
 
 const StatisticsHorizontalCard = (props: Props) => {
   // ** Props
-  const { title, icon, stats, trendNumber, color = 'primary', trend = 'positive' } = props
+  const { title, icon, stats, color = 'primary' } = props
 
   return (
-    <Card>
-      <CardContent sx={{ py: theme => `${theme.spacing(4.125)} !important` }}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar skin='light' color={color} variant='rounded'>
-            {icon}
-          </Avatar>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-              <Typography variant='h6'>{stats}</Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box sx={{ display: 'inline-flex', color: trend === 'positive' ? 'success.main' : 'error.main' }}>
-                  <Icon icon={trend === 'positive' ? 'mdi:chevron-up' : 'mdi:chevron-down'} />
-                </Box>
-                <Typography variant='caption' sx={{ color: trend === 'positive' ? 'success.main' : 'error.main' }}>
-                  {trendNumber}
-                </Typography>
-              </Box>
-            </Box>
-            <Typography variant='caption'>{title}</Typography>
-          </Box>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar skin='light' color={color} variant='rounded'>
+        {icon}
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+          <Typography variant='h6'>{stats}</Typography>
         </Box>
-      </CardContent>
-    </Card>
+        <Typography variant='caption'>{title}</Typography>
+      </Box>
+    </Box>
   )
 }
 

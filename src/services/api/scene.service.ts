@@ -65,7 +65,11 @@ export const getScene = async (params: GetSceneProps): Promise<GetSceneResponse>
       populate: {
         cover: true,
         owner: true,
-        collaborators: true,
+        collaborators: {
+          populate: {
+            avatar: true
+          }
+        },
         assetList: {
           populate: {
             cover: true,
