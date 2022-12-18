@@ -5,6 +5,8 @@ import { useState, ChangeEvent, useCallback } from 'react'
 import Link from 'next/link'
 
 // ** MUI Imports
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { Theme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
@@ -44,6 +46,9 @@ const HomePage = () => {
   const [verseType, setVerseType] = useState<string>('classic')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [page, setPage] = useState<number>(1)
+
+  // ** Hooks
+  const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
   const debouncedSearchTerm = useDebounce<string>(searchTerm, 500)
   const {
     isLoading: isQueryLoading,
@@ -225,12 +230,23 @@ const HomePage = () => {
                         }}
                       >
                         <Box sx={{ mr: 2, mb: 1, display: 'flex', flexDirection: 'column' }}>
-                          <Typography variant='h6'>{scene?.attributes?.displayName || 'Untitled'}</Typography>
+                          <Typography variant='h6'>
+                            {scene?.attributes?.displayName || 'Untitled'}
+                            <Typography component='span' sx={{ ml: 2 }}>
+                              {`• ${scene?.attributes?.assetList?.data?.length || 0} assets`}
+                            </Typography>
+                          </Typography>
                           <Typography variant='caption'>
                             {scene?.attributes?.description || 'no description'}
                           </Typography>
                         </Box>
-                        <Button variant='contained' component={Link} href={`/verse/book/${scene.id}`}>
+                        <Button
+                          fullWidth={!isDesktop}
+                          variant='contained'
+                          component={Link}
+                          href={`/verse/book/${scene.id}`}
+                          sx={{ mt: isDesktop ? 0 : 4 }}
+                        >
                           Visit
                         </Button>
                       </Box>

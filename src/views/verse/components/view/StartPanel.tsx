@@ -197,7 +197,7 @@ const StartPanel = () => {
               {sceneBase?.attributes.displayName}
             </Typography>
             <Typography variant='body1' color='common.white'>
-              {sceneBase?.attributes.description ?? 'no description'}
+              {sceneBase?.attributes.description}
             </Typography>
           </Grid>
           <Grid item xs={12} sx={{ mt: 6 }}>
