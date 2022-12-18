@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ChangeEvent, useCallback } from 'react'
+import { useState, useEffect, ChangeEvent, useCallback } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -30,6 +30,9 @@ import { useScenesQuery } from 'src/services/queries/scene.query'
 // ** Hooks Imports
 import useDebounce from 'src/hooks/useDebounce'
 
+// ** Utils Imports
+import { RoomAvailable } from 'colyseus.js'
+
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -46,6 +49,7 @@ const HomePage = () => {
   const [verseType, setVerseType] = useState<string>('classic')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [page, setPage] = useState<number>(1)
+  const [allRooms, setAllRooms] = useState<RoomAvailable[]>([])
 
   // ** Hooks
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
@@ -77,6 +81,37 @@ const HomePage = () => {
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
   }
+
+  // ** Side Effect
+  useEffect(() => {
+    const joinLobby = async () => {
+      const { ColyseusClient } = await import('src/views/verse/lib/utils/Network')
+
+      const lobby = await ColyseusClient.joinOrCreate('lobby')
+
+      lobby.onMessage('rooms', rooms => {
+        setAllRooms(() => rooms)
+      })
+
+      lobby.onMessage('+', ([roomId, room]) => {
+        const roomIndex = allRooms.findIndex(room => room.roomId === roomId)
+        if (roomIndex !== -1) {
+          allRooms[roomIndex] = room
+
+          setAllRooms(() => allRooms)
+        } else {
+          allRooms.push(room)
+        }
+      })
+
+      lobby.onMessage('-', roomId => {
+        setAllRooms(allRooms => allRooms.filter(room => room.roomId !== roomId))
+      })
+    }
+
+    joinLobby()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Grid container spacing={4}>
@@ -219,6 +254,45 @@ const HomePage = () => {
                         border: theme => `5px solid ${theme.palette.common.white}`
                       }}
                     />
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        p: 2,
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'flex-end'
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          px: 2,
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          backgroundColor: theme => theme.palette.background.paper,
+                          borderRadius: theme => theme.shape.borderRadius
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: '8px',
+                            height: '8px',
+                            mr: 2,
+                            backgroundColor: theme =>
+                              allRooms.find(room => room.metadata?.sceneId === scene.id)
+                                ? theme.palette.success.main
+                                : theme.palette.warning.main,
+                            borderRadius: '50%'
+                          }}
+                        />
+                        <Typography variant='subtitle2'>
+                          {allRooms.find(room => room.metadata?.sceneId === scene.id)
+                            ? allRooms.find(room => room.metadata?.sceneId === scene.id)!.clients
+                            : '0'}
+                        </Typography>
+                      </Box>
+                    </Box>
                     <CardContent>
                       <Box
                         sx={{
