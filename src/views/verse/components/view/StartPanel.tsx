@@ -157,10 +157,10 @@ const StartPanel = () => {
           <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Box sx={{ display: 'flex', mr: 4, alignItems: 'flex-end', flexDirection: 'column' }}>
-                <Typography sx={{ fontWeight: 600 }} color='common.white'>
+                <Typography color='common.white' sx={{ fontWeight: 600 }}>
                   {auth.user.username}
                 </Typography>
-                <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
+                <Typography variant='body2' color='common.white' sx={{ fontSize: '0.8rem' }}>
                   {auth.user?.address ? `${etherAddressFormatter(auth.user.address)}` : 'guest'}
                 </Typography>
               </Box>
