@@ -7,3 +7,7 @@ export const etherAddressFormatter = (etherAddress: string): string => {
 
   return etherAddress
 }
+
+export const isEtherAddress = (etherAddress: string): boolean => {
+  return new RegExp(/^0x[a-fA-F0-9]{40}$/).test(etherAddress)
+}

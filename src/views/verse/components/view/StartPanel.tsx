@@ -31,7 +31,7 @@ import { hideStartPanel } from 'src/store/verse/view/startPanelSlice'
 import { useAuth } from 'src/hooks/useAuth'
 
 // ** Utils
-import { etherAddressFormatter } from 'src/utils/ether-address-formatter'
+import { etherAddressFormatter } from 'src/utils/ether-address'
 
 // ** Config
 import apiConfig from 'src/configs/api'

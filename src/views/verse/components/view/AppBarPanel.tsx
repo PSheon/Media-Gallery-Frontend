@@ -16,7 +16,7 @@ import { styled } from '@mui/material/styles'
 import { useAuth } from 'src/hooks/useAuth'
 
 // ** Utils
-import { etherAddressFormatter } from 'src/utils/ether-address-formatter'
+import { etherAddressFormatter } from 'src/utils/ether-address'
 
 // ** Config
 import apiConfig from 'src/configs/api'
