@@ -10,7 +10,6 @@ import CongratulationsSection from 'src/views/dashboards/user/CongratulationsSec
 import MintLargeCard from 'src/views/dashboards/user/mintCard/Large'
 import MintMediumCard from 'src/views/dashboards/user/mintCard/Medium'
 import MintStandardCard from 'src/views/dashboards/user/mintCard/Standard'
-import ActivityTimelineSection from 'src/views/dashboards/user/ActivityTimelineSection'
 import NetworkDetectDialog from 'src/views/dashboards/user/NetworkDetectDialog'
 
 const UserDashboard = () => {
@@ -23,21 +22,21 @@ const UserDashboard = () => {
         <Grid item xs={12} md={8}>
           <StatisticSection />
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={4}>
           <MintLargeCard />
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={4}>
           <MintMediumCard />
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={4}>
           <MintStandardCard />
         </Grid>
         {/* <Grid item xs={12} md={7}>
           <ScenesOverviewWithTabsSection />
         </Grid> */}
-        <Grid item xs={12} md={3}>
+        {/* <Grid item xs={12} md={3}>
           <ActivityTimelineSection />
-        </Grid>
+        </Grid> */}
       </Grid>
 
       <NetworkDetectDialog />
