@@ -2,7 +2,6 @@
 import { useState, SyntheticEvent } from 'react'
 
 // ** Next Imports
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 
 // ** MUI Imports
@@ -135,16 +134,6 @@ const SceneModelSelectionList = () => {
               sx={{ my: 2 }}
             />
           </TabList>
-          <Box
-            sx={{
-              mt: 12,
-              display: 'flex',
-              justifyContent: 'center',
-              '& img': { maxWidth: '100%', display: { xs: 'none', md: 'block' } }
-            }}
-          >
-            <Image width={135} height={195} alt='illustration' src='/images/pages/faq-illustration.png' />
-          </Box>
         </Box>
 
         <TabPanel value='free' sx={{ p: 6, pt: 0, width: '100%' }}>
