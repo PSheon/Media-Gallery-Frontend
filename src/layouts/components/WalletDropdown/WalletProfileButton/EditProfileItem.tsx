@@ -25,7 +25,7 @@ import Avatar from '@mui/material/Avatar'
 
 // ** Utils Imports
 import axios from 'axios'
-import { useMutation } from '@tanstack/react-query'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { useFileUpload } from 'use-file-upload'
 
@@ -68,6 +68,7 @@ const EditProfileItem = (props: Props) => {
 
   // ** Hooks
   const auth = useAuth()
+  const queryClient = useQueryClient()
   // eslint-disable-next-line
   const [files, selectFiles] = useFileUpload()
   const { mutate: updateUser, isLoading: isUpdateUserLoading } = useMutation({
@@ -78,6 +79,7 @@ const EditProfileItem = (props: Props) => {
         data: newData
       }),
     onSuccess: response => {
+      queryClient.invalidateQueries(['scenes'])
       auth.setUser({ ...response.data.userData })
     },
     onError: () => {
@@ -106,6 +108,7 @@ const EditProfileItem = (props: Props) => {
       })
     },
     onSuccess: response => {
+      queryClient.invalidateQueries(['scenes'])
       auth.setUser({ ...response.data.userData })
       toast.success('Update avatar success')
     },
