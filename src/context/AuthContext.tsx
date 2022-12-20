@@ -55,7 +55,7 @@ const AuthProvider = ({ children }: Props) => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`
 
         await axios({
-          method: 'POST',
+          method: 'GET',
           url: `/api/auth/me`,
           headers: {
             Authorization: `Bearer ${storedToken}`
