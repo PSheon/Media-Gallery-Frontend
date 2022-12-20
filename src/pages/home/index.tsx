@@ -46,7 +46,7 @@ const HomePage = () => {
   // ** States
   // const [role, setRole] = useState<string>('')
   // const [plan, setPlan] = useState<string>('')
-  const [verseType, setVerseType] = useState<string>('classic')
+  const [verseType, setVerseType] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [page, setPage] = useState<number>(1)
   const [allRooms, setAllRooms] = useState<RoomAvailable[]>([])
@@ -171,6 +171,7 @@ const HomePage = () => {
                     onChange={handleStatusChange}
                     inputProps={{ placeholder: 'Select Type' }}
                   >
+                    <MenuItem value='all'>All</MenuItem>
                     <MenuItem value='classic'>Classic</MenuItem>
                     <MenuItem value='playground'>Playground</MenuItem>
                   </Select>

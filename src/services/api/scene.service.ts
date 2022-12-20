@@ -22,7 +22,7 @@ export const getScenes = async (params: GetScenesProps): Promise<GetScenesRespon
           $contains: params.displayName
         }
       }),
-      ...(params.type && {
+      ...(params.type !== 'all' && {
         type: params.type
       })
     },
