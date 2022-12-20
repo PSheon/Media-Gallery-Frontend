@@ -67,110 +67,184 @@ const ScenesOverviewWithTabsSection = () => {
     window.location.href = `/verse/edit/${sid}`
   }
 
-  const RenderTabCover = ({ sceneBase }: { sceneBase: IScene }) =>
-    sceneBase?.attributes?.cover?.data?.attributes?.url ? (
-      <Avatar
-        variant='rounded'
-        alt={`me-scene-tabs-${sceneBase?.attributes.displayName}`}
-        src={`${apiConfig.publicFolderUrl}${sceneBase.attributes.cover.data.attributes.url}`}
-        sx={{
-          width: theme => theme.spacing(40),
-          height: theme => theme.spacing(25),
-          backgroundColor: 'transparent',
-          border: theme =>
-            tabValue === `me-scene-${sceneBase.id}`
-              ? `2px solid ${theme.palette.primary.main}`
-              : `2px dashed ${theme.palette.divider}`
-        }}
-      />
-    ) : (
+  const RenderTabCover = ({ sceneBase }: { sceneBase: IScene }) => (
+    <Box
+      sx={{
+        width: theme => theme.spacing(60),
+        height: theme => theme.spacing(30),
+        position: 'relative',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: '.2rem',
+        border: theme =>
+          tabValue === `me-scene-${sceneBase.id}`
+            ? `2px solid ${theme.palette.primary.main}`
+            : `2px dashed ${theme.palette.divider}`
+      }}
+    >
+      {sceneBase?.attributes?.cover?.data?.attributes?.url ? (
+        <Avatar
+          variant='rounded'
+          alt={`me-scene-tabs-${sceneBase?.attributes.displayName}`}
+          src={`${apiConfig.publicFolderUrl}${sceneBase.attributes.cover.data.attributes.url}`}
+          sx={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'transparent'
+          }}
+        />
+      ) : (
+        <Icon icon='material-symbols:add' fontSize={24} />
+      )}
       <Box
         sx={{
-          width: theme => theme.spacing(40),
-          height: theme => theme.spacing(25),
+          position: 'absolute',
+          top: 0,
+          p: 2,
+          width: '100%',
           display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: '.2rem',
-          border: theme => `1px dashed ${theme.palette.divider}`
+          justifyContent: 'flex-end'
         }}
       >
-        <Icon icon='material-symbols:add' fontSize={24} />
+        <Box
+          sx={{
+            px: 2,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: theme => theme.palette.background.paper,
+            borderRadius: theme => theme.shape.borderRadius
+          }}
+        >
+          <Box
+            sx={{
+              width: '8px',
+              height: '8px',
+              mr: 2,
+              backgroundColor: theme =>
+                sceneBase.attributes.published === true ? theme.palette.success.main : theme.palette.warning.main,
+
+              borderRadius: '50%'
+            }}
+          />
+          <Typography variant='subtitle2'>{sceneBase.attributes.published === true ? 'published' : 'draft'}</Typography>
+        </Box>
       </Box>
-    )
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: 0,
+          p: theme => theme.spacing(1, 2),
+          width: '100%',
+          height: theme => theme.spacing(6),
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          background: `linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1), transparent)`
+        }}
+      >
+        <Typography variant='caption' color='common.white'>
+          {sceneBase.attributes.displayName || 'Untitled'}
+        </Typography>
+      </Box>
+    </Box>
+  )
 
   const RenderTabContent = ({ assetList = [] }: { assetList: ISceneAsset[] }) => {
     return (
       <TableContainer sx={{ height: '15rem' }}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow sx={{ '& .MuiTableCell-root': { py: theme => `${theme.spacing(2.5)} !important` } }}>
-              <TableCell sx={{ whiteSpace: 'nowrap' }}>Asset</TableCell>
-              <TableCell align='center'>type</TableCell>
-              <TableCell align='right'>views</TableCell>
-              <TableCell align='right'>status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {assetList.map(asset => (
-              <TableRow
-                key={`me-scene-asset-list-${asset.id}`}
-                sx={{
-                  '& .MuiTableCell-root': {
-                    border: 0,
-                    py: theme => `${theme.spacing(1.5)} !important`
-                  },
-                  '&:first-child .MuiTableCell-body': {
-                    pt: theme => `${theme.spacing(3)} !important`
-                  },
-                  '&:last-child .MuiTableCell-body': {
-                    pb: theme => `${theme.spacing(3)} !important`
-                  }
-                }}
-              >
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Box>
-                      <Avatar
-                        src={`${apiConfig.publicFolderUrl}${asset?.attributes?.cover?.data?.attributes.url}`}
-                        alt={asset?.attributes.displayName}
-                        sx={{
-                          width: '4.5rem',
-                          height: '2.4rem',
-                          borderRadius: '.2rem',
-                          boxShadow: theme => theme.shadows[9]
-                        }}
-                      />
-                    </Box>
-                    <Box sx={{ display: 'flex', ml: 4, mr: 2, flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 600 }} color='common.white' noWrap>
-                        {asset?.attributes.displayName || 'Untitled'}
-                      </Typography>
-                      <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }} noWrap>
-                        {asset?.attributes.description || 'no description'}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </TableCell>
-                <TableCell align='center'>
-                  <Typography variant='body2' sx={{ fontWeight: 600, whiteSpace: 'nowrap', color: 'text.primary' }}>
-                    {asset?.attributes.type}
-                  </Typography>
-                </TableCell>
-                <TableCell align='right'>{asset?.attributes.views}</TableCell>
-                <TableCell align='right'>
-                  <CustomChip
-                    skin='light'
-                    size='small'
-                    label='active'
-                    color='primary'
-                    sx={{ height: 20, fontWeight: 500, '& .MuiChip-label': { px: 1.625, lineHeight: 1.539 } }}
-                  />
-                </TableCell>
+        {assetList.length ? (
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow sx={{ '& .MuiTableCell-root': { py: theme => `${theme.spacing(2.5)} !important` } }}>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>Asset</TableCell>
+                <TableCell align='center'>type</TableCell>
+                <TableCell align='right'>views</TableCell>
+                <TableCell align='right'>status</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {assetList.map(asset => (
+                <TableRow
+                  key={`me-scene-asset-list-${asset.id}`}
+                  sx={{
+                    '& .MuiTableCell-root': {
+                      border: 0,
+                      py: theme => `${theme.spacing(1.5)} !important`
+                    },
+                    '&:first-child .MuiTableCell-body': {
+                      pt: theme => `${theme.spacing(3)} !important`
+                    },
+                    '&:last-child .MuiTableCell-body': {
+                      pb: theme => `${theme.spacing(3)} !important`
+                    }
+                  }}
+                >
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Box>
+                        <Avatar
+                          src={`${apiConfig.publicFolderUrl}${asset?.attributes?.cover?.data?.attributes.url}`}
+                          alt={asset?.attributes.displayName}
+                          sx={{
+                            width: '4.5rem',
+                            height: '2.4rem',
+                            borderRadius: '.2rem',
+                            boxShadow: theme => theme.shadows[9]
+                          }}
+                        />
+                      </Box>
+                      <Box sx={{ display: 'flex', ml: 4, mr: 2, flexDirection: 'column' }}>
+                        <Typography sx={{ fontWeight: 600 }} noWrap>
+                          {asset?.attributes.displayName || 'Untitled'}
+                        </Typography>
+                        <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }} noWrap>
+                          {asset?.attributes.description || 'no description'}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </TableCell>
+                  <TableCell align='center'>
+                    <Typography variant='body2' sx={{ fontWeight: 600, whiteSpace: 'nowrap', color: 'text.primary' }}>
+                      {asset?.attributes.type}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align='right'>{asset?.attributes.views}</TableCell>
+                  <TableCell align='right'>
+                    <CustomChip
+                      skin='light'
+                      size='small'
+                      label='active'
+                      color='primary'
+                      sx={{ height: 20, fontWeight: 500, '& .MuiChip-label': { px: 1.625, lineHeight: 1.539 } }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <CardContent
+            sx={{
+              display: 'flex',
+              width: '100%',
+              height: '100%',
+              textAlign: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column'
+            }}
+          >
+            <CustomAvatar skin='light' sx={{ width: 56, height: 56, mb: 2 }}>
+              <Icon icon='file-icons:3d-model' fontSize='2rem' />
+            </CustomAvatar>
+            <Typography variant='h6' sx={{ mb: 2 }}>
+              No asset placed
+            </Typography>
+            <Typography variant='body2'>Use edit mode to add a new asset.</Typography>
+          </CardContent>
+        )}
       </TableContainer>
     )
   }
@@ -216,8 +290,8 @@ const ScenesOverviewWithTabsSection = () => {
               <Avatar
                 variant='rounded'
                 sx={{
-                  width: theme => theme.spacing(40),
-                  height: theme => theme.spacing(25),
+                  width: theme => theme.spacing(60),
+                  height: theme => theme.spacing(30),
                   backgroundColor: 'transparent',
                   border: theme =>
                     tabValue === 'add'
