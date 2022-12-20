@@ -306,7 +306,9 @@ const MiddleSection = () => {
               <Grid container spacing={4} justifyContent='flex-end'>
                 <Grid item xs={12} sm={4}>
                   <StatisticsHorizontalCard
-                    stats={(5_000).toLocaleString('en-US')}
+                    stats={(sceneBase?.attributes?.assetList?.data || [])
+                      .reduce((acc, cur) => acc + cur.attributes.views, 0)
+                      .toLocaleString('en-US')}
                     title='Total scene views'
                     icon={<Icon icon={'material-symbols:thumb-up'} />}
                   />
