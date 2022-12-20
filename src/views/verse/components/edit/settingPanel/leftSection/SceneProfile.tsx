@@ -63,8 +63,8 @@ const PreviewPicture = styled('img')(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
-  displayName: yup.string().min(3).required(),
-  sceneId: yup.string().required(),
+  sceneId: yup.string().min(3).max(36).required(),
+  displayName: yup.string().optional(),
   description: yup.string().optional()
 })
 
@@ -216,8 +216,8 @@ const SceneProfile = () => {
                 Edit Scene
               </Typography>
               <Typography variant='body2'>
-                Fill a title to make it public in oncyber discovery. Regenerate its previews (bottom) to update its
-                thumbnail and portal appearance.
+                Fill a displayName to make it public. Regenerate its previews (bottom) to update its thumbnail and
+                portal appearance.
               </Typography>
             </Box>
 
@@ -320,6 +320,37 @@ const SceneProfile = () => {
                         onChange={onChange}
                         error={Boolean(errors.displayName)}
                         placeholder='Untitled'
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position='end'>
+                              <Box
+                                sx={{
+                                  px: 2,
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                  alignItems: 'center'
+                                }}
+                              >
+                                <Box
+                                  sx={{
+                                    width: '8px',
+                                    height: '8px',
+                                    mr: 2,
+                                    backgroundColor: theme =>
+                                      sceneBase?.attributes.published === true
+                                        ? theme.palette.success.main
+                                        : theme.palette.warning.main,
+
+                                    borderRadius: '50%'
+                                  }}
+                                />
+                                <Typography variant='subtitle2'>
+                                  {sceneBase?.attributes.published === true ? 'published' : 'draft'}
+                                </Typography>
+                              </Box>
+                            </InputAdornment>
+                          )
+                        }}
                       />
                     )}
                   />

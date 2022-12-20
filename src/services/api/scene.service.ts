@@ -16,6 +16,7 @@ export const getMeScenes = async (): Promise<GetScenesResponse> => {
 export const getScenes = async (params: GetScenesProps): Promise<GetScenesResponse> => {
   const enhancedParams = {
     filters: {
+      published: true,
       ...(params.displayName && {
         displayName: {
           $contains: params.displayName
