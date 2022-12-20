@@ -1,5 +1,5 @@
-/* TODO */
 // ** React Imports
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Next Import
@@ -29,6 +29,7 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 import Icon from 'src/@core/components/icon'
 
 // ** Utils
+import axios from 'axios'
 import { etherAddressFormatter } from 'src/utils/ether-address'
 
 // ** Config
@@ -74,6 +75,21 @@ const ViewDialogBox = () => {
     }
     dispatch(hideViewDialogBox())
   }
+
+  // ** Side Effect
+  useEffect(() => {
+    try {
+      if (VIEW_DIALOG_BOX.show) {
+        axios({
+          method: 'POST',
+          url: `/api/scene-assets/view/${currentPlacedAsset!.id}`
+        })
+      }
+    } catch (viewAssetErr) {
+      console.error('View asset err, ', viewAssetErr)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [VIEW_DIALOG_BOX.show])
 
   // ** Renders
   const renderTokeChainIcon = (chainName: ISceneAsset['attributes']['tokenChain']) => {
