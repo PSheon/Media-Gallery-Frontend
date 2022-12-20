@@ -128,7 +128,7 @@ const ScenesOverviewWithTabsSection = () => {
               borderRadius: '50%'
             }}
           />
-          <Typography variant='subtitle2'>{sceneBase.attributes.published === true ? 'published' : 'draft'}</Typography>
+          <Typography variant='body2'>{sceneBase.attributes.published === true ? 'published' : 'draft'}</Typography>
         </Box>
       </Box>
       <Box
@@ -137,14 +137,14 @@ const ScenesOverviewWithTabsSection = () => {
           bottom: 0,
           p: theme => theme.spacing(1, 2),
           width: '100%',
-          height: theme => theme.spacing(6),
+          height: theme => theme.spacing(8),
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
           background: `linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1), transparent)`
         }}
       >
-        <Typography variant='caption' color='common.white'>
+        <Typography variant='caption' color='common.white' noWrap>
           {sceneBase.attributes.displayName || 'Untitled'}
         </Typography>
       </Box>
