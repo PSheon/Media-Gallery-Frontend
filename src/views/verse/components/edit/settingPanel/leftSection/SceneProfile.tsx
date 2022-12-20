@@ -88,7 +88,7 @@ const SceneProfile = () => {
     mutationFn: (newSceneData: UpdateSceneFormData) =>
       axios({
         method: 'PUT',
-        url: `/api/scenes/${sid}`,
+        url: `/api/scenes/metadata/${sid}`,
         data: {
           data: newSceneData
         }
@@ -117,7 +117,7 @@ const SceneProfile = () => {
 
       return axios({
         method: 'PUT',
-        url: `/api/scenes/${sid}`,
+        url: `/api/scenes/cover/${sid}`,
         data: {
           data: {
             cover: newCoverId
