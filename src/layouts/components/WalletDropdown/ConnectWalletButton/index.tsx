@@ -14,7 +14,7 @@ import Fade, { FadeProps } from '@mui/material/Fade'
 import DialogContent from '@mui/material/DialogContent'
 
 // ** Wagmi Imports
-import { useConnect, useSignMessage, useDisconnect, Connector } from 'wagmi'
+import { useConnect, useSignMessage, Connector } from 'wagmi'
 
 // ** Axios
 import axios from 'axios'
@@ -45,7 +45,6 @@ const ConnectWalletButton = () => {
   const auth = useAuth()
   const bgColors = useBgColor()
   const { connectAsync, connectors, error: connectError, isLoading, pendingConnector } = useConnect()
-  const { disconnect } = useDisconnect()
   const { signMessageAsync } = useSignMessage()
 
   const handleClose = () => {
@@ -72,7 +71,6 @@ const ConnectWalletButton = () => {
         setConnecting(false)
       })
     } catch (connectingErr) {
-      disconnect()
       setConnecting(false)
     }
   }

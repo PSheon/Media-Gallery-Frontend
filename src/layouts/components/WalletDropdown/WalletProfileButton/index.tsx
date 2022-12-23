@@ -14,9 +14,6 @@ import MenuItem from '@mui/material/MenuItem'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 
-// ** Wagmi Imports
-import { useDisconnect } from 'wagmi'
-
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -60,7 +57,6 @@ const WalletProfileButton = (props: Props) => {
 
   // ** Hooks
   const router = useRouter()
-  const { disconnect } = useDisconnect()
   const { user, logout } = useAuth()
 
   // ** Vars
@@ -80,7 +76,6 @@ const WalletProfileButton = (props: Props) => {
   }
 
   const handleLogout = () => {
-    disconnect()
     handleDropdownClose()
 
     logout()

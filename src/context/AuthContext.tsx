@@ -4,6 +4,9 @@ import { createContext, useEffect, useState, ReactNode } from 'react'
 // ** Next Import
 import { useRouter } from 'next/router'
 
+// ** Wagmi Imports
+import { useDisconnect } from 'wagmi'
+
 // ** Axios
 import axios from 'axios'
 
@@ -43,6 +46,7 @@ const AuthProvider = ({ children }: Props) => {
 
   // ** Hooks
   const router = useRouter()
+  const { disconnect } = useDisconnect()
 
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
@@ -124,11 +128,13 @@ const AuthProvider = ({ children }: Props) => {
       })
 
       .catch(err => {
+        disconnect()
         if (errorCallback) errorCallback(err)
       })
   }
 
   const handleLogout = () => {
+    disconnect()
     setUser(() => ({ role: 'guest', email: 'anonymous@media.app', fullName: 'Anonymous', username: 'anonymous' }))
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
