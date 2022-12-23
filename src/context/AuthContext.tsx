@@ -7,6 +7,9 @@ import { useRouter } from 'next/router'
 // ** Axios
 import axios from 'axios'
 
+// ** Wagmi Imports
+import { useDisconnect } from 'wagmi'
+
 // ** Config
 import authConfig from 'src/configs/auth'
 
@@ -42,6 +45,7 @@ const AuthProvider = ({ children }: Props) => {
 
   // ** Hooks
   const router = useRouter()
+  const { disconnect } = useDisconnect()
 
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
@@ -63,9 +67,10 @@ const AuthProvider = ({ children }: Props) => {
         })
           .then(async response => {
             setLoading(false)
-            setUser(() => ({ ...response.data.userData }))
+            setUser(() => response.data.userData)
           })
           .catch(() => {
+            disconnect()
             localStorage.removeItem('userData')
             localStorage.removeItem('refreshToken')
             localStorage.removeItem('accessToken')
@@ -83,6 +88,7 @@ const AuthProvider = ({ children }: Props) => {
             router.replace('/')
           })
       } else {
+        disconnect()
         setLoading(false)
       }
     }
@@ -101,7 +107,7 @@ const AuthProvider = ({ children }: Props) => {
         window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
         const returnUrl = router.query.returnUrl
 
-        setUser(() => ({ ...response.data.userData }))
+        setUser(() => response.data.userData)
         window.localStorage.setItem('userData', JSON.stringify(response.data.userData))
 
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
@@ -113,7 +119,7 @@ const AuthProvider = ({ children }: Props) => {
         //   : null
         // const returnUrl = router.query.returnUrl
 
-        // setUser(() => ({ ...response.data.userData }))
+        // setUser(() => response.data.userData)
         // params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
 
         // const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
@@ -127,6 +133,7 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   const handleLogout = () => {
+    disconnect()
     setUser(() => ({ role: 'guest', email: 'anonymous@media.app', fullName: 'Anonymous', username: 'anonymous' }))
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
