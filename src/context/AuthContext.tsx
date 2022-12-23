@@ -64,9 +64,10 @@ const AuthProvider = ({ children }: Props) => {
         })
           .then(async response => {
             setLoading(false)
-            setUser(() => ({ ...response.data.userData }))
+            setUser(() => response.data.userData)
           })
           .catch(() => {
+            delete axios.defaults.headers.common['Authorization']
             localStorage.removeItem('userData')
             localStorage.removeItem('refreshToken')
             localStorage.removeItem('accessToken')
@@ -102,7 +103,7 @@ const AuthProvider = ({ children }: Props) => {
         window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
         const returnUrl = router.query.returnUrl
 
-        setUser(() => ({ ...response.data.userData }))
+        setUser(() => response.data.userData)
         window.localStorage.setItem('userData', JSON.stringify(response.data.userData))
 
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
