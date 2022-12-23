@@ -22,7 +22,7 @@ const ChatFormWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   boxShadow: theme.shadows[1],
-  padding: theme.spacing(1.25, 4),
+  padding: theme.spacing(0, 4),
   justifyContent: 'space-between',
   transition: theme.transitions.create('background-color'),
   borderRadius: theme.shape.borderRadius,
