@@ -10,6 +10,7 @@ import { Theme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import Skeleton from '@mui/material/Skeleton'
@@ -47,6 +48,7 @@ const HomePage = () => {
   // const [role, setRole] = useState<string>('')
   // const [plan, setPlan] = useState<string>('')
   const [verseType, setVerseType] = useState<string>('all')
+  const [searchTermBarOpen, setSearchTermBarOpen] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [page, setPage] = useState<number>(1)
   const [allRooms, setAllRooms] = useState<RoomAvailable[]>([])
@@ -78,6 +80,16 @@ const HomePage = () => {
   const handleStatusChange = useCallback((e: SelectChangeEvent) => {
     setVerseType(e.target.value)
   }, [])
+  const handleOpenSearchTermBar = () => {
+    setSearchTermBarOpen(true)
+  }
+  const handleClearFilters = () => {
+    setVerseType('all')
+  }
+  const handleCloseSearchTermBar = () => {
+    setSearchTermBarOpen(false)
+    setSearchTerm('')
+  }
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
   }
@@ -118,81 +130,161 @@ const HomePage = () => {
       <Grid item xs={12}>
         <Card>
           <CardContent>
-            <Grid container spacing={4}>
-              {/* <Grid item xs={12} sm={3}>
-                <FormControl fullWidth>
-                  <InputLabel id='role-select'>Select Role</InputLabel>
-                  <Select
-                    fullWidth
-                    value={role}
-                    id='select-role'
-                    label='Select Role'
-                    labelId='role-select'
-                    onChange={handleRoleChange}
-                    inputProps={{ placeholder: 'Select Role' }}
-                  >
-                    <MenuItem value=''>Select Role</MenuItem>
-                    <MenuItem value='admin'>Admin</MenuItem>
-                    <MenuItem value='author'>Author</MenuItem>
-                    <MenuItem value='editor'>Editor</MenuItem>
-                    <MenuItem value='maintainer'>Maintainer</MenuItem>
-                    <MenuItem value='subscriber'>Subscriber</MenuItem>
-                  </Select>
-                </FormControl>
+            {isDesktop ? (
+              <Grid container spacing={4}>
+                {searchTermBarOpen && (
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      placeholder='Search...'
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position='start'>
+                            <Icon icon={isQueryLoading ? 'line-md:loading-twotone-loop' : 'material-symbols:search'} />
+                          </InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position='end'>
+                            <IconButton onClick={handleCloseSearchTermBar}>
+                              <Icon icon='mingcute:close-fill' fontSize={20} />
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </Grid>
+                )}
+                {!searchTermBarOpen && (
+                  <Grid item xs={12} sm={3} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Box
+                      onClick={handleOpenSearchTermBar}
+                      sx={{
+                        p: 4,
+                        height: '100%',
+                        display: 'flex',
+                        borderRadius: 1,
+                        cursor: 'pointer',
+                        position: 'relative',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        border: theme => `1px solid ${theme.palette.divider}`,
+                        '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` }
+                      }}
+                    >
+                      <Icon icon='material-symbols:search-rounded' fontSize={24} />
+                    </Box>
+                    {verseType !== 'all' && (
+                      <Box
+                        onClick={handleClearFilters}
+                        sx={{
+                          p: 4,
+                          height: '100%',
+                          display: 'flex',
+                          borderRadius: 1,
+                          cursor: 'pointer',
+                          position: 'relative',
+                          alignItems: 'center',
+                          flexDirection: 'column',
+                          border: theme => `1px solid ${theme.palette.divider}`,
+                          '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` }
+                        }}
+                      >
+                        Clear filters
+                      </Box>
+                    )}
+                  </Grid>
+                )}
+                {!searchTermBarOpen && (
+                  <Grid item xs={12} sm={3}>
+                    <FormControl fullWidth>
+                      <InputLabel id='verse-type-select'>Select Type</InputLabel>
+                      <Select
+                        fullWidth
+                        value={verseType}
+                        label='Select Type'
+                        labelId='verse-type-select'
+                        onChange={handleStatusChange}
+                        inputProps={{ placeholder: 'Select Type' }}
+                      >
+                        <MenuItem value='all'>All</MenuItem>
+                        <MenuItem value='classic'>Classic</MenuItem>
+                        <MenuItem value='playground'>Playground</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                )}
+                {!searchTermBarOpen && (
+                  <Grid item xs={12} sm={3}>
+                    <FormControl fullWidth>
+                      <InputLabel id='verse-chain-select'>Select Chain</InputLabel>
+                      <Select
+                        fullWidth
+                        value='all'
+                        label='Select Chain'
+                        labelId='verse-chain-select'
+                        inputProps={{ placeholder: 'Select Chain' }}
+                      >
+                        <MenuItem value='all'>All</MenuItem>
+                        <MenuItem disabled value='eth'>
+                          Ethereum
+                        </MenuItem>
+                        <MenuItem disabled value='polygon'>
+                          Polygon
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                )}
+                {!searchTermBarOpen && (
+                  <Grid item xs={12} sm={3}>
+                    <FormControl fullWidth>
+                      <InputLabel id='verse-collection-select'>Select Collection</InputLabel>
+                      <Select
+                        fullWidth
+                        value='all'
+                        label='Select Collection'
+                        labelId='verse-collection-select'
+                        inputProps={{ placeholder: 'Select Collection' }}
+                      >
+                        <MenuItem value='all'>All</MenuItem>
+                        <MenuItem disabled value='eth'>
+                          Media Verse
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                )}
               </Grid>
-              <Grid item xs={12} sm={3}>
-                <FormControl fullWidth>
-                  <InputLabel id='plan-select'>Select Plan</InputLabel>
-                  <Select
+            ) : (
+              <Grid container spacing={4}>
+                <Grid item xs={12}>
+                  <TextField
                     fullWidth
-                    value={plan}
-                    id='select-plan'
-                    label='Select Plan'
-                    labelId='plan-select'
-                    onChange={handlePlanChange}
-                    inputProps={{ placeholder: 'Select Plan' }}
-                  >
-                    <MenuItem value=''>Select Plan</MenuItem>
-                    <MenuItem value='basic'>Basic</MenuItem>
-                    <MenuItem value='company'>Company</MenuItem>
-                    <MenuItem value='enterprise'>Enterprise</MenuItem>
-                    <MenuItem value='team'>Team</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid> */}
-              <Grid item xs={12} sm={3}>
-                <FormControl fullWidth>
-                  <InputLabel id='verse-type-select'>Select Type</InputLabel>
-                  <Select
-                    fullWidth
-                    value={verseType}
-                    label='Select Type'
-                    labelId='verse-type-select'
-                    onChange={handleStatusChange}
-                    inputProps={{ placeholder: 'Select Type' }}
-                  >
-                    <MenuItem value='all'>All</MenuItem>
-                    <MenuItem value='classic'>Classic</MenuItem>
-                    <MenuItem value='playground'>Playground</MenuItem>
-                  </Select>
-                </FormControl>
+                    placeholder='Search...'
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position='start'>
+                          <Icon icon={isQueryLoading ? 'line-md:loading-twotone-loop' : 'material-symbols:search'} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          {searchTerm && (
+                            <IconButton onClick={handleCloseSearchTermBar}>
+                              <Icon icon='mingcute:close-fill' fontSize={20} />
+                            </IconButton>
+                          )}
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={9}>
-                <TextField
-                  fullWidth
-                  placeholder='Search...'
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position='end'>
-                        <Icon icon={isQueryLoading ? 'line-md:loading-twotone-loop' : 'material-symbols:search'} />
-                      </InputAdornment>
-                    )
-                  }}
-                />
-              </Grid>
-            </Grid>
+            )}
           </CardContent>
         </Card>
       </Grid>
