@@ -44,7 +44,7 @@ const MessagePortalBox = () => {
         method: 'POST',
         url: '/api/streaming-token',
         data: {
-          roomName: router.query.scene ?? 'default'
+          roomName: router.query.sid ?? 'default'
         }
       })
 
