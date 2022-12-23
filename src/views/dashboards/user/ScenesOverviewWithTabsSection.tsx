@@ -85,7 +85,7 @@ const ScenesOverviewWithTabsSection = () => {
     >
       {sceneBase?.attributes?.cover?.data?.attributes?.url ? (
         <Avatar
-          variant='rounded'
+          variant='square'
           alt={`me-scene-tabs-${sceneBase?.attributes.displayName}`}
           src={`${apiConfig.publicFolderUrl}${sceneBase.attributes.cover.data.attributes.url}`}
           sx={{
