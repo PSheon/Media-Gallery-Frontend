@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 // ** Components Imports
-import StatisticSection from 'src/views/dashboards/user/StatisticSection'
+// import StatisticSection from 'src/views/dashboards/user/StatisticSection'
 import CongratulationsSection from 'src/views/dashboards/user/CongratulationsSection'
 import MintLargeCard from 'src/views/dashboards/user/mintCard/Large'
 import MintMediumCard from 'src/views/dashboards/user/mintCard/Medium'
@@ -16,12 +16,12 @@ const UserDashboard = () => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6} className='match-height'>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12}>
           <CongratulationsSection />
         </Grid>
-        <Grid item xs={12} md={8}>
+        {/* <Grid item xs={12} md={8}>
           <StatisticSection />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} md={4}>
           <MintLargeCard />
         </Grid>

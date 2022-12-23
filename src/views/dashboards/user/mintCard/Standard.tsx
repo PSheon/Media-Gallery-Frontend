@@ -155,7 +155,8 @@ const MintStandardCard = () => {
         </Typography>
         <Box sx={{ mb: 1.25, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant='body2' sx={{ mr: 2, fontWeight: 600, color: 'text.primary' }}>
-            {`${mintedCount} / 4050`}
+            {/* {`${mintedCount} / 4050`} */}
+            process
           </Typography>
           <Typography variant='body2' sx={{ fontWeight: 600, color: 'text.primary' }}>
             {`${(mintedCount / 4050).toFixed(2)}%`}
