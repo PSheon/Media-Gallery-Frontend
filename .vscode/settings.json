@@ -33,7 +33,20 @@
   "npm.packageManager": "yarn",
   // Extension: cSpell
   "cSpell.words": [
-    "customizer"
+    "broadphase",
+    "clsx",
+    "colyseus",
+    "customizer",
+    "ecommerce",
+    "fxaa",
+    "gltf",
+    "hemi",
+    "lerp",
+    "moralis",
+    "raycast",
+    "registree",
+    "Trimesh",
+    "wagmi"
   ],
   "search-node-modules.path": "node_modules",
   "markdown.extension.toc.updateOnSave": false

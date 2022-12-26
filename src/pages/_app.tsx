@@ -26,10 +26,25 @@ import themeConfig from 'src/configs/themeConfig'
 // ** Fake-DB Import
 import 'src/@fake-db'
 
+// ** 100ms Imports
+import { HMSRoomProvider } from '@100mslive/react-sdk'
+
+// ** Wagmi Imports
+import { WagmiConfig, createClient, configureChains } from 'wagmi'
+import { mainnet, polygon, avalanche, bsc, goerli } from 'wagmi/chains'
+import { infuraProvider } from 'wagmi/providers/infura'
+import { publicProvider } from 'wagmi/providers/public'
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+
+// ** React Query Imports
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
 // ** Third Party Import
 import { Toaster } from 'react-hot-toast'
 
-// ** Component Imports
+// ** Components Imports
 import UserLayout from 'src/layouts/UserLayout'
 import AclGuard from 'src/@core/components/auth/AclGuard'
 import ThemeComponent from 'src/@core/theme/ThemeComponent'
@@ -38,7 +53,7 @@ import GuestGuard from 'src/@core/components/auth/GuestGuard'
 import WindowWrapper from 'src/@core/components/window-wrapper'
 
 // ** Spinner Import
-import Spinner from 'src/@core/components/spinner'
+import Spinner from 'src/layouts/components/spinner'
 
 // ** Contexts
 import { AuthProvider } from 'src/context/AuthContext'
@@ -77,6 +92,41 @@ type GuardProps = {
 }
 
 const clientSideEmotionCache = createEmotionCache()
+const { chains, provider, webSocketProvider } = configureChains(
+  [mainnet, polygon, avalanche, bsc, goerli],
+  [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY as string }), publicProvider()]
+)
+const client = createClient({
+  autoConnect: true,
+  connectors: [
+    new MetaMaskConnector({ chains }),
+    new WalletConnectConnector({
+      chains,
+      options: {
+        qrcode: true
+      }
+    }),
+    new CoinbaseWalletConnector({
+      chains,
+      options: {
+        appName: 'wagmi'
+      }
+    })
+  ],
+  provider,
+  webSocketProvider
+})
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 0
+    },
+    mutations: {
+      retry: 0
+    }
+  }
+})
 
 // ** Pace Loader
 if (themeConfig.routingLoader) {
@@ -119,42 +169,48 @@ const App = (props: ExtendedAppProps) => {
   const aclAbilities = Component.acl ?? defaultACLObj
 
   return (
-    <Provider store={store}>
-      <CacheProvider value={emotionCache}>
-        <Head>
-          <title>{`${themeConfig.templateName} - Material Design React Admin Template`}</title>
-          <meta
-            name='description'
-            content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
-          />
-          <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
-          <meta name='viewport' content='initial-scale=1, width=device-width' />
-        </Head>
+    <WagmiConfig client={client}>
+      <HMSRoomProvider>
+        <Provider store={store}>
+          <CacheProvider value={emotionCache}>
+            <Head>
+              <title>{`${themeConfig.templateName} - Buy and Sell digital assets`}</title>
+              <meta name='description' content={`${themeConfig.templateName} – Buy and Sell digital assets.`} />
+              <meta name='keywords' content='NFT,Web3,Eth,Btc' />
+              <meta name='viewport' content='initial-scale=1, width=device-width' />
+            </Head>
 
-        <AuthProvider>
-          <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
-            <SettingsConsumer>
-              {({ settings }) => {
-                return (
-                  <ThemeComponent settings={settings}>
-                    <WindowWrapper>
-                      <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                        <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
-                          {getLayout(<Component {...pageProps} />)}
-                        </AclGuard>
-                      </Guard>
-                    </WindowWrapper>
-                    <ReactHotToast>
-                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                    </ReactHotToast>
-                  </ThemeComponent>
-                )
-              }}
-            </SettingsConsumer>
-          </SettingsProvider>
-        </AuthProvider>
-      </CacheProvider>
-    </Provider>
+            <AuthProvider>
+              <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
+                <QueryClientProvider client={queryClient}>
+                  <SettingsConsumer>
+                    {({ settings }) => {
+                      return (
+                        <ThemeComponent settings={settings}>
+                          <WindowWrapper>
+                            <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                              <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
+                                {getLayout(<Component {...pageProps} />)}
+                              </AclGuard>
+                            </Guard>
+                          </WindowWrapper>
+                          <ReactHotToast>
+                            <Toaster
+                              position={settings.toastPosition}
+                              toastOptions={{ className: 'react-hot-toast' }}
+                            />
+                          </ReactHotToast>
+                        </ThemeComponent>
+                      )
+                    }}
+                  </SettingsConsumer>
+                </QueryClientProvider>
+              </SettingsProvider>
+            </AuthProvider>
+          </CacheProvider>
+        </Provider>
+      </HMSRoomProvider>
+    </WagmiConfig>
   )
 }
 

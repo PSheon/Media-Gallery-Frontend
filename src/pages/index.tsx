@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 // ** Spinner Import
-import Spinner from 'src/@core/components/spinner'
+import Spinner from 'src/layouts/components/spinner'
 
 // ** Hook Imports
 import { useAuth } from 'src/hooks/useAuth'
@@ -15,7 +15,10 @@ import { useAuth } from 'src/hooks/useAuth'
  */
 export const getHomeRoute = (role: string) => {
   if (role === 'client') return '/acl'
-  else return '/dashboards/crm'
+  if (role === 'admin') return '/dashboards/admin'
+  if (role === 'staff') return '/dashboards/staff'
+  if (role === 'user') return '/home'
+  else return '/home'
 }
 
 const Home = () => {

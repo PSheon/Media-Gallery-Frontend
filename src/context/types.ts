@@ -1,15 +1,30 @@
 export type ErrCallbackType = (err: { [key: string]: string }) => void
 
-export type LoginParams = {
-  email: string
-  password: string
-  rememberMe?: boolean
-}
+export type LoginParams =
+  | {
+      message: string
+      signature: string
+    }
+  | {
+      email: string
+      password: string
+      rememberMe?: boolean
+    }
 
 export type RegisterParams = {
   email: string
   username: string
   password: string
+}
+
+export type GuestDataType = {
+  id?: number
+  role: 'guest'
+  email: string
+  fullName: string
+  username: string
+  avatar?: string | null
+  address?: string
 }
 
 export type UserDataType = {
@@ -18,16 +33,17 @@ export type UserDataType = {
   email: string
   fullName: string
   username: string
-  password: string
+  password?: string
   avatar?: string | null
+  address: string
 }
 
 export type AuthValuesType = {
   loading: boolean
   logout: () => void
-  user: UserDataType | null
+  user: UserDataType | GuestDataType
   setLoading: (value: boolean) => void
-  setUser: (value: UserDataType | null) => void
+  setUser: (value: UserDataType | GuestDataType) => void
   login: (params: LoginParams, errorCallback?: ErrCallbackType) => void
   register: (params: RegisterParams, errorCallback?: ErrCallbackType) => void
 }

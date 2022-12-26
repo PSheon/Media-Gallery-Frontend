@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import List from '@mui/material/List'
-import MuiDialog from '@mui/material/Dialog'
+import MuiDialog, { DialogProps } from '@mui/material/Dialog'
 import ListItem from '@mui/material/ListItem'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -231,7 +231,7 @@ const Autocomplete = styled(MuiAutocomplete)(({ theme }) => ({
 }))
 
 // ** Styled Dialog component
-const Dialog = styled(MuiDialog)({
+const Dialog = styled(MuiDialog)<DialogProps>({
   '& .MuiBackdrop-root': {
     backdropFilter: 'blur(4px)'
   },

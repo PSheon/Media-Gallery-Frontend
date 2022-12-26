@@ -14,7 +14,7 @@ import { LayoutProps } from 'src/@core/layouts/types'
 
 import themeConfig from 'src/configs/themeConfig'
 
-// ** Component Imports
+// ** Components Imports
 import Drawer from './Drawer'
 import VerticalNavItems from './VerticalNavItems'
 import VerticalNavHeader from './VerticalNavHeader'

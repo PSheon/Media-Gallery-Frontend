@@ -3,6 +3,7 @@ import { useState, ReactNode, MouseEvent } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
+import Image from 'next/image'
 
 // ** MUI Components
 import Alert from '@mui/material/Alert'
@@ -181,7 +182,7 @@ const LoginPage = () => {
                 justifyContent: 'center'
               }}
             >
-              <svg width={47} fill='none' height={26} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
+              {/* <svg width={47} fill='none' height={26} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
                 <rect
                   rx='25.1443'
                   width='50.2886'
@@ -250,7 +251,8 @@ const LoginPage = () => {
                     <stop offset='1' stopOpacity='0' />
                   </linearGradient>
                 </defs>
-              </svg>
+              </svg> */}
+              <Image width={40} height={40} src='/images/logos/media-app.png' alt='media logo' />
               <Typography variant='h6' sx={{ ml: 2, lineHeight: 1, fontWeight: 700, fontSize: '1.5rem !important' }}>
                 {themeConfig.templateName}
               </Typography>

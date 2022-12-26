@@ -3,6 +3,7 @@ import { ReactNode, useState, Fragment, MouseEvent } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
+import Image from 'next/image'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
@@ -190,7 +191,7 @@ const Register = () => {
                 justifyContent: 'center'
               }}
             >
-              <svg width={47} fill='none' height={26} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
+              {/* <svg width={47} fill='none' height={26} viewBox='0 0 268 150' xmlns='http://www.w3.org/2000/svg'>
                 <rect
                   rx='25.1443'
                   width='50.2886'
@@ -259,7 +260,8 @@ const Register = () => {
                     <stop offset='1' stopOpacity='0' />
                   </linearGradient>
                 </defs>
-              </svg>
+              </svg> */}
+              <Image width={47} height={26} src='/images/logos/media-app.png' alt='media logo' />
               <Typography variant='h6' sx={{ ml: 2, lineHeight: 1, fontWeight: 700, fontSize: '1.5rem !important' }}>
                 {themeConfig.templateName}
               </Typography>

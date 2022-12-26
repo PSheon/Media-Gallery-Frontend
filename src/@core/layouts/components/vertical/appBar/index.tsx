@@ -55,7 +55,9 @@ const LayoutAppBar = (props: Props) => {
 
   const appBarFixedStyles = () => {
     return {
+      mt: 1.5,
       px: `${theme.spacing(6)} !important`,
+      borderRadius: '10px',
       boxShadow: skin === 'bordered' ? 0 : 3,
       ...(appBarBlur && { backdropFilter: 'blur(8px)' }),
       backgroundColor: hexToRGBA(theme.palette.background.paper, appBarBlur ? 0.9 : 1),

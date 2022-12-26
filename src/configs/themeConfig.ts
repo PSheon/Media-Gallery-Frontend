@@ -19,6 +19,8 @@ import {
   HorizontalMenuToggle
 } from 'src/@core/layouts/types'
 
+const isProduction: boolean = (process.env.NODE_ENV as string) === 'production'
+
 type ThemeConfig = {
   skin: Skin
   mode: Mode
@@ -49,8 +51,8 @@ type ThemeConfig = {
 
 const themeConfig: ThemeConfig = {
   // ** Layout Configs
-  templateName: 'Materialize' /* App Name */,
-  layout: 'vertical' /* vertical | horizontal */,
+  templateName: 'Media Verse' /* App Name */,
+  layout: 'horizontal' /* vertical | horizontal */,
   mode: 'light' as Mode /* light | dark | semi-dark /*! Note: semi-dark value will only work for Vertical Layout */,
   direction: 'ltr' /* ltr | rtl */,
   skin: 'default' /* default | bordered */,
@@ -61,7 +63,7 @@ const themeConfig: ThemeConfig = {
   routingLoader: true /* true | false */,
 
   // ** Navigation (Menu) Configs
-  navHidden: false /* true | false */,
+  navHidden: true /* true | false */,
   menuTextTruncate: true /* true | false */,
   navSubItemIcon: 'mdi:circle' /* Icon */,
   verticalNavToggleType: 'accordion' /* accordion | collapse /*! Note: This is for Vertical navigation menu only */,
@@ -80,7 +82,7 @@ const themeConfig: ThemeConfig = {
   // ** Other Configs
   responsiveFontSizes: true /* true | false */,
   disableRipple: false /* true | false */,
-  disableCustomizer: false /* true | false */,
+  disableCustomizer: isProduction ? true : false /* true | false */,
   toastPosition: 'top-right' /* top-left | top-center | top-right | bottom-left | bottom-center | bottom-right */
 }
 
