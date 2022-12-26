@@ -60,7 +60,7 @@ export class Nft {
       type: 'nft',
       cover: {},
       displayName: 'Empty',
-      description: 'no description...',
+      description: 'no description',
       framePosition: this.framePosition,
       coverFileType: 'png',
       views: 0,

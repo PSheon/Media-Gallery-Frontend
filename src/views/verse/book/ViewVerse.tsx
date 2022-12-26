@@ -48,7 +48,7 @@ const Book = (props: Props) => {
       sceneId: sceneBase.id,
       owner: sceneBase?.attributes?.owner?.data?.attributes?.username || 'Anonymous',
       displayName: sceneBase?.attributes?.displayName || 'Untitled',
-      description: sceneBase?.attributes?.description || 'no description...',
+      description: sceneBase?.attributes?.description || 'no description',
       worldScenePaths: sceneBase?.attributes.sceneModel.data?.attributes.worldScenePaths || [],
       assetList: sceneBase?.attributes.assetList?.data || [],
       playerDisplayName,
