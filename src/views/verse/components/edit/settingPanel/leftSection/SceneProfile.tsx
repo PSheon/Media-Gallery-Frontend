@@ -28,7 +28,7 @@ import TextField from '@mui/material/TextField'
 import axios from 'axios'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
-import { useFileUpload } from 'use-file-upload'
+import { dataURLtoBlob } from 'src/utils/data-url-to-blob'
 
 // ** Services Imports
 import { useSceneQuery } from 'src/services/queries/scene.query'
@@ -57,6 +57,7 @@ const PreviewPicture = styled('img')(({ theme }) => ({
   objectFit: 'cover',
   borderRadius: theme.shape.borderRadius,
   border: `5px solid ${theme.palette.common.white}`,
+  filter: 'brightness(0.8)',
   [theme.breakpoints.down('md')]: {
     marginBottom: theme.spacing(4)
   }
@@ -78,8 +79,6 @@ const SceneProfile = () => {
   // ** Hooks
   const router = useRouter()
   const { sid } = router.query
-  // eslint-disable-next-line
-  const [files, selectFiles] = useFileUpload()
   const worldInstance = useSelector(({ verse }: RootState) => verse.edit.scene.worldInstance)
   const queryClient = useQueryClient()
   const { isLoading: isQueryLoading, data: queryData } = useSceneQuery({ sid: sid as string })
@@ -171,12 +170,13 @@ const SceneProfile = () => {
     }
   }
   const handleChangeCoverPhoto = () => {
-    // @ts-ignore
-    selectFiles({ accept: 'image/*', multiple: false }, async ({ file }) => {
+    if (worldInstance && !isUpdateSceneLoading) {
+      const imageDataURL = worldInstance.captureScreenshot()
+
       const updateSceneCoverFormData = new FormData()
-      updateSceneCoverFormData.append('files', file)
+      updateSceneCoverFormData.append('files', dataURLtoBlob(imageDataURL))
       updateSceneCover(updateSceneCoverFormData)
-    })
+    }
   }
   const onSubmit = (newData: UpdateSceneFormData) => {
     updateScene(newData)
@@ -225,16 +225,15 @@ const SceneProfile = () => {
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <Typography variant='subtitle2' sx={{ mb: 2 }}>
-                    Preview
+                    Banner
                   </Typography>
                   <Box
                     onClick={handleChangeCoverPhoto}
                     sx={{
                       position: 'relative',
-                      width: 'fit-content',
                       minWidth: '10rem',
-                      height: '6rem',
-                      mb: 4,
+                      width: theme => theme.spacing(50),
+                      height: theme => theme.spacing(25),
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
@@ -244,14 +243,15 @@ const SceneProfile = () => {
                       '&:hover': { borderColor: theme => `rgba(${theme.palette.customColors.main}, 0.25)` }
                     }}
                   >
-                    {sceneBase?.attributes?.cover?.data?.attributes?.url ? (
+                    {sceneBase?.attributes?.cover?.data?.attributes?.url && (
                       <PreviewPicture
                         src={`${apiConfig.publicFolderUrl}${sceneBase.attributes.cover.data.attributes.url}`}
                         alt={sceneBase?.attributes.owner?.data?.attributes?.username}
                       />
-                    ) : (
-                      <Icon icon='material-symbols:add' fontSize={24} />
                     )}
+                    <Box sx={{ position: 'absolute' }}>
+                      <Icon icon='material-symbols:camera-enhance-rounded' fontSize={24} />
+                    </Box>
 
                     <Backdrop
                       open={isQueryLoading || isUpdateSceneCoverLoading}

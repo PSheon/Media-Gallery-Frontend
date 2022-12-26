@@ -478,6 +478,19 @@ export class World {
     }
   }
 
+  public captureScreenshot(): string {
+    this.renderer.render(this.graphicsWorld, this.camera)
+    const resizedCanvas = document.createElement('canvas')
+    const resizedContext = resizedCanvas.getContext('2d')
+
+    resizedCanvas.width = 2048
+    resizedCanvas.height = 840
+
+    resizedContext!.drawImage(this.renderer.domElement, 0, 0, 2048, 840)
+
+    return resizedCanvas.toDataURL()
+  }
+
   public launchScenario(scenarioID: string, loadingManager?: LoadingManager): void {
     this.lastScenarioID = scenarioID
 
