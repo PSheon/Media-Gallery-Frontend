@@ -129,6 +129,14 @@ export const generateViewDialogBoxPayload = ({ hoverObjectType = 'asset', hoverO
   // }
   // return DEFAULT_DIALOG_BOX_PAYLOAD
 
+  console.log('hoverObjectType, ', hoverObjectType)
+  if (hoverObjectType === 'npc') {
+    return {
+      hoverObjectType: 'npc',
+      hoverObjectMetadata
+    }
+  }
+
   if (hoverObjectType === 'asset') {
     return {
       hoverObjectType: 'asset',

@@ -46,8 +46,21 @@ export class Character extends THREE.Object3D implements IWorldEntity {
   public updateOrder = 1
   public entityType: EntityType = EntityType.Character
   public metadata: ICharacterMetadata = {
-    displayName: 'MediaVerve',
-    objectType: 'player'
+    objectType: 'player',
+    objectMetadata: {
+      framePosition: 'Player',
+      displayName: 'Player',
+      position: {
+        x: 0,
+        y: 0,
+        z: 0
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0
+      }
+    }
   }
   public isPlayer = false
   public zoomLevel = 5
@@ -246,15 +259,15 @@ export class Character extends THREE.Object3D implements IWorldEntity {
   }
 
   public setMetadata(metadata: ICharacterMetadata): void {
-    this.metadata.displayName = metadata.displayName
-    this.characterCapsule.body.displayName = metadata.displayName
     this.metadata.objectType = metadata.objectType
     this.characterCapsule.body.objectType = metadata.objectType
+    this.metadata.objectMetadata = metadata.objectMetadata
+    this.characterCapsule.body.objectMetadata = metadata.objectMetadata
 
     if (!this.isPlayer && !this.characterLabel) {
       const labelDomElement = document.createElement('div')
       labelDomElement.className = 'verse-character-label-container'
-      labelDomElement.textContent = metadata.displayName
+      labelDomElement.textContent = metadata.objectMetadata.displayName
       this.characterLabel = new CSS2DObject(labelDomElement)
       this.characterLabel.position.copy(new THREE.Vector3(0, 1.25, 0))
       this.modelContainer.add(this.characterLabel)

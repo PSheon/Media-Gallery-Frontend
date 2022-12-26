@@ -19,7 +19,15 @@ export class NpcSpawnPoint implements ISpawnPoint {
     const npcModel = this.object.userData?.model ?? 'shark_boy'
     loadingManager.loadGLTF(`/assets/book/character/draco-${npcModel}.glb`, model => {
       const npc = new Character(model)
-      npc.setMetadata({ displayName: this.object.userData?.displayName ?? 'Bob', objectType: 'npc' })
+      npc.setMetadata({
+        objectType: 'npc',
+        objectMetadata: {
+          framePosition: this.object.name,
+          displayName: this.object.userData?.displayName ?? 'Bob',
+          position: { x: this.object.position.x, y: this.object.position.y, z: this.object.position.z },
+          rotation: { x: this.object.rotation.x, y: this.object.rotation.y, z: this.object.rotation.z }
+        }
+      })
       npc.setLabelVisible(world.params.Label_Visible)
 
       const worldPos = new THREE.Vector3()

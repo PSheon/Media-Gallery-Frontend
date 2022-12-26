@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 
 // ** Components Imports
-import TokenChainIcon from 'src/views/verse/components/view/viewDialogBox/TokenChainIcon'
+import TokenChainIcon from 'src/views/verse/components/view/viewDialogBox/assetDialogContent/TokenChainIcon'
 
 // ** Config
 import apiConfig from 'src/configs/api'
