@@ -5,7 +5,8 @@ import { Character } from 'src/views/verse/book/characters/view/Character'
 import { LoadingManager } from 'src/views/verse/book/core/view/LoadingManager'
 import * as Utils from 'src/views/verse/book/core/FunctionLibrary'
 
-// import { RandomBehaviour } from '../characters/character_ai/RandomBehaviour'
+import { FollowTarget } from 'src/views/verse/book/characters/view/character_ai/FollowTarget'
+import { RandomBehaviour } from 'src/views/verse/book/characters/view/character_ai/RandomBehaviour'
 
 export class NpcSpawnPoint implements ISpawnPoint {
   private object: THREE.Object3D
@@ -28,7 +29,12 @@ export class NpcSpawnPoint implements ISpawnPoint {
       const forward = Utils.getForward(this.object)
       npc.setOrientation(forward, true)
 
-      // npc.setBehaviour(new RandomBehaviour())
+      if (this.object.userData?.behaviour === 'follow-player') {
+        npc.setBehaviour(new FollowTarget(world.localPlayer!))
+      }
+      if (this.object.userData?.behaviour === 'random') {
+        npc.setBehaviour(new RandomBehaviour())
+      }
 
       world.add(npc)
     })
