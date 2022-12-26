@@ -16,7 +16,7 @@ import Box, { BoxProps } from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 
 // ** Utils Imports
-import { useConnect, useSignMessage, Connector } from 'wagmi'
+import { useConnect, useSignMessage, useDisconnect, Connector } from 'wagmi'
 import axios from 'axios'
 
 // ** Layout Import
@@ -48,6 +48,7 @@ const Error401 = () => {
   const router = useRouter()
   const bgColors = useBgColor()
   const { connectAsync, connectors, error: connectError, isLoading, pendingConnector } = useConnect()
+  const { disconnect } = useDisconnect()
   const { signMessageAsync } = useSignMessage()
 
   // ** Logics
@@ -69,6 +70,7 @@ const Error401 = () => {
         setConnecting(false)
       })
     } catch (connectingErr) {
+      disconnect()
       setConnecting(false)
     }
   }
