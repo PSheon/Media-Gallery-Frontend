@@ -575,9 +575,23 @@ export class World {
               toast.success(`${player.metadata.displayName} joined!`)
               const visitor = new Character(model)
 
+              /* NOTE */
               visitor.setMetadata({
-                displayName: `Player #${player.metadata.displayName}`,
-                objectType: 'player'
+                objectType: 'visitor',
+                objectMetadata: {
+                  framePosition: `Visitor-${sessionId}`,
+                  displayName: `Player #${player.metadata.displayName}`,
+                  position: {
+                    x: 0,
+                    y: 0,
+                    z: 0
+                  },
+                  rotation: {
+                    x: 0,
+                    y: 0,
+                    z: 0
+                  }
+                }
               })
               visitor.setLabelVisible(this.params.Label_Visible)
 
@@ -592,9 +606,23 @@ export class World {
                 // @ts-ignore
                 changes.forEach(change => {
                   if (change.field === 'displayName') {
+                    /* NOTE */
                     this.visitors[sessionId].setMetadata({
-                      displayName: `Player #${player.metadata.displayName}`,
-                      objectType: 'player'
+                      objectType: 'visitor',
+                      objectMetadata: {
+                        framePosition: `Visitor-${sessionId}`,
+                        displayName: `Player #${player.metadata.displayName}`,
+                        position: {
+                          x: 0,
+                          y: 0,
+                          z: 0
+                        },
+                        rotation: {
+                          x: 0,
+                          y: 0,
+                          z: 0
+                        }
+                      }
                     })
                   }
                   if (change.field === 'avatarModel') {
