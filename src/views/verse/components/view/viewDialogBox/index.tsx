@@ -24,6 +24,7 @@ import { hideViewDialogBox } from 'src/store/verse/view/viewDialogBoxSlice'
 
 // ** Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
+import NftBox from 'src/views/verse/components/view/viewDialogBox/NftBox'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -32,12 +33,8 @@ import Icon from 'src/@core/components/icon'
 import axios from 'axios'
 import { etherAddressFormatter } from 'src/utils/ether-address'
 
-// ** Config
-import apiConfig from 'src/configs/api'
-
 // ** Types
 import { RootState } from 'src/store'
-import { ISceneAsset } from 'src/types/sceneAssetTypes'
 
 // ** Styled StyledRootDialog component
 const StyledRootDialog = styled(Dialog)<DialogProps>(() => ({
@@ -91,129 +88,6 @@ const ViewDialogBox = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [VIEW_DIALOG_BOX.show])
 
-  // ** Renders
-  const renderTokeChainIcon = (chainName: ISceneAsset['attributes']['tokenChain']) => {
-    let iconURI = ''
-    if (chainName === 'eth') {
-      iconURI = 'cryptocurrency-color:eth'
-    }
-    if (chainName === 'polygon') {
-      iconURI = 'cryptocurrency-color:polygon'
-    }
-    if (chainName === 'bsc') {
-      iconURI = 'cryptocurrency-color:bsc'
-    }
-    if (chainName === 'avalanche') {
-      iconURI = 'cryptocurrency-color:avax'
-    }
-
-    return <Icon icon={iconURI} />
-  }
-  const renderNftBox = (ownNft: ISceneAsset) => {
-    if (
-      ownNft?.attributes?.coverFileType === 'png' ||
-      ownNft?.attributes?.coverFileType === 'jpg' ||
-      ownNft?.attributes?.coverFileType === 'svg' ||
-      ownNft?.attributes?.coverFileType === 'gif'
-    ) {
-      return (
-        <Box
-          sx={{
-            width: '100%',
-            height: '100%',
-            maxWidth: theme => theme.spacing(80),
-            maxHeight: theme => theme.spacing(80),
-            position: 'relative',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '.2rem',
-            '& img': {
-              width: '100%',
-              height: '100%',
-              borderRadius: '.2rem'
-            }
-          }}
-        >
-          <img
-            src={`${apiConfig.publicFolderUrl}${currentPlacedAsset?.attributes?.cover?.data?.attributes.url}`}
-            alt={currentPlacedAsset?.attributes.displayName}
-          />
-          <Box sx={{ position: 'absolute', top: 0, p: 2, width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-            <Box
-              sx={{
-                p: theme => theme.spacing(1, 2),
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: theme => theme.palette.background.paper,
-                borderRadius: theme => theme.shape.borderRadius
-              }}
-            >
-              {renderTokeChainIcon(ownNft?.attributes.tokenChain)}
-              <Typography variant='subtitle2' sx={{ ml: 1 }}>
-                {ownNft?.attributes.tokenChain}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-      )
-    }
-
-    if (ownNft?.attributes?.coverFileType === 'mp4') {
-      return (
-        <Box
-          sx={{
-            width: '100%',
-            height: '100%',
-            maxWidth: theme => theme.spacing(220),
-            maxHeight: theme => theme.spacing(140),
-            position: 'relative',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '.2rem',
-            '& video': {
-              objectFit: 'cover',
-              borderRadius: '.2rem'
-            }
-          }}
-        >
-          <video
-            width='100%'
-            height='100%'
-            src={`${apiConfig.publicFolderUrl}${currentPlacedAsset?.attributes?.cover?.data?.attributes.url}`}
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls
-            crossOrigin='anonymous'
-          />
-          <Box sx={{ position: 'absolute', top: 0, p: 2, width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-            <Box
-              sx={{
-                p: theme => theme.spacing(1, 2),
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: theme => theme.palette.background.paper,
-                borderRadius: theme => theme.shape.borderRadius
-              }}
-            >
-              {renderTokeChainIcon(ownNft?.attributes.tokenChain)}
-              <Typography variant='subtitle2' sx={{ ml: 1 }}>
-                {ownNft?.attributes.tokenChain}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-      )
-    }
-  }
-
   return (
     <StyledRootDialog
       fullWidth
@@ -238,7 +112,7 @@ const ViewDialogBox = () => {
           </Box>
           <Grid container spacing={4}>
             <Grid item xs={12} sm={5}>
-              {renderNftBox(currentPlacedAsset)}
+              <NftBox ownNft={currentPlacedAsset} currentPlacedAsset={currentPlacedAsset} />
             </Grid>
             <Grid item xs={12} sm={7}>
               <Grid container spacing={4}>
