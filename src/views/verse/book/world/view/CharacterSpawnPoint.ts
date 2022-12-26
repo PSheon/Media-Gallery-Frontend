@@ -18,7 +18,6 @@ export class CharacterSpawnPoint implements ISpawnPoint {
     loadingManager.loadGLTF(`/assets/book/character/${avatarModel}.glb`, model => {
       const player = new Character(model)
       player.isPlayer = true
-      player.setMetadata({ displayName: 'Me', objectType: 'localPlayer' })
       world.localPlayer = player
 
       const worldPos = new THREE.Vector3()
