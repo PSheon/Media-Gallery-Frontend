@@ -171,6 +171,14 @@ export class World {
       scope.composer.setSize(window.innerWidth * pixelRatio, window.innerHeight * pixelRatio)
     }
     window.addEventListener('resize', onWindowResize, false)
+    function onWindowBlur() {
+      scope.audioManager.pause()
+    }
+    window.addEventListener('blur', onWindowBlur, false)
+    function onWindowFocus() {
+      scope.audioManager.play(scope.params.Background_Music_Volume)
+    }
+    window.addEventListener('focus', onWindowFocus, false)
 
     // Three.js scene
     this.graphicsWorld = new THREE.Scene()
