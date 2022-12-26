@@ -17,7 +17,7 @@ export class FollowTarget implements ICharacterAI {
   public target: THREE.Object3D
   private stopDistance: number
 
-  constructor(target: THREE.Object3D, stopDistance = 1.3) {
+  constructor(target: THREE.Object3D, stopDistance = 2) {
     this.target = target
     this.stopDistance = stopDistance
   }
