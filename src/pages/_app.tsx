@@ -44,6 +44,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 // ** Third Party Import
 import { Toaster } from 'react-hot-toast'
 
+// Google Analytics
+import { GoogleAnalytics } from 'nextjs-google-analytics'
+
 // ** Components Imports
 import UserLayout from 'src/layouts/UserLayout'
 import AclGuard from 'src/@core/components/auth/AclGuard'
@@ -188,6 +191,7 @@ const App = (props: ExtendedAppProps) => {
                       return (
                         <ThemeComponent settings={settings}>
                           <WindowWrapper>
+                            <GoogleAnalytics trackPageViews />
                             <Guard authGuard={authGuard} guestGuard={guestGuard}>
                               <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
                                 {getLayout(<Component {...pageProps} />)}
