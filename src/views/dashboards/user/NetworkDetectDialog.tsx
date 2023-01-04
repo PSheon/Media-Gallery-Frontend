@@ -35,24 +35,32 @@ const NetworkDetectDialog = () => {
   return (
     <Dialog
       fullWidth
-      open={(chain as Chain).id !== TARGET_CHAIN_ID}
+      open={(chain as Chain)?.id !== TARGET_CHAIN_ID}
       maxWidth='sm'
       scroll='body'
       TransitionComponent={Transition}
     >
       <DialogContent sx={{ px: { xs: 4, sm: 8 }, py: { xs: 4, sm: 6 }, position: 'relative' }}>
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant='h5' sx={{ mb: 3, lineHeight: '2rem' }}>
-            Change Network
-          </Typography>
-          <Typography variant='body2' sx={{ mb: 4 }}>{`Switch network from ${
-            (chain as Chain)?.name
-          } to ${TARGET_CHAIN_NAME}`}</Typography>
+        {chain ? (
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant='h5' sx={{ mb: 3, lineHeight: '2rem' }}>
+              Change Network
+            </Typography>
+            <Typography variant='body2' sx={{ mb: 4 }}>{`Switch network from ${
+              (chain as Chain)?.name
+            } to ${TARGET_CHAIN_NAME}`}</Typography>
 
-          <LoadingButton loading={isLoading} variant='contained' onClick={handleSwitchNetwork}>
-            Switch
-          </LoadingButton>
-        </Box>
+            <LoadingButton loading={isLoading} variant='contained' onClick={handleSwitchNetwork}>
+              Switch
+            </LoadingButton>
+          </Box>
+        ) : (
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant='h5' sx={{ mb: 3, lineHeight: '2rem' }}>
+              Please login to Metamask
+            </Typography>
+          </Box>
+        )}
       </DialogContent>
     </Dialog>
   )
