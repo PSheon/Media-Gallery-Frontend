@@ -34,6 +34,7 @@ export type ISceneModel = {
     tagTitle?: string
     frameCount: number
     worldScenePaths: string[]
+    allowed: boolean
 
     creator: {
       data?: {

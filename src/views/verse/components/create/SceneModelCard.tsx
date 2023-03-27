@@ -1,6 +1,12 @@
+// ** Next Import
+import Link from 'next/link'
+
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+
+// ** Config Imports
+import { TARGET_CHAIN_ID } from 'src/configs/ethereum'
 
 interface Props {
   id: number
@@ -9,6 +15,8 @@ interface Props {
   tagIcon?: string
   tagTitle?: string
   frameCount: number
+  contract?: string
+  allowed: boolean
   published: boolean
   creatorName?: string
   selectedSceneModelId: number
@@ -25,6 +33,8 @@ const SceneModelCard = (props: Props) => {
     // tagIcon,
     tagTitle,
     frameCount,
+    contract,
+    allowed,
 
     // published,
     creatorName = 'Media.app',
@@ -34,7 +44,7 @@ const SceneModelCard = (props: Props) => {
 
   return (
     <Box
-      onClick={() => handleChange(id)}
+      onClick={() => allowed && handleChange(id)}
       sx={{
         height: '20rem',
         display: 'flex',
@@ -55,6 +65,13 @@ const SceneModelCard = (props: Props) => {
           objectFit: 'cover'
         }
       }}
+      {...(allowed
+        ? {}
+        : {
+            component: Link,
+            href: `https://${TARGET_CHAIN_ID === 1 ? 'www' : 'goerli'}.etherscan.io/address/${contract}`,
+            target: '_blank'
+          })}
     >
       <img width={200} height={80} src={coverURL} alt={`scene-model-${id}`} />
       <Box sx={{ position: 'absolute', top: 0, p: 2, width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
@@ -75,11 +92,11 @@ const SceneModelCard = (props: Props) => {
                 width: '8px',
                 height: '8px',
                 mr: 2,
-                backgroundColor: theme => theme.palette.success.main,
+                backgroundColor: theme => (allowed ? theme.palette.success.main : theme.palette.error.main),
                 borderRadius: '50%'
               }}
             />
-            <Typography variant='subtitle2'>{tagTitle}</Typography>
+            <Typography variant='subtitle2'>{allowed ? tagTitle : 'NFT Needed'}</Typography>
           </Box>
         )}
       </Box>

@@ -187,7 +187,9 @@ const SceneModelSelectionList = () => {
                     tagIcon={sceneModel.attributes?.tagIcon}
                     tagTitle={sceneModel.attributes?.tagTitle}
                     frameCount={sceneModel.attributes.frameCount}
+                    contract={sceneModel.attributes?.contract}
                     published={sceneModel.attributes.published}
+                    allowed={sceneModel.attributes.allowed}
                     creatorName={sceneModel.attributes.creator?.data?.attributes.username}
                     selectedSceneModelId={selectedSceneModelId}
                     handleChange={handleSceneModelChange}
